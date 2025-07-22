@@ -1,0 +1,12 @@
+{
+  "apps": [
+    {
+      "app_id": "app_4fdbaf24-6225-4bc5-a2bb-84319ea72bfb",
+      "deploy": {
+        "nodejs": 18
+      },
+      "name": "virida_ihm",
+      "alias": "virida_app"
+    }
+  ]
+}
