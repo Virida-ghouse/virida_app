@@ -1,0 +1,12 @@
+{
+  "build": {
+    "node_version": "18",
+    "npm_config": {
+      "production": false
+    }
+  },
+  "deploy": {
+    "module": "server.js",
+    "static": "/dist"
+  }
+}
