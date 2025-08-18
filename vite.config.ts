@@ -1,6 +1,5 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import { resolve } from 'path';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -11,6 +10,16 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     emptyOutDir: true,
+    chunkSizeWarningLimit: 1000,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          mui: ['@mui/material', '@mui/icons-material'],
+          three: ['three', '@react-three/fiber', '@react-three/drei']
+        }
+      }
+    }
   },
   server: {
     port: 8080,
@@ -23,7 +32,7 @@ export default defineConfig({
   // Assure que les routes SPA fonctionnent correctement
   resolve: {
     alias: {
-      '@': resolve(__dirname, 'src'),
+      '@': './src',
     },
   },
 });
