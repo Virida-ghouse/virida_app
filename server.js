@@ -12,6 +12,7 @@ const PORT = process.env.PORT || 8080;
 
 // Vérifier si le répertoire dist existe
 const distPath = path.join(__dirname, 'dist');
+const assetsPath = path.join(distPath, 'assets');
 console.log(`Chemin du répertoire dist: ${distPath}`);
 console.log(`Contenu du répertoire courant: ${fs.readdirSync(__dirname).join(', ')}`);
 
@@ -55,10 +56,18 @@ if (!isBuildComplete()) {
   console.log('Build React incomplet, attente du build Vite...');
 }
 
-// Middleware pour servir les fichiers statiques avec cache headers
+// Middleware pour servir les fichiers statiques avec des headers de cache adaptés
+// 1) Assets versionnés (hashés) -> cache long + immutable
+app.use('/assets', express.static(assetsPath, {
+  maxAge: '1y',
+  immutable: true,
+  etag: true
+}));
+
+// 2) Autres fichiers statiques de dist (ex: favicon, manifest) -> pas de cache long
 app.use(express.static(distPath, {
-  maxAge: '1d', // Cache pour 1 jour
-  etag: false
+  maxAge: 0,
+  etag: true
 }));
 
 // Vérifier si index.html existe et afficher son contenu pour le débogage
@@ -106,6 +115,8 @@ app.get('*', (req, res) => {
   // Pour les routes de l'application, servir index.html
   if (fs.existsSync(indexPath)) {
     console.log('📄 Envoi du fichier index.html de l\'application Virida');
+    // Empêcher la mise en cache d'index.html afin d'éviter les pages obsolètes
+    res.set('Cache-Control', 'no-store');
     res.sendFile(indexPath, (err) => {
       if (err) {
         console.error('❌ Erreur lors de l\'envoi du fichier:', err);
