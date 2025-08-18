@@ -3,7 +3,10 @@
     "node_version": "22",
     "npm_config": {
       "production": false
-    }
+    },
+    "commands": [
+      "NODE_OPTIONS='--max-old-space-size=1536 --no-warnings' npm run build"
+    ]
   },
   "deploy": {
     "module": "server.js"

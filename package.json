@@ -9,8 +9,7 @@
     "build:simple": "NODE_OPTIONS='--max-old-space-size=1536 --no-warnings' vite build --mode development",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "start": "bash start.sh",
-    "deploy": "npm run build && node server.js"
+    "start": "node server.js"
   },
   "dependencies": {
     "@emotion/react": "^11.11.3",
