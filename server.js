@@ -123,8 +123,9 @@ app.get('*', (req, res) => {
   const hasBuiltAssets = fs.existsSync(distPath) && 
     fs.readdirSync(distPath).some(file => file.endsWith('.js') || file.endsWith('.css'));
   
-  if (fs.existsSync(indexPath) && hasBuiltAssets) {
-    console.log('Envoi du fichier index.html (build React complet)');
+  // Toujours essayer de servir l'index.html s'il existe, même sans assets
+  if (fs.existsSync(indexPath)) {
+    console.log('Envoi du fichier index.html de l\'application Virida');
     res.sendFile(indexPath, (err) => {
       if (err) {
         console.error('Erreur lors de l\'envoi du fichier:', err);
