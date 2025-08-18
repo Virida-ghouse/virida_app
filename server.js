@@ -60,11 +60,13 @@ app.get('/health', (req, res) => {
 app.get('*', (req, res) => {
   console.log(`Requête reçue pour: ${req.url}`);
   
-  // Vérifier si le build React est complet (présence de fichiers JS/CSS)
-  const hasBuiltAssets = fs.existsSync(distPath) && 
-    fs.readdirSync(distPath).some(file => file.endsWith('.js') || file.endsWith('.css'));
+  // Si c'est une requête pour un fichier statique qui n'existe pas, retourner 404
+  if (req.url.match(/\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot)$/)) {
+    console.log(`Fichier statique non trouvé: ${req.url}`);
+    return res.status(404).send('File not found');
+  }
   
-  // Toujours essayer de servir l'index.html s'il existe, même sans assets
+  // Pour les routes de l'application, servir index.html
   if (fs.existsSync(indexPath)) {
     console.log('Envoi du fichier index.html de l\'application Virida');
     res.sendFile(indexPath, (err) => {
