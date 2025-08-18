@@ -16,6 +16,22 @@ const assetsPath = path.join(distPath, 'assets');
 console.log(`Chemin du répertoire dist: ${distPath}`);
 console.log(`Contenu du répertoire courant: ${fs.readdirSync(__dirname).join(', ')}`);
 
+// Fonction pour builder l'application
+function buildApp() {
+  console.log('🔨 Démarrage du build Vite...');
+  try {
+    execSync('NODE_OPTIONS="--max-old-space-size=1024 --no-warnings" npm run build:simple', {
+      stdio: 'inherit',
+      timeout: 120000 // 2 minutes max
+    });
+    console.log('✅ Build terminé avec succès');
+    return true;
+  } catch (error) {
+    console.log('❌ Erreur de build:', error.message);
+    return false;
+  }
+}
+
 // Vérifier si le build React est complet
 function isBuildComplete() {
   console.log('🔍 Vérification du build complet...');
@@ -52,8 +68,13 @@ function isBuildComplete() {
   return isComplete;
 }
 
+// Tenter un build au démarrage si nécessaire
 if (!isBuildComplete()) {
-  console.log('Build React incomplet, attente du build Vite...');
+  console.log('🔨 Build manquant, tentative de build au démarrage...');
+  const buildSuccess = buildApp();
+  if (!buildSuccess) {
+    console.log('⚠️ Build échoué, serveur démarrera avec page d\'attente');
+  }
 }
 
 // Middleware pour servir les fichiers statiques avec des headers de cache adaptés
