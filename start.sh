@@ -5,9 +5,10 @@ echo "Répertoire courant: $(pwd)"
 echo "Contenu du répertoire: $(ls -la)"
 
 echo "=== EXÉCUTION DU BUILD ==="
-npm run build
+timeout 300 npm run build
 BUILD_EXIT_CODE=$?
 echo "Code de sortie du build: $BUILD_EXIT_CODE"
+echo "Build terminé ou timeout atteint"
 
 echo "=== VÉRIFICATION DU DOSSIER DIST ==="
 if [ -d "dist" ]; then
