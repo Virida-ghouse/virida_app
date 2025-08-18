@@ -6,7 +6,6 @@
     }
   },
   "deploy": {
-    "module": "server.js",
-    "static": "/dist"
+    "module": "server.js"
   }
 }
