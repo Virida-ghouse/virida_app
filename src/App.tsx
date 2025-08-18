@@ -15,9 +15,13 @@ import SettingsPanel from './components/settings/SettingsPanel';
 import theme from './theme';
 
 function App() {
+  console.log('🎯 App.tsx - Composant App en cours de rendu');
+  
   const [sidebarOpen, setSidebarOpen] = React.useState(true);
   const [currentView, setCurrentView] = React.useState('dashboard');
   const [configureOpen, setConfigureOpen] = React.useState(false);
+  
+  console.log('📊 État App:', { sidebarOpen, currentView, configureOpen });
 
   const renderView = () => {
     switch (currentView) {
