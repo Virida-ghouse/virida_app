@@ -5,24 +5,19 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [react()],
   optimizeDeps: {
-    include: ['react', 'react-dom', '@mui/material', '@emotion/react', '@emotion/styled'],
-    exclude: ['three-stdlib']
+    include: ['react', 'react-dom', '@mui/material', '@emotion/react', '@emotion/styled', 'three'],
+    exclude: []
   },
   build: {
-    target: 'es2015',
-    minify: false,
+    target: 'es2020',
+    minify: 'esbuild',
     sourcemap: false,
-    chunkSizeWarningLimit: 1000,
+    chunkSizeWarningLimit: 2000,
     rollupOptions: {
       output: {
-        manualChunks: undefined
-      },
-      external: (id) => {
-        // Exclure les modules problématiques
-        if (id.includes('three-stdlib/libs/lottie')) {
-          return true;
+        manualChunks: {
+          'three-vendor': ['three', '@react-three/fiber', '@react-three/drei']
         }
-        return false;
       }
     }
   },
@@ -34,10 +29,12 @@ export default defineConfig({
     port: 8080,
     host: '0.0.0.0',
   },
-  // Assure que les routes SPA fonctionnent correctement
   resolve: {
     alias: {
       '@': './src',
     },
+  },
+  define: {
+    global: 'globalThis',
   },
 });
