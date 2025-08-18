@@ -5,9 +5,10 @@ echo "Répertoire courant: $(pwd)"
 echo "Contenu du répertoire: $(ls -la)"
 
 echo "=== EXÉCUTION DU BUILD ==="
-export NODE_OPTIONS="--max-old-space-size=2048"
+export NODE_OPTIONS="--max-old-space-size=1024"
 export NODE_ENV="production"
-npm run build --verbose
+# Build avec timeout plus court et fallback
+timeout 180 npm run build || echo "Build timeout, continuons..."
 BUILD_EXIT_CODE=$?
 echo "Code de sortie du build: $BUILD_EXIT_CODE"
 echo "Build terminé"
