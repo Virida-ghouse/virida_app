@@ -12,6 +12,7 @@ export default defineConfig({
     target: 'es2020',
     minify: 'esbuild',
     chunkSizeWarningLimit: 2000,
+    sourcemap: false,
     rollupOptions: {
       external: ['three-stdlib', 'three-mesh-bvh'],
       output: {
