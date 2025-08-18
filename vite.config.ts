@@ -5,8 +5,7 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   optimizeDeps: {
-    include: ['three', '@react-three/fiber', '@react-three/drei'],
-    exclude: ['three-stdlib', 'three-mesh-bvh']
+    include: ['three', '@react-three/fiber', '@react-three/drei']
   },
   build: {
     target: 'es2020',
@@ -14,7 +13,6 @@ export default defineConfig({
     chunkSizeWarningLimit: 2000,
     sourcemap: false,
     rollupOptions: {
-      external: ['three-stdlib', 'three-mesh-bvh'],
       output: {
         manualChunks: {
           'three-vendor': ['three', '@react-three/fiber', '@react-three/drei']
