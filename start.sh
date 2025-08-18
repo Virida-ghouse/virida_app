@@ -5,11 +5,19 @@ echo "Répertoire courant: $(pwd)"
 echo "Contenu du répertoire: $(ls -la)"
 
 echo "=== EXÉCUTION DU BUILD ==="
-export NODE_OPTIONS="--max-old-space-size=1024"
-export NODE_ENV="production"
-# Build avec timeout plus court et fallback
-timeout 180 npm run build || echo "Build timeout, continuons..."
+# Augmenter le timeout et utiliser une approche plus simple
+timeout 300 npm run build --verbose
 BUILD_EXIT_CODE=$?
+
+if [ $BUILD_EXIT_CODE -eq 124 ]; then
+    echo "Build timeout après 5 minutes, continuons..."
+elif [ $BUILD_EXIT_CODE -ne 0 ]; then
+    echo "Build échoué avec le code: $BUILD_EXIT_CODE"
+    echo "Tentative de build simplifié..."
+    # Essayer un build sans optimisations
+    NODE_OPTIONS="--max-old-space-size=1024 --no-warnings" npm run build --mode development
+fi
+
 echo "Code de sortie du build: $BUILD_EXIT_CODE"
 echo "Build terminé"
 

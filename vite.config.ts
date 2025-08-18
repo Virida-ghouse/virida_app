@@ -5,19 +5,24 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [react()],
   optimizeDeps: {
-    exclude: ['lucide-react'],
+    include: ['react', 'react-dom', '@mui/material', '@emotion/react', '@emotion/styled'],
+    exclude: ['three-stdlib']
   },
   build: {
-    outDir: 'dist',
-    emptyOutDir: true,
-    chunkSizeWarningLimit: 5000,
-    minify: false, // Désactiver la minification pour accélérer
+    target: 'es2015',
+    minify: false,
     sourcemap: false,
-    target: 'es2015', // Target plus ancien pour moins de transformations
+    chunkSizeWarningLimit: 1000,
     rollupOptions: {
       output: {
-        // Un seul chunk pour simplifier
         manualChunks: undefined
+      },
+      external: (id) => {
+        // Exclure les modules problématiques
+        if (id.includes('three-stdlib/libs/lottie')) {
+          return true;
+        }
+        return false;
       }
     }
   },
