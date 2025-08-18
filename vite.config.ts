@@ -5,15 +5,13 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   optimizeDeps: {
-    include: ['three', '@react-three/fiber', '@react-three/drei'],
-    exclude: ['three-stdlib']
+    include: ['three', '@react-three/fiber', '@react-three/drei']
   },
   build: {
     target: 'es2020',
     minify: 'esbuild',
     chunkSizeWarningLimit: 2000,
     rollupOptions: {
-      external: ['three-stdlib/libs/lottie'],
       output: {
         manualChunks: {
           'three-vendor': ['three', '@react-three/fiber', '@react-three/drei']
@@ -22,9 +20,7 @@ export default defineConfig({
     }
   },
   define: {
-    global: 'globalThis',
-    // Désactiver eval() pour éviter les problèmes de sécurité
-    'eval': '(function() { console.warn("eval disabled"); return function() {}; })'
+    global: 'globalThis'
   },
   resolve: {
     alias: {
