@@ -1,19 +1,19 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
   optimizeDeps: {
-    include: ['react', 'react-dom', '@mui/material', '@emotion/react', '@emotion/styled', 'three'],
-    exclude: []
+    include: ['three', '@react-three/fiber', '@react-three/drei'],
+    exclude: ['three-stdlib']
   },
   build: {
     target: 'es2020',
     minify: 'esbuild',
-    sourcemap: false,
     chunkSizeWarningLimit: 2000,
     rollupOptions: {
+      external: ['three-stdlib/libs/lottie'],
       output: {
         manualChunks: {
           'three-vendor': ['three', '@react-three/fiber', '@react-three/drei']
@@ -21,20 +21,18 @@ export default defineConfig({
       }
     }
   },
-  server: {
-    port: 8080,
-    host: '0.0.0.0',
-  },
-  preview: {
-    port: 8080,
-    host: '0.0.0.0',
+  define: {
+    global: 'globalThis',
+    // Désactiver eval() pour éviter les problèmes de sécurité
+    'eval': '(function() { console.warn("eval disabled"); return function() {}; })'
   },
   resolve: {
     alias: {
       '@': './src',
     },
   },
-  define: {
-    global: 'globalThis',
-  },
-});
+  server: {
+    host: true,
+    port: 5173
+  }
+})
