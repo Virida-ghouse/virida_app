@@ -82,28 +82,44 @@ app.get('/health', (req, res) => {
 
 // Pour les routes SPA - redirige toutes les requêtes vers index.html
 app.get('*', (req, res) => {
-  console.log(`Requête reçue pour: ${req.url}`);
+  console.log(`🌐 Requête reçue pour: ${req.url}`);
   
   // Si c'est une requête pour un fichier statique qui n'existe pas, retourner 404
-  if (req.url.match(/\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot)$/)) {
-    console.log(`Fichier statique non trouvé: ${req.url}`);
-    return res.status(404).send('File not found');
+  if (req.url.match(/\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|gltf)$/)) {
+    console.log(`📁 Fichier statique demandé: ${req.url}`);
+    const filePath = path.join(distPath, req.url);
+    if (fs.existsSync(filePath)) {
+      console.log(`✅ Fichier trouvé, envoi: ${filePath}`);
+      return res.sendFile(filePath);
+    } else {
+      console.log(`❌ Fichier statique non trouvé: ${req.url}`);
+      return res.status(404).send('File not found');
+    }
+  }
+  
+  // Vérifier si le build est complet avant de servir l'application
+  if (!isBuildComplete()) {
+    console.log('⏳ Build incomplet, affichage de la page d\'attente');
+    return res.status(200).send(getWaitingPage());
   }
   
   // Pour les routes de l'application, servir index.html
   if (fs.existsSync(indexPath)) {
-    console.log('Envoi du fichier index.html de l\'application Virida');
+    console.log('📄 Envoi du fichier index.html de l\'application Virida');
     res.sendFile(indexPath, (err) => {
       if (err) {
-        console.error('Erreur lors de l\'envoi du fichier:', err);
+        console.error('❌ Erreur lors de l\'envoi du fichier:', err);
         res.status(500).send('Erreur serveur lors du chargement de l\'application.');
       }
     });
   } else {
-    console.log('Build React incomplet, affichage de la page d\'attente');
-    
-    // Afficher la page d'attente directement
-    res.status(200).send(`
+    console.log('⏳ Build React incomplet, affichage de la page d\'attente');
+    return res.status(200).send(getWaitingPage());
+  }
+});
+
+function getWaitingPage() {
+  return `
       <!DOCTYPE html>
       <html lang="fr">
       <head>
@@ -232,9 +248,8 @@ app.get('*', (req, res) => {
           </script>
       </body>
       </html>
-    `);
-  }
-});
+    `;
+}
 
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on http://0.0.0.0:${PORT}`);
