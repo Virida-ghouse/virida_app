@@ -6,10 +6,10 @@ echo "Contenu du répertoire: $(ls -la)"
 
 echo "=== EXÉCUTION DU BUILD ==="
 export NODE_OPTIONS="--max-old-space-size=1536"
-timeout 300 npm run build
+npm run build
 BUILD_EXIT_CODE=$?
 echo "Code de sortie du build: $BUILD_EXIT_CODE"
-echo "Build terminé ou timeout atteint"
+echo "Build terminé"
 
 echo "=== VÉRIFICATION DU DOSSIER DIST ==="
 if [ -d "dist" ]; then
