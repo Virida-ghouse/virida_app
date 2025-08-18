@@ -16,22 +16,77 @@ console.log(`Chemin du répertoire dist: ${distPath}`);
 console.log(`Contenu du répertoire courant: ${fs.readdirSync(__dirname).join(', ')}`);
 
 if (!fs.existsSync(distPath)) {
-  console.error('Le répertoire dist n\'existe pas. Tentative de build automatique...');
+  console.error('Le répertoire dist n\'existe pas. Création d\'un fallback...');
+  
+  // Créer le dossier dist et un index.html de base
   try {
-    console.log('Exécution de la commande de build...');
-    // Configuration optimisée pour le build
-    process.env.NODE_OPTIONS = '--max-old-space-size=2048';
-    process.env.NODE_ENV = 'production';
+    fs.mkdirSync(distPath, { recursive: true });
+    const fallbackHtml = `<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virida - Application en cours de construction</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background: #f0f0f0; }
+        .container { max-width: 600px; margin: 0 auto; background: white; padding: 40px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 40px; height: 40px; animation: spin 2s linear infinite; margin: 20px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌱 Virida</h1>
+        <div class="spinner"></div>
+        <h2>Application en cours de construction</h2>
+        <p>L'application React est en cours de build. Le processus peut prendre quelques minutes.</p>
+        <p>Cette page se rafraîchira automatiquement toutes les 30 secondes.</p>
+        <p><small>Si le problème persiste, vérifiez les logs de déploiement sur Clever Cloud.</small></p>
+    </div>
+    <script>
+        setTimeout(() => {
+            window.location.reload();
+        }, 30000);
+        
+        // Vérifier toutes les 10 secondes si l'app est prête
+        setInterval(() => {
+            fetch('/health')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.indexExists && data.distExists) {
+                        window.location.reload();
+                    }
+                })
+                .catch(() => {});
+        }, 10000);
+    </script>
+</body>
+</html>`;
     
-    execSync('npm run build', { 
-      stdio: 'inherit',
-      timeout: 600000, // 10 minutes timeout
-      env: { ...process.env }
-    });
-    console.log('Build terminé avec succès!');
+    fs.writeFileSync(path.join(distPath, 'index.html'), fallbackHtml);
+    console.log('✅ Fallback HTML créé avec succès');
+    
+    // Essayer le build en arrière-plan
+    setTimeout(() => {
+      console.log('Tentative de build en arrière-plan...');
+      try {
+        execSync('npm run build', { 
+          stdio: 'pipe',
+          timeout: 180000, // 3 minutes timeout
+          env: { 
+            ...process.env,
+            NODE_OPTIONS: '--max-old-space-size=1024',
+            NODE_ENV: 'production'
+          }
+        });
+        console.log('✅ Build en arrière-plan réussi!');
+      } catch (buildError) {
+        console.error('❌ Build en arrière-plan échoué:', buildError.message);
+      }
+    }, 5000);
+    
   } catch (error) {
-    console.error('Erreur lors du build:', error.message);
-    console.error('Le serveur va démarrer sans le dossier dist...');
+    console.error('Erreur lors de la création du fallback:', error.message);
   }
 }
 

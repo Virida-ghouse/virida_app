@@ -10,16 +10,14 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     emptyOutDir: true,
-    chunkSizeWarningLimit: 2000,
-    minify: 'esbuild', // Plus rapide que terser
-    sourcemap: false, // Désactiver les sourcemaps pour économiser la mémoire
+    chunkSizeWarningLimit: 5000,
+    minify: false, // Désactiver la minification pour accélérer
+    sourcemap: false,
+    target: 'es2015', // Target plus ancien pour moins de transformations
     rollupOptions: {
       output: {
-        manualChunks: {
-          'react-vendor': ['react', 'react-dom'],
-          'three-vendor': ['three', '@react-three/fiber', '@react-three/drei'],
-          'utils': ['lucide-react']
-        }
+        // Un seul chunk pour simplifier
+        manualChunks: undefined
       }
     }
   },
