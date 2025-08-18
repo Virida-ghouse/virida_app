@@ -106,7 +106,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           >
             <StyledListItem
               button
-              active={currentView === item.id}
+              active={currentView === item.id ? true : undefined}
               onClick={() => onViewChange(item.id)}
             >
               <ListItemIcon
