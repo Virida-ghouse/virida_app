@@ -26,8 +26,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@': './src',
-      'three-stdlib': 'three-stdlib/index.js'
+      '@': './src'
     },
   },
   server: {
