@@ -22,9 +22,15 @@ function isBuildComplete() {
   const indexPath = path.join(distPath, 'index.html');
   if (!fs.existsSync(indexPath)) return false;
   
-  // Vérifier si c'est un vrai build React (pas notre fallback)
-  const indexContent = fs.readFileSync(indexPath, 'utf8');
-  return indexContent.includes('type="module"') || indexContent.includes('script src=');
+  // Vérifier si les assets JS/CSS existent
+  const assetsPath = path.join(distPath, 'assets');
+  if (!fs.existsSync(assetsPath)) return false;
+  
+  const assets = fs.readdirSync(assetsPath);
+  const hasJS = assets.some(file => file.endsWith('.js'));
+  const hasCSS = assets.some(file => file.endsWith('.css'));
+  
+  return hasJS && hasCSS;
 }
 
 if (!isBuildComplete()) {
