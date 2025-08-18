@@ -5,17 +5,17 @@ echo "Répertoire courant: $(pwd)"
 echo "Contenu du répertoire: $(ls -la)"
 
 echo "=== EXÉCUTION DU BUILD ==="
-# Augmenter le timeout et utiliser une approche plus simple
-timeout 300 npm run build --verbose
+# Augmenter encore plus le timeout pour Three.js
+timeout 600 npm run build --verbose
 BUILD_EXIT_CODE=$?
 
 if [ $BUILD_EXIT_CODE -eq 124 ]; then
-    echo "Build timeout après 5 minutes, continuons..."
+    echo "Build timeout après 10 minutes, continuons..."
 elif [ $BUILD_EXIT_CODE -ne 0 ]; then
     echo "Build échoué avec le code: $BUILD_EXIT_CODE"
     echo "Tentative de build simplifié..."
     # Essayer un build sans optimisations
-    NODE_OPTIONS="--max-old-space-size=1024 --no-warnings" npm run build --mode development
+    NODE_OPTIONS="--max-old-space-size=1536 --no-warnings" npm run build:simple
 fi
 
 echo "Code de sortie du build: $BUILD_EXIT_CODE"
