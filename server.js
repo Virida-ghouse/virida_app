@@ -119,9 +119,12 @@ app.get('/health', (req, res) => {
 app.get('*', (req, res) => {
   console.log(`Requête reçue pour: ${req.url}`);
   
-  // Vérifier à nouveau si le fichier existe (au cas où le build se termine après le démarrage)
-  if (fs.existsSync(indexPath)) {
-    console.log('Envoi du fichier index.html');
+  // Vérifier si le build React est complet (présence de fichiers JS/CSS)
+  const hasBuiltAssets = fs.existsSync(distPath) && 
+    fs.readdirSync(distPath).some(file => file.endsWith('.js') || file.endsWith('.css'));
+  
+  if (fs.existsSync(indexPath) && hasBuiltAssets) {
+    console.log('Envoi du fichier index.html (build React complet)');
     res.sendFile(indexPath, (err) => {
       if (err) {
         console.error('Erreur lors de l\'envoi du fichier:', err);
@@ -129,45 +132,137 @@ app.get('*', (req, res) => {
       }
     });
   } else {
-    console.error('index.html introuvable!');
+    console.log('Build React incomplet, affichage de la page d\'attente');
     
-    // Tentative de rebuild si le fichier n'existe toujours pas
-    if (!fs.existsSync(distPath)) {
-      console.log('Tentative de rebuild automatique...');
-      try {
-        execSync('npm run build', { 
-          stdio: 'pipe',
-          timeout: 300000, // 5 minutes timeout pour rebuild
-          env: { 
-            ...process.env,
-            NODE_OPTIONS: '--max-old-space-size=2048',
-            NODE_ENV: 'production'
-          }
-        });
-        
-        // Vérifier à nouveau après le rebuild
-        if (fs.existsSync(indexPath)) {
-          console.log('Rebuild réussi, envoi du fichier index.html');
-          return res.sendFile(indexPath);
-        }
-      } catch (buildError) {
-        console.error('Erreur lors du rebuild:', buildError.message);
-      }
-    }
-    
-    res.status(404).send(`
-      <html>
-        <head><title>Application en cours de construction</title></head>
-        <body>
-          <h1>Application en cours de construction</h1>
-          <p>L'application React est en cours de build. Veuillez patienter quelques minutes et rafraîchir la page.</p>
-          <p>Si le problème persiste, vérifiez les logs de déploiement.</p>
+    // Afficher la page d'attente directement
+    res.status(200).send(`
+      <!DOCTYPE html>
+      <html lang="fr">
+      <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>🌱 Virida - Application en cours de construction</title>
+          <style>
+              body { 
+                  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+                  text-align: center; 
+                  padding: 50px 20px; 
+                  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                  color: white;
+                  margin: 0;
+                  min-height: 100vh;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+              }
+              .container { 
+                  max-width: 600px; 
+                  background: rgba(255,255,255,0.1); 
+                  padding: 40px; 
+                  border-radius: 20px; 
+                  backdrop-filter: blur(10px);
+                  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+              }
+              .spinner { 
+                  border: 4px solid rgba(255,255,255,0.3); 
+                  border-top: 4px solid white; 
+                  border-radius: 50%; 
+                  width: 50px; 
+                  height: 50px; 
+                  animation: spin 1s linear infinite; 
+                  margin: 20px auto; 
+              }
+              @keyframes spin { 
+                  0% { transform: rotate(0deg); } 
+                  100% { transform: rotate(360deg); } 
+              }
+              h1 { font-size: 2.5em; margin-bottom: 10px; }
+              h2 { font-size: 1.5em; margin: 20px 0; }
+              p { font-size: 1.1em; line-height: 1.6; margin: 15px 0; }
+              .status { 
+                  background: rgba(255,255,255,0.2); 
+                  padding: 15px; 
+                  border-radius: 10px; 
+                  margin: 20px 0; 
+              }
+              .progress-bar {
+                  width: 100%;
+                  height: 6px;
+                  background: rgba(255,255,255,0.3);
+                  border-radius: 3px;
+                  overflow: hidden;
+                  margin: 20px 0;
+              }
+              .progress-fill {
+                  height: 100%;
+                  background: white;
+                  width: 0%;
+                  animation: progress 30s linear infinite;
+              }
+              @keyframes progress {
+                  0% { width: 0%; }
+                  100% { width: 100%; }
+              }
+          </style>
+      </head>
+      <body>
+          <div class="container">
+              <h1>🌱 Virida</h1>
+              <div class="spinner"></div>
+              <h2>Application en cours de construction</h2>
+              <div class="status">
+                  <p><strong>État :</strong> Build React en cours...</p>
+                  <div class="progress-bar">
+                      <div class="progress-fill"></div>
+                  </div>
+              </div>
+              <p>L'application React est en cours de compilation. Le processus peut prendre quelques minutes.</p>
+              <p>Cette page se rafraîchira automatiquement toutes les 15 secondes.</p>
+              <p><small>Déployé avec succès sur Clever Cloud • Node.js ${process.version}</small></p>
+          </div>
           <script>
-            setTimeout(() => {
-              window.location.reload();
-            }, 30000); // Refresh automatique après 30 secondes
+              let attempts = 0;
+              const maxAttempts = 20;
+              
+              function checkStatus() {
+                  attempts++;
+                  fetch('/health')
+                      .then(response => response.json())
+                      .then(data => {
+                          console.log('Status check:', data);
+                          if (data.indexExists && data.distExists) {
+                              // Vérifier si le build est vraiment complet
+                              fetch('/')
+                                  .then(response => response.text())
+                                  .then(html => {
+                                      if (!html.includes('Application en cours de construction')) {
+                                          window.location.reload();
+                                      }
+                                  })
+                                  .catch(() => {});
+                          }
+                      })
+                      .catch(error => {
+                          console.log('Health check failed:', error);
+                      });
+                  
+                  if (attempts < maxAttempts) {
+                      setTimeout(checkStatus, 15000);
+                  } else {
+                      // Après 5 minutes, forcer le rechargement
+                      window.location.reload();
+                  }
+              }
+              
+              // Premier check après 10 secondes
+              setTimeout(checkStatus, 10000);
+              
+              // Rechargement automatique après 30 secondes
+              setTimeout(() => {
+                  window.location.reload();
+              }, 30000);
           </script>
-        </body>
+      </body>
       </html>
     `);
   }
