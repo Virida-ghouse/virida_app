@@ -17,20 +17,38 @@ console.log(`Contenu du répertoire courant: ${fs.readdirSync(__dirname).join(',
 
 // Vérifier si le build React est complet
 function isBuildComplete() {
-  if (!fs.existsSync(distPath)) return false;
+  console.log('🔍 Vérification du build complet...');
+  
+  if (!fs.existsSync(distPath)) {
+    console.log('❌ Dossier dist n\'existe pas');
+    return false;
+  }
   
   const indexPath = path.join(distPath, 'index.html');
-  if (!fs.existsSync(indexPath)) return false;
+  if (!fs.existsSync(indexPath)) {
+    console.log('❌ Fichier index.html n\'existe pas');
+    return false;
+  }
   
   // Vérifier si les assets JS/CSS existent
   const assetsPath = path.join(distPath, 'assets');
-  if (!fs.existsSync(assetsPath)) return false;
+  if (!fs.existsSync(assetsPath)) {
+    console.log('❌ Dossier assets n\'existe pas');
+    return false;
+  }
   
   const assets = fs.readdirSync(assetsPath);
+  console.log(`📁 Assets trouvés: ${assets.join(', ')}`);
+  
   const hasJS = assets.some(file => file.endsWith('.js'));
   const hasCSS = assets.some(file => file.endsWith('.css'));
   
-  return hasJS && hasCSS;
+  console.log(`📝 JS trouvé: ${hasJS}, CSS trouvé: ${hasCSS}`);
+  
+  const isComplete = hasJS && hasCSS;
+  console.log(`✅ Build complet: ${isComplete}`);
+  
+  return isComplete;
 }
 
 if (!isBuildComplete()) {
