@@ -12,6 +12,7 @@ import AutomationRules from './components/automation/AutomationRules';
 import MonitoringView from './components/monitoring/MonitoringView';
 import EnergyManagement from './components/energy/EnergyManagement';
 import SettingsPanel from './components/settings/SettingsPanel';
+import ChatBot from './components/chatbot/ChatBot';
 import theme from './theme';
 
 function App() {
@@ -20,6 +21,14 @@ function App() {
   const [sidebarOpen, setSidebarOpen] = React.useState(true);
   const [currentView, setCurrentView] = React.useState('dashboard');
   const [configureOpen, setConfigureOpen] = React.useState(false);
+  
+  // Données des capteurs simulées pour EVE
+  const [sensorData] = React.useState({
+    temperature: 24.5,
+    humidity: 65,
+    light: 850,
+    soilMoisture: 45
+  });
   
   console.log('📊 État App:', { sidebarOpen, currentView, configureOpen });
 
@@ -84,6 +93,9 @@ function App() {
             {renderView()}
           </Box>
         </Box>
+        
+        {/* Chatbot EVE - Toujours visible */}
+        <ChatBot sensorData={sensorData} />
       </Box>
     </ThemeProvider>
   );
