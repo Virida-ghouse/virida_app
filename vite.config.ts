@@ -5,7 +5,8 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   optimizeDeps: {
-    include: ['three', '@react-three/fiber', '@react-three/drei']
+    include: ['three', '@react-three/fiber', '@react-three/drei'],
+    exclude: ['three-stdlib']
   },
   build: {
     target: 'es2020',
