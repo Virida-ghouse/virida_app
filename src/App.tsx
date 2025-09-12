@@ -1,102 +1,48 @@
 import React from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import { Box } from '@mui/material';
-import Dashboard from './components/dashboard/Dashboard';
-import Header from './components/layout/Header';
-import Sidebar from './components/layout/Sidebar';
-import PlantConfiguration from './components/plants/PlantConfiguration';
-import SystemStats from './components/statistics/SystemStats';
-import IrrigationSchedule from './components/schedules/IrrigationSchedule';
-import AutomationRules from './components/automation/AutomationRules';
-import MonitoringView from './components/monitoring/MonitoringView';
-import EnergyManagement from './components/energy/EnergyManagement';
-import SettingsPanel from './components/settings/SettingsPanel';
-import ChatBot from './components/chatbot/ChatBot';
+import { Box, CircularProgress } from '@mui/material';
+import MainApp from './components/MainApp';
+import AuthContainer from './components/auth/AuthContainer';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
 import theme from './theme';
+
+// Composant pour gérer l'état d'authentification
+const AppContent: React.FC = () => {
+  const { isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          minHeight: '100vh',
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        }}
+      >
+        <CircularProgress size={60} sx={{ color: '#FFFFFF' }} />
+      </Box>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <AuthContainer />;
+  }
+
+  return <MainApp />;
+};
 
 function App() {
   console.log('🎯 App.tsx - Composant App en cours de rendu');
-  
-  const [sidebarOpen, setSidebarOpen] = React.useState(true);
-  const [currentView, setCurrentView] = React.useState('dashboard');
-  const [configureOpen, setConfigureOpen] = React.useState(false);
-  
-  // Données des capteurs simulées pour EVE
-  const [sensorData] = React.useState({
-    temperature: 24.5,
-    humidity: 65,
-    light: 850,
-    soilMoisture: 45
-  });
-  
-  console.log('📊 État App:', { sidebarOpen, currentView, configureOpen });
-
-  const renderView = () => {
-    switch (currentView) {
-      case 'dashboard':
-        return <Dashboard />;
-      case 'plants':
-        return (
-          <>
-            <PlantConfiguration
-              open={configureOpen}
-              onClose={() => setConfigureOpen(false)}
-            />
-            <SystemStats />
-          </>
-        );
-      case 'irrigation':
-        return <IrrigationSchedule />;
-      case 'automation':
-        return <AutomationRules />;
-      case 'monitoring':
-        return <MonitoringView />;
-      case 'energy':
-        return <EnergyManagement />;
-      case 'settings':
-        return <SettingsPanel />;
-      case 'reports':
-        return <Box p={3}>Cette fonctionnalité sera bientôt disponible</Box>;
-      default:
-        return <Dashboard />;
-    }
-  };
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box sx={{ 
-        display: 'flex',
-        minHeight: '100vh',
-        background: '#FFFFFF',
-      }}>
-        <Sidebar
-          open={sidebarOpen}
-          onToggle={() => setSidebarOpen(!sidebarOpen)}
-          currentView={currentView}
-          onViewChange={setCurrentView}
-        />
-        <Box
-          sx={{
-            flexGrow: 1,
-            marginLeft: sidebarOpen ? '240px' : '72px',
-            transition: (theme) =>
-              theme.transitions.create('margin', {
-                easing: theme.transitions.easing.sharp,
-                duration: theme.transitions.duration.enteringScreen,
-              }),
-          }}
-        >
-          <Header />
-          <Box sx={{ p: 3 }}>
-            {renderView()}
-          </Box>
-        </Box>
-        
-        {/* Chatbot EVE - Toujours visible */}
-        <ChatBot sensorData={sensorData} />
-      </Box>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
     </ThemeProvider>
   );
 }
