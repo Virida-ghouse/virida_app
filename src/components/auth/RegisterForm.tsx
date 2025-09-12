@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
 import {
   Box,
-  Card,
-  CardContent,
   TextField,
   Button,
   Typography,
-  Alert,
   InputAdornment,
   IconButton,
   CircularProgress,
@@ -22,25 +19,18 @@ import {
   Person,
   PersonAdd
 } from '@mui/icons-material';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface RegisterFormProps {
-  onRegister: (userData: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    password: string;
-  }) => Promise<void>;
-  onSwitchToLogin: () => void;
-  loading?: boolean;
-  error?: string;
+  onToggleMode: () => void;
+  onError: (error: string) => void;
 }
 
 const RegisterForm: React.FC<RegisterFormProps> = ({
-  onRegister,
-  onSwitchToLogin,
-  loading = false,
-  error
+  onToggleMode,
+  onError
 }) => {
+  const { register } = useAuth();
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -51,6 +41,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [acceptTerms, setAcceptTerms] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [validationErrors, setValidationErrors] = useState<{
     [key: string]: string;
   }>({});
@@ -107,37 +98,23 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
     }
 
     try {
-      await onRegister({
+      setIsLoading(true);
+      await register({
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,
         password: formData.password
       });
-    } catch (err) {
+    } catch (err: any) {
       console.error('Erreur d\'inscription:', err);
+      onError(err.message || 'Erreur lors de l\'inscription');
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        minHeight: '100vh',
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        padding: 2
-      }}
-    >
-      <Card
-        sx={{
-          maxWidth: 450,
-          width: '100%',
-          borderRadius: 3,
-          boxShadow: '0 20px 40px rgba(0,0,0,0.1)'
-        }}
-      >
-        <CardContent sx={{ p: 4 }}>
+    <Box>
           <Box sx={{ textAlign: 'center', mb: 3 }}>
             <Typography
               variant="h4"
@@ -155,11 +132,6 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
             </Typography>
           </Box>
 
-          {error && (
-            <Alert severity="error" sx={{ mb: 2 }}>
-              {error}
-            </Alert>
-          )}
 
           <form onSubmit={handleSubmit}>
             <Box sx={{ display: 'flex', gap: 1 }}>
@@ -171,7 +143,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
                 error={!!validationErrors.firstName}
                 helperText={validationErrors.firstName}
                 margin="normal"
-                disabled={loading}
+                disabled={isLoading}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
@@ -189,7 +161,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
                 error={!!validationErrors.lastName}
                 helperText={validationErrors.lastName}
                 margin="normal"
-                disabled={loading}
+                disabled={isLoading}
               />
             </Box>
 
@@ -202,7 +174,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
               error={!!validationErrors.email}
               helperText={validationErrors.email}
               margin="normal"
-              disabled={loading}
+              disabled={isLoading}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -221,7 +193,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
               error={!!validationErrors.password}
               helperText={validationErrors.password}
               margin="normal"
-              disabled={loading}
+              disabled={isLoading}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -233,7 +205,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
                     <IconButton
                       onClick={() => setShowPassword(!showPassword)}
                       edge="end"
-                      disabled={loading}
+                      disabled={isLoading}
                     >
                       {showPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
@@ -251,7 +223,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
               error={!!validationErrors.confirmPassword}
               helperText={validationErrors.confirmPassword}
               margin="normal"
-              disabled={loading}
+              disabled={isLoading}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -263,7 +235,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
                     <IconButton
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                       edge="end"
-                      disabled={loading}
+                      disabled={isLoading}
                     >
                       {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
@@ -277,7 +249,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
                 <Checkbox
                   checked={acceptTerms}
                   onChange={(e) => setAcceptTerms(e.target.checked)}
-                  disabled={loading}
+                  disabled={isLoading}
                   color="primary"
                 />
               }
@@ -299,8 +271,8 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
               fullWidth
               variant="contained"
               size="large"
-              disabled={loading}
-              startIcon={loading ? <CircularProgress size={20} /> : <PersonAdd />}
+              disabled={isLoading}
+              startIcon={isLoading ? <CircularProgress size={20} /> : <PersonAdd />}
               sx={{
                 mt: 3,
                 mb: 2,
@@ -311,7 +283,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
                 }
               }}
             >
-              {loading ? 'Création du compte...' : 'Créer mon compte'}
+              {isLoading ? 'Création du compte...' : 'Créer mon compte'}
             </Button>
 
             <Box sx={{ textAlign: 'center' }}>
@@ -320,8 +292,8 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
                 <Link
                   component="button"
                   type="button"
-                  onClick={onSwitchToLogin}
-                  disabled={loading}
+                  onClick={onToggleMode}
+                  disabled={isLoading}
                   sx={{
                     color: '#2E7D32',
                     textDecoration: 'none',
@@ -335,8 +307,6 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
               </Typography>
             </Box>
           </form>
-        </CardContent>
-      </Card>
     </Box>
   );
 };
