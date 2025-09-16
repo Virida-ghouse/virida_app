@@ -23,22 +23,36 @@ import MenuIcon from '@mui/icons-material/Menu';
 
 const StyledDrawer = styled(Drawer)(({ theme }) => ({
   '& .MuiDrawer-paper': {
-    background: '#2AD388',
-    border: 'none',
     width: 240,
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
+    background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(46, 125, 50, 0.05) 100%)',
+    backdropFilter: 'blur(10px)',
+    border: 'none',
+    borderRight: 'none',
+    boxShadow: 'none',
+    transition: 'all 0.3s ease',
+    '&::before': {
+      content: '""',
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      background: `
+        radial-gradient(circle at 20% 20%, rgba(46, 125, 50, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(56, 142, 60, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 40% 60%, rgba(67, 160, 71, 0.02) 0%, transparent 50%)
+      `,
+      pointerEvents: 'none',
+    },
   },
 }));
 
 const StyledListItem = styled(ListItem)<{ active?: boolean }>(({ theme, active }) => ({
-  margin: '8px 16px',
+  margin: '2px 16px',
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: active ? 'rgba(5, 46, 28, 0.2)' : 'transparent',
+  backgroundColor: active ? '#2E7D32' : 'transparent',
   '&:hover': {
-    backgroundColor: 'rgba(5, 46, 28, 0.1)',
+    backgroundColor: 'rgba(46, 125, 50, 0.1)',
   },
 }));
 
@@ -52,7 +66,6 @@ interface SidebarProps {
 const menuItems = [
   { id: 'dashboard', label: 'Dashboard', icon: <DashboardIcon /> },
   { id: 'plants', label: 'Plants', icon: <LocalFloristIcon /> },
-  { id: 'monitoring', label: 'Monitoring', icon: <ShowChartIcon /> },
   { id: 'irrigation', label: 'Irrigation', icon: <WaterDropIcon /> },
   { id: 'automation', label: 'Automation', icon: <AutomationIcon /> },
   { id: 'energy', label: 'Energy', icon: <BoltIcon /> },
@@ -74,6 +87,9 @@ const Sidebar: React.FC<SidebarProps> = ({
       open={open}
       sx={{
         width: open ? 240 : 72,
+        flexShrink: 0,
+        position: 'fixed',
+        zIndex: 1200,
         transition: theme.transitions.create('width', {
           easing: theme.transitions.easing.sharp,
           duration: theme.transitions.duration.enteringScreen,
@@ -81,6 +97,8 @@ const Sidebar: React.FC<SidebarProps> = ({
         '& .MuiDrawer-paper': {
           width: open ? 240 : 72,
           overflowX: 'hidden',
+          position: 'fixed',
+          height: '100vh',
         },
       }}
     >
@@ -112,7 +130,7 @@ const Sidebar: React.FC<SidebarProps> = ({
               <ListItemIcon
                 sx={{
                   minWidth: open ? 36 : 'auto',
-                  color: currentView === item.id ? '#121A21' : 'rgba(18, 26, 33, 0.7)',
+                  color: currentView === item.id ? '#FFFFFF' : 'rgba(46, 125, 50, 0.7)',
                 }}
               >
                 {item.icon}
@@ -122,7 +140,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                   primary={item.label}
                   sx={{
                     color:
-                      currentView === item.id ? '#121A21' : 'rgba(18, 26, 33, 0.7)',
+                      currentView === item.id ? '#FFFFFF' : 'rgba(46, 125, 50, 0.7)',
                   }}
                 />
               )}

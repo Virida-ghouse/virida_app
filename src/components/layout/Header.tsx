@@ -21,10 +21,25 @@ import PersonIcon from '@mui/icons-material/Person';
 import { styled } from '@mui/material/styles';
 import { useAuth } from '../../contexts/AuthContext';
 
-const StyledAppBar = styled(AppBar)(() => ({
-  background: '#FFFFFF',
-  boxShadow: '0 2px 10px rgba(0, 0, 0, 0.08)',
-  border: '1px solid rgba(0, 0, 0, 0.1)',
+const StyledAppBar = styled(AppBar)(({ theme }) => ({
+  background: 'linear-gradient(135deg, #2E7D32 0%, #388E3C 100%)',
+  backdropFilter: 'blur(10px)',
+  border: 'none',
+  borderBottom: '1px solid rgba(46, 125, 50, 0.2)',
+  boxShadow: '0 4px 20px rgba(46, 125, 50, 0.3)',
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    background: `
+      radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 50%)
+    `,
+    pointerEvents: 'none',
+  },
 }));
 
 const LogoBox = styled(Box)(({ theme }) => ({
@@ -32,11 +47,11 @@ const LogoBox = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   gap: theme.spacing(1),
   '& .logo-icon': {
-    color: '#2AD388',
+    color: '#FFFFFF',
     fontSize: '2rem',
   },
   '& .logo-text': {
-    color: '#121A21',
+    color: '#FFFFFF',
     fontWeight: 700,
     fontSize: '1.5rem',
   },
@@ -75,17 +90,23 @@ const Header: React.FC = () => {
         </LogoBox>
         <Box sx={{ flexGrow: 1 }} />
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <IconButton sx={{ color: '#121A21' }}>
+          <IconButton
+            color="inherit"
+            sx={{ color: '#FFFFFF' }}
+          >
             <NotificationsIcon />
           </IconButton>
-          <IconButton sx={{ color: '#121A21' }}>
+          <IconButton
+            color="inherit"
+            sx={{ color: '#FFFFFF' }}
+          >
             <SettingsIcon />
           </IconButton>
           
           {user && (
             <>
               <Box sx={{ ml: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
-                <Typography variant="body2" sx={{ color: '#121A21', fontWeight: 500 }}>
+                <Typography variant="body2" sx={{ color: '#FFFFFF', fontWeight: 500 }}>
                   {user.firstName} {user.lastName}
                 </Typography>
                 <IconButton onClick={handleClick} size="small">

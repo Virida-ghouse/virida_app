@@ -17,9 +17,11 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { useViridaStore } from '../../store/useViridaStore';
 
 const StyledCard = styled(Card)(({ theme }) => ({
-  background: '#FFFFFF',
-  boxShadow: '0 2px 10px rgba(0, 0, 0, 0.08)',
-  border: '1px solid rgba(0, 0, 0, 0.1)',
+  background: 'rgba(255, 255, 255, 0.9)',
+  backdropFilter: 'blur(10px)',
+  boxShadow: '0 8px 32px rgba(46, 125, 50, 0.1)',
+  border: '1px solid rgba(46, 125, 50, 0.2)',
+  borderRadius: '16px',
   marginBottom: theme.spacing(2),
 }));
 
@@ -41,12 +43,19 @@ const AutomationRules: React.FC = () => {
                   <Switch
                     checked={rule.enabled}
                     onChange={() => toggleAutomationRule(rule.id)}
-                    color="primary"
+                    sx={{
+                      '& .MuiSwitch-switchBase.Mui-checked': {
+                        color: '#2E7D32',
+                      },
+                      '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                        backgroundColor: '#2E7D32',
+                      },
+                    }}
                   />
-                  <IconButton size="small">
+                  <IconButton size="small" sx={{ color: '#2E7D32' }}>
                     <EditIcon />
                   </IconButton>
-                  <IconButton size="small">
+                  <IconButton size="small" sx={{ color: '#d32f2f' }}>
                     <DeleteIcon />
                   </IconButton>
                 </Box>

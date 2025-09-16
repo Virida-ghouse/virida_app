@@ -7,7 +7,6 @@ import PlantConfiguration from './plants/PlantConfiguration';
 import SystemStats from './statistics/SystemStats';
 import IrrigationSchedule from './schedules/IrrigationSchedule';
 import AutomationRules from './automation/AutomationRules';
-import MonitoringView from './monitoring/MonitoringView';
 import EnergyManagement from './energy/EnergyManagement';
 import SettingsPanel from './settings/SettingsPanel';
 import ChatBot from './chatbot/ChatBot';
@@ -47,8 +46,6 @@ const MainApp: React.FC = () => {
         return <IrrigationSchedule />;
       case 'automation':
         return <AutomationRules />;
-      case 'monitoring':
-        return <MonitoringView />;
       case 'energy':
         return <EnergyManagement />;
       case 'settings':
@@ -65,6 +62,7 @@ const MainApp: React.FC = () => {
       display: 'flex',
       minHeight: '100vh',
       background: '#FFFFFF',
+      position: 'relative',
     }}>
       <Sidebar
         open={sidebarOpen}
@@ -75,7 +73,7 @@ const MainApp: React.FC = () => {
       <Box
         sx={{
           flexGrow: 1,
-          marginLeft: sidebarOpen ? '240px' : '72px',
+          ml: sidebarOpen ? '240px' : '72px',
           transition: (theme) =>
             theme.transitions.create('margin', {
               easing: theme.transitions.easing.sharp,
@@ -84,7 +82,7 @@ const MainApp: React.FC = () => {
         }}
       >
         <Header />
-        <Box sx={{ p: 3 }}>
+        <Box sx={{ p: 0 }}>
           {renderView()}
         </Box>
       </Box>
