@@ -7,6 +7,8 @@ import {
   Box,
   LinearProgress,
   Tooltip,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import {
@@ -58,6 +60,10 @@ const ResourceProgress = styled(Box)(({ theme }) => ({
 const COLORS = ['#2E7D32', '#388E3C', '#4CAF50', '#66BB6A'];
 
 const SystemStats: React.FC = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isTablet = useMediaQuery(theme.breakpoints.down('lg'));
+  
   // Exemple de données pour les statistiques
   const resourceUsage = [
     { name: 'Water', value: 75, icon: <OpacityIcon />, color: '#2E7D32' },
@@ -83,19 +89,26 @@ const SystemStats: React.FC = () => {
   ];
 
   return (
-    <Grid container spacing={3}>
+    <Grid container spacing={isMobile ? 2 : 3}>
       <Grid item xs={12} md={8}>
         <StyledCard>
           <CardContent>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant={isMobile ? "h6" : "h6"} gutterBottom>
               Weekly Resource Usage
             </Typography>
-            <Box height={300}>
+            <Box height={isMobile ? 250 : 300}>
               <ResponsiveContainer>
                 <BarChart data={weeklyData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.1)" />
-                  <XAxis dataKey="name" stroke="rgba(0,0,0,0.5)" />
-                  <YAxis stroke="rgba(0,0,0,0.5)" />
+                  <XAxis 
+                    dataKey="name" 
+                    stroke="rgba(0,0,0,0.5)" 
+                    fontSize={isMobile ? 12 : 14}
+                  />
+                  <YAxis 
+                    stroke="rgba(0,0,0,0.5)" 
+                    fontSize={isMobile ? 12 : 14}
+                  />
                   <Bar dataKey="water" fill="#2E7D32" stackId="a" />
                   <Bar dataKey="energy" fill="#388E3C" stackId="a" />
                   <Bar dataKey="temp" fill="#4CAF50" stackId="a" />

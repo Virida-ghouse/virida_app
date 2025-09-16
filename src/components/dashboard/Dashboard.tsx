@@ -1,5 +1,5 @@
 import React from 'react';
-import { Paper, Box, Typography } from '@mui/material';
+import { Paper, Box, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import GreenhouseModel from '../3d/GreenhouseModel';
 import EnhancedSensorWidget from './EnhancedSensorWidget';
@@ -29,6 +29,10 @@ const GridOverlay = styled(Box)(() => ({
 }));
 
 const Dashboard: React.FC = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isTablet = useMediaQuery(theme.breakpoints.down('lg'));
+  
   const mockSensors = [
     { 
       id: 1, 
@@ -39,7 +43,8 @@ const Dashboard: React.FC = () => {
       trend: [23.2, 23.8, 24.1, 24.5, 24.3, 24.7, 24.5],
       min: 18,
       max: 30,
-      target: 24
+      target: 24,
+      position: { x: 0, y: 0, z: 0 }
     },
     { 
       id: 2, 
@@ -50,7 +55,8 @@ const Dashboard: React.FC = () => {
       trend: [62, 64, 66, 65, 67, 65, 65],
       min: 40,
       max: 80,
-      target: 60
+      target: 60,
+      position: { x: 1, y: 0, z: 0 }
     },
     { 
       id: 3, 
@@ -61,7 +67,8 @@ const Dashboard: React.FC = () => {
       trend: [6.3, 6.4, 6.5, 6.6, 6.5, 6.4, 6.5],
       min: 5.5,
       max: 7.5,
-      target: 6.5
+      target: 6.5,
+      position: { x: 0, y: 1, z: 0 }
     },
     { 
       id: 4, 
@@ -72,7 +79,8 @@ const Dashboard: React.FC = () => {
       trend: [820, 840, 860, 850, 870, 850, 850],
       min: 200,
       max: 1000,
-      target: 800
+      target: 800,
+      position: { x: 1, y: 1, z: 0 }
     },
   ];
 
@@ -87,29 +95,63 @@ const Dashboard: React.FC = () => {
           Greenhouse Monitor
         </Typography>
         
-        {/* Layout with widgets on sides and 3D model in center */}
-        <Box sx={{ display: 'flex', gap: 0, height: '80vh', alignItems: 'stretch' }}>
-          
-          {/* Left Side Widgets */}
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: '300px' }}>
-            <EnhancedSensorWidget sensor={mockSensors[0]} /> {/* Temperature */}
-            <EnhancedSensorWidget sensor={mockSensors[1]} /> {/* Humidity */}
-          </Box>
-          
-          {/* Central 3D Model */}
-          <Box sx={{ flex: 1, position: 'relative' }}>
-            <StyledPaper sx={{ p: 2, height: '100%', position: 'relative' }}>
+        {/* Responsive Layout */}
+        {isMobile ? (
+          // Mobile Layout: 3D Model first, then widgets
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            {/* 3D Model for Mobile */}
+            <StyledPaper sx={{ p: 2, height: '300px', position: 'relative' }}>
               <GreenhouseModel />
             </StyledPaper>
+            
+            {/* Sensor Widgets Grid for Mobile */}
+            <Box sx={{ 
+              display: 'grid', 
+              gridTemplateColumns: '1fr 1fr', 
+              gap: 1
+            }}>
+              <EnhancedSensorWidget sensor={mockSensors[0]} />
+              <EnhancedSensorWidget sensor={mockSensors[1]} />
+              <EnhancedSensorWidget sensor={mockSensors[2]} />
+              <EnhancedSensorWidget sensor={mockSensors[3]} />
+            </Box>
           </Box>
-          
-          {/* Right Side Widgets */}
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: '300px' }}>
-            <EnhancedSensorWidget sensor={mockSensors[2]} /> {/* pH */}
-            <EnhancedSensorWidget sensor={mockSensors[3]} /> {/* Light */}
+        ) : isTablet ? (
+          // Tablet Layout: 2x2 grid with 3D model above
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <StyledPaper sx={{ p: 2, height: '300px', position: 'relative' }}>
+              <GreenhouseModel />
+            </StyledPaper>
+            <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1 }}>
+              <EnhancedSensorWidget sensor={mockSensors[0]} />
+              <EnhancedSensorWidget sensor={mockSensors[1]} />
+              <EnhancedSensorWidget sensor={mockSensors[2]} />
+              <EnhancedSensorWidget sensor={mockSensors[3]} />
+            </Box>
           </Box>
-          
-        </Box>
+        ) : (
+          // Desktop Layout: Original side-by-side layout
+          <Box sx={{ display: 'flex', gap: 0, height: '80vh', alignItems: 'stretch' }}>
+            {/* Left Side Widgets */}
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: '300px' }}>
+              <EnhancedSensorWidget sensor={mockSensors[0]} />
+              <EnhancedSensorWidget sensor={mockSensors[1]} />
+            </Box>
+            
+            {/* Central 3D Model */}
+            <Box sx={{ flex: 1, position: 'relative' }}>
+              <StyledPaper sx={{ p: 2, height: '100%', position: 'relative' }}>
+                <GreenhouseModel />
+              </StyledPaper>
+            </Box>
+            
+            {/* Right Side Widgets */}
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: '300px' }}>
+              <EnhancedSensorWidget sensor={mockSensors[2]} />
+              <EnhancedSensorWidget sensor={mockSensors[3]} />
+            </Box>
+          </Box>
+        )}
       </Box>
     </Box>
   );

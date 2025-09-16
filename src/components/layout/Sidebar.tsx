@@ -9,11 +9,11 @@ import {
   Box,
   useTheme,
   Tooltip,
+  useMediaQuery,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import LocalFloristIcon from '@mui/icons-material/LocalFlorist';
-import ShowChartIcon from '@mui/icons-material/ShowChart';
 import WaterDropIcon from '@mui/icons-material/WaterDrop';
 import SettingsIcon from '@mui/icons-material/Settings';
 import AutomationIcon from '@mui/icons-material/SmartToy';
@@ -80,22 +80,28 @@ const Sidebar: React.FC<SidebarProps> = ({
   onViewChange,
 }) => {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   return (
     <StyledDrawer
-      variant="permanent"
-      open={open}
+      variant={isMobile ? "temporary" : "permanent"}
+      open={isMobile ? open : true}
+      onClose={onToggle}
+      ModalProps={{
+        keepMounted: true, // Better open performance on mobile.
+      }}
       sx={{
-        width: open ? 240 : 72,
+        width: isMobile ? 0 : (open ? 240 : 72),
         flexShrink: 0,
         position: 'fixed',
         zIndex: 1200,
+        display: isMobile ? (open ? 'block' : 'none') : 'block',
         transition: theme.transitions.create('width', {
           easing: theme.transitions.easing.sharp,
           duration: theme.transitions.duration.enteringScreen,
         }),
         '& .MuiDrawer-paper': {
-          width: open ? 240 : 72,
+          width: isMobile ? 280 : (open ? 240 : 72),
           overflowX: 'hidden',
           position: 'fixed',
           height: '100vh',
@@ -124,7 +130,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           >
             <StyledListItem
               button
-              active={currentView === item.id ? true : undefined}
+              active={currentView === item.id}
               onClick={() => onViewChange(item.id)}
             >
               <ListItemIcon

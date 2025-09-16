@@ -29,7 +29,7 @@ const AuthContainer: React.FC = () => {
       <Box
         sx={{
           width: 280,
-          background: 'linear-gradient(180deg, #22c55e 0%, #16a34a 100%)',
+          background: 'linear-gradient(180deg, #2E7D32 0%, #1B5E20 100%)',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',

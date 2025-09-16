@@ -7,9 +7,8 @@ import {
   Switch,
   IconButton,
   List,
-  ListItem,
-  ListItemText,
-  ListItemSecondaryAction,
+  useTheme,
+  useMediaQuery,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import EditIcon from '@mui/icons-material/Edit';
@@ -27,47 +26,91 @@ const StyledCard = styled(Card)(({ theme }) => ({
 
 const AutomationRules: React.FC = () => {
   const { automationRules, toggleAutomationRule } = useViridaStore();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   return (
-    <Box p={3}>
-      <Typography variant="h4" gutterBottom>
+    <Box p={isMobile ? 2 : 3}>
+      <Typography variant={isMobile ? "h5" : "h4"} gutterBottom>
         Automation Rules
       </Typography>
       <List>
         {automationRules.map((rule) => (
           <StyledCard key={rule.id}>
             <CardContent>
-              <Box display="flex" justifyContent="space-between" alignItems="center">
-                <Typography variant="h6">{rule.name}</Typography>
+              {isMobile ? (
+                // Mobile Layout: Stacked
                 <Box>
-                  <Switch
-                    checked={rule.enabled}
-                    onChange={() => toggleAutomationRule(rule.id)}
-                    sx={{
-                      '& .MuiSwitch-switchBase.Mui-checked': {
-                        color: '#2E7D32',
-                      },
-                      '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                        backgroundColor: '#2E7D32',
-                      },
-                    }}
-                  />
-                  <IconButton size="small" sx={{ color: '#2E7D32' }}>
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton size="small" sx={{ color: '#d32f2f' }}>
-                    <DeleteIcon />
-                  </IconButton>
+                  <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={2}>
+                    <Typography variant="h6" sx={{ flex: 1, pr: 1 }}>
+                      {rule.name}
+                    </Typography>
+                    <Switch
+                      checked={rule.enabled}
+                      onChange={() => toggleAutomationRule(rule.id)}
+                      sx={{
+                        '& .MuiSwitch-switchBase.Mui-checked': {
+                          color: '#2E7D32',
+                        },
+                        '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                          backgroundColor: '#2E7D32',
+                        },
+                      }}
+                    />
+                  </Box>
+                  <Box mb={2}>
+                    <Typography variant="body2" color="text.secondary" gutterBottom>
+                      <strong>Condition:</strong> {rule.condition}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      <strong>Action:</strong> {rule.action}
+                    </Typography>
+                  </Box>
+                  <Box display="flex" justifyContent="flex-end" gap={1}>
+                    <IconButton size="small" sx={{ color: '#2E7D32' }}>
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton size="small" sx={{ color: '#d32f2f' }}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </Box>
                 </Box>
-              </Box>
-              <Box mt={1}>
-                <Typography variant="body2" color="text.secondary">
-                  Condition: {rule.condition}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Action: {rule.action}
-                </Typography>
-              </Box>
+              ) : (
+                // Desktop Layout: Side by side
+                <Box>
+                  <Box display="flex" justifyContent="space-between" alignItems="center">
+                    <Typography variant="h6">{rule.name}</Typography>
+                    <Box>
+                      <Switch
+                        checked={rule.enabled}
+                        onChange={() => toggleAutomationRule(rule.id)}
+                        sx={{
+                          '& .MuiSwitch-switchBase.Mui-checked': {
+                            color: '#2E7D32',
+                          },
+                          '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                            backgroundColor: '#2E7D32',
+                          },
+                        }}
+                      />
+                      <IconButton size="small" sx={{ color: '#2E7D32' }}>
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton size="small" sx={{ color: '#d32f2f' }}>
+                        <DeleteIcon />
+                      </IconButton>
+                    </Box>
+                  </Box>
+                  <Box mt={1}>
+                    <Typography variant="body2" color="text.secondary">
+                      Condition: {rule.condition}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Action: {rule.action}
+                    </Typography>
+                  </Box>
+                </Box>
+              )}
             </CardContent>
           </StyledCard>
         ))}
