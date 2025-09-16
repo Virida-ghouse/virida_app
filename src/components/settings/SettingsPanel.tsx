@@ -28,6 +28,8 @@ import {
   InputLabel,
   Chip,
   styled,
+  useTheme,
+  useMediaQuery,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -53,10 +55,11 @@ interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
   value: number;
+  isMobile?: boolean;
 }
 
 const TabPanel = (props: TabPanelProps) => {
-  const { children, value, index, ...other } = props;
+  const { children, value, index, isMobile = false, ...other } = props;
 
   return (
     <div
@@ -66,12 +69,15 @@ const TabPanel = (props: TabPanelProps) => {
       aria-labelledby={`settings-tab-${index}`}
       {...other}
     >
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+      {value === index && <Box sx={{ p: isMobile ? 2 : 3 }}>{children}</Box>}
     </div>
   );
 };
 
 const SettingsPanel: React.FC = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  
   const [activeTab, setActiveTab] = useState(0);
   const [openDialog, setOpenDialog] = useState(false);
   const [dialogType, setDialogType] = useState('');
@@ -132,14 +138,15 @@ const SettingsPanel: React.FC = () => {
   };
 
   return (
-    <Box p={3}>
+    <Box p={isMobile ? 2 : 3}>
       {/* Header */}
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-        <Typography variant="h4">Settings</Typography>
+      <Box display="flex" flexDirection={isMobile ? "column" : "row"} justifyContent="space-between" alignItems={isMobile ? "flex-start" : "center"} mb={3} gap={isMobile ? 2 : 0}>
+        <Typography variant={isMobile ? "h5" : "h4"}>Settings</Typography>
         <Button
           variant="contained"
           startIcon={<SaveIcon />}
           onClick={handleSaveSettings}
+          fullWidth={isMobile}
           sx={{
             backgroundColor: '#2E7D32',
             '&:hover': {
@@ -165,19 +172,25 @@ const SettingsPanel: React.FC = () => {
             onChange={handleTabChange}
             variant="scrollable"
             scrollButtons="auto"
+            sx={{
+              '& .MuiTab-root': {
+                minWidth: isMobile ? 60 : 'auto',
+                fontSize: isMobile ? '0.75rem' : '0.875rem',
+              },
+            }}
           >
-            <Tab icon={<LanguageIcon />} label="General" />
-            <Tab icon={<NotificationsIcon />} label="Notifications" />
-            <Tab icon={<SecurityIcon />} label="Security" />
-            <Tab icon={<DisplaySettingsIcon />} label="Display" />
-            <Tab icon={<BackupIcon />} label="Backup" />
-            <Tab icon={<StorageIcon />} label="Storage" />
+            <Tab icon={<LanguageIcon />} label={isMobile ? "" : "General"} />
+            <Tab icon={<NotificationsIcon />} label={isMobile ? "" : "Notifications"} />
+            <Tab icon={<SecurityIcon />} label={isMobile ? "" : "Security"} />
+            <Tab icon={<DisplaySettingsIcon />} label={isMobile ? "" : "Display"} />
+            <Tab icon={<BackupIcon />} label={isMobile ? "" : "Backup"} />
+            <Tab icon={<StorageIcon />} label={isMobile ? "" : "Storage"} />
           </Tabs>
         </Box>
 
         {/* General Settings */}
-        <TabPanel value={activeTab} index={0}>
-          <Grid container spacing={3}>
+        <TabPanel value={activeTab} index={0} isMobile={isMobile}>
+          <Grid container spacing={isMobile ? 2 : 3}>
             <Grid item xs={12} md={6}>
               <FormControl fullWidth>
                 <InputLabel>Language</InputLabel>
@@ -233,7 +246,7 @@ const SettingsPanel: React.FC = () => {
         </TabPanel>
 
         {/* Notification Settings */}
-        <TabPanel value={activeTab} index={1}>
+        <TabPanel value={activeTab} index={1} isMobile={isMobile}>
           <List>
             <ListItem>
               <ListItemText
@@ -299,7 +312,7 @@ const SettingsPanel: React.FC = () => {
         </TabPanel>
 
         {/* Security Settings */}
-        <TabPanel value={activeTab} index={2}>
+        <TabPanel value={activeTab} index={2} isMobile={isMobile}>
           <List>
             <ListItem>
               <ListItemText
@@ -342,8 +355,8 @@ const SettingsPanel: React.FC = () => {
         </TabPanel>
 
         {/* Display Settings */}
-        <TabPanel value={activeTab} index={3}>
-          <Grid container spacing={3}>
+        <TabPanel value={activeTab} index={3} isMobile={isMobile}>
+          <Grid container spacing={isMobile ? 2 : 3}>
             <Grid item xs={12} md={6}>
               <FormControl fullWidth>
                 <InputLabel>Theme</InputLabel>
@@ -387,7 +400,7 @@ const SettingsPanel: React.FC = () => {
         </TabPanel>
 
         {/* Backup Settings */}
-        <TabPanel value={activeTab} index={4}>
+        <TabPanel value={activeTab} index={4} isMobile={isMobile}>
           <List>
             <ListItem>
               <ListItemText
@@ -450,7 +463,7 @@ const SettingsPanel: React.FC = () => {
         </TabPanel>
 
         {/* Storage Settings */}
-        <TabPanel value={activeTab} index={5}>
+        <TabPanel value={activeTab} index={5} isMobile={isMobile}>
           <List>
             <ListItem>
               <ListItemText

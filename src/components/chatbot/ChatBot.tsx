@@ -139,24 +139,24 @@ const ChatBot: React.FC<ChatBotProps> = ({ sensorData }) => {
     }
   };
 
-  if (!isOpen) {
-    return (
-      <button
-        onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 bg-green-800 hover:bg-green-900 text-white rounded-full p-4 shadow-lg transition-all duration-300 hover:scale-110 z-50"
-        title="Discuter avec EVE"
-      >
-        <MessageCircle size={24} />
-      </button>
-    );
-  }
-
   return (
-    <div className={`fixed bottom-6 right-6 bg-white rounded-lg shadow-2xl border border-gray-200 z-50 transition-all duration-300 ${
-      isMinimized ? 'w-80 h-16' : 'w-96 h-[500px]'
-    }`}>
-      {/* Header */}
-      <div className="bg-gradient-to-r from-green-800 to-green-900 text-white p-4 rounded-t-lg flex items-center justify-between">
+    <div className="fixed bottom-20 right-4 z-50">
+      {/* Chat Toggle Button */}
+      {!isOpen && (
+        <button
+          onClick={() => setIsOpen(true)}
+          className="bg-green-600 hover:bg-green-700 text-white p-4 rounded-full shadow-lg transition-all duration-300 transform hover:scale-110"
+          aria-label="Ouvrir le chat avec EVE"
+        >
+          <MessageCircle size={24} />
+        </button>
+      )}
+
+      {/* Chat Window */}
+      {isOpen && (
+        <div className="bg-white rounded-lg shadow-xl w-80 max-w-sm">
+          {/* Header */}
+          <div className="bg-gradient-to-r from-green-800 to-green-900 text-white p-4 rounded-t-lg flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
             <span className="text-green-800 font-bold text-sm">🤖</span>
@@ -245,6 +245,8 @@ const ChatBot: React.FC<ChatBotProps> = ({ sensorData }) => {
             </div>
           </div>
         </>
+      )}
+        </div>
       )}
     </div>
   );

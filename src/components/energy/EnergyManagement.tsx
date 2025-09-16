@@ -17,6 +17,8 @@ import {
   Slider,
   Tooltip,
   styled,
+  useTheme,
+  useMediaQuery,
 } from '@mui/material';
 import {
   LineChart,
@@ -60,6 +62,10 @@ const MetricCard = styled(Paper)(({ theme }) => ({
 }));
 
 const EnergyManagement: React.FC = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isTablet = useMediaQuery(theme.breakpoints.down('lg'));
+  
   const [selectedTimeRange, setSelectedTimeRange] = useState('24h');
   const [autoMode, setAutoMode] = useState(true);
   const [energyData, setEnergyData] = useState({
@@ -128,12 +134,12 @@ const EnergyManagement: React.FC = () => {
   const COLORS = ['#2E7D32', '#388E3C', '#4CAF50', '#66BB6A', '#81C784'];
 
   return (
-    <Box p={3}>
+    <Box p={isMobile ? 2 : 3}>
       {/* Header */}
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-        <Typography variant="h4">Energy Management</Typography>
-        <Box display="flex" alignItems="center" gap={2}>
-          <FormControl variant="outlined" size="small">
+      <Box display="flex" flexDirection={isMobile ? "column" : "row"} justifyContent="space-between" alignItems={isMobile ? "flex-start" : "center"} mb={3} gap={isMobile ? 2 : 0}>
+        <Typography variant={isMobile ? "h5" : "h4"}>Energy Management</Typography>
+        <Box display="flex" flexDirection={isMobile ? "column" : "row"} alignItems={isMobile ? "flex-start" : "center"} gap={2}>
+          <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }}>
             <InputLabel>Time Range</InputLabel>
             <Select
               value={selectedTimeRange}
@@ -145,9 +151,11 @@ const EnergyManagement: React.FC = () => {
               <MenuItem value="30d">Last 30 Days</MenuItem>
             </Select>
           </FormControl>
-          <Typography variant="body2" color="text.secondary">
-            Last updated: {lastUpdate.toLocaleTimeString()}
-          </Typography>
+          {!isMobile && (
+            <Typography variant="body2" color="text.secondary">
+              Last updated: {lastUpdate.toLocaleTimeString()}
+            </Typography>
+          )}
           <IconButton onClick={() => setLastUpdate(new Date())}>
             <RefreshIcon />
           </IconButton>
@@ -160,60 +168,60 @@ const EnergyManagement: React.FC = () => {
           <StyledCard>
             <CardContent>
               <Typography variant="h6" gutterBottom>Real-time Energy Metrics</Typography>
-              <Grid container spacing={2}>
-                <Grid item xs={12} sm={6} md={3}>
+              <Grid container spacing={isMobile ? 1 : 2}>
+                <Grid item xs={6} sm={6} md={3}>
                   <MetricCard>
                     <Box display="flex" flexDirection="column" gap={1}>
                       <Box display="flex" alignItems="center" gap={1}>
-                        <ElectricBoltIcon />
-                        <Typography>Consumption</Typography>
+                        <ElectricBoltIcon sx={{ fontSize: isMobile ? 16 : 24 }} />
+                        <Typography variant={isMobile ? "caption" : "body1"}>Consumption</Typography>
                       </Box>
-                      <Typography variant="h4">
+                      <Typography variant={isMobile ? "h6" : "h4"}>
                         {energyData.currentConsumption.toFixed(1)} kW
                       </Typography>
                     </Box>
                   </MetricCard>
                 </Grid>
-                <Grid item xs={12} sm={6} md={3}>
+                <Grid item xs={6} sm={6} md={3}>
                   <MetricCard>
                     <Box display="flex" flexDirection="column" gap={1}>
                       <Box display="flex" alignItems="center" gap={1}>
-                        <SolarPowerIcon />
-                        <Typography>Solar</Typography>
+                        <SolarPowerIcon sx={{ fontSize: isMobile ? 16 : 24 }} />
+                        <Typography variant={isMobile ? "caption" : "body1"}>Solar</Typography>
                       </Box>
-                      <Typography variant="h4" sx={{ color: '#2ecc71' }}>
+                      <Typography variant={isMobile ? "h6" : "h4"} sx={{ color: '#2ecc71' }}>
                         {energyData.solarProduction.toFixed(1)} kW
                       </Typography>
                     </Box>
                   </MetricCard>
                 </Grid>
-                <Grid item xs={12} sm={6} md={3}>
+                <Grid item xs={6} sm={6} md={3}>
                   <MetricCard>
                     <Box display="flex" flexDirection="column" gap={1}>
                       <Box display="flex" alignItems="center" gap={1}>
-                        <ElectricBoltIcon />
-                        <Typography>Grid</Typography>
+                        <ElectricBoltIcon sx={{ fontSize: isMobile ? 16 : 24 }} />
+                        <Typography variant={isMobile ? "caption" : "body1"}>Grid</Typography>
                       </Box>
-                      <Typography variant="h4" sx={{ color: '#e74c3c' }}>
+                      <Typography variant={isMobile ? "h6" : "h4"} sx={{ color: '#e74c3c' }}>
                         {energyData.gridConsumption.toFixed(1)} kW
                       </Typography>
                     </Box>
                   </MetricCard>
                 </Grid>
-                <Grid item xs={12} sm={6} md={3}>
+                <Grid item xs={6} sm={6} md={3}>
                   <MetricCard>
                     <Box display="flex" flexDirection="column" gap={1}>
                       <Box display="flex" alignItems="center" gap={1}>
-                        <BatteryChargingFullIcon />
-                        <Typography>Battery</Typography>
+                        <BatteryChargingFullIcon sx={{ fontSize: isMobile ? 16 : 24 }} />
+                        <Typography variant={isMobile ? "caption" : "body1"}>Battery</Typography>
                       </Box>
-                      <Typography variant="h4">
+                      <Typography variant={isMobile ? "h6" : "h4"}>
                         {energyData.batteryLevel}%
                       </Typography>
                       <Chip
                         label={energyData.batteryCharging ? 'Charging' : 'Discharging'}
                         color={energyData.batteryCharging ? 'success' : 'warning'}
-                        size="small"
+                        size={isMobile ? "small" : "small"}
                       />
                     </Box>
                   </MetricCard>
@@ -223,15 +231,15 @@ const EnergyManagement: React.FC = () => {
               {/* Energy Distribution Chart */}
               <Box mt={3}>
                 <Typography variant="h6" gutterBottom>Energy Distribution</Typography>
-                <Box height={300}>
+                <Box height={isMobile ? 250 : 300}>
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                       <Pie
                         data={energyData.distribution}
                         cx="50%"
                         cy="50%"
-                        innerRadius={60}
-                        outerRadius={100}
+                        innerRadius={isMobile ? 40 : 60}
+                        outerRadius={isMobile ? 80 : 100}
                         paddingAngle={5}
                         dataKey="value"
                       >
@@ -327,7 +335,7 @@ const EnergyManagement: React.FC = () => {
           <StyledCard>
             <CardContent>
               <Typography variant="h6" gutterBottom>Energy Consumption History</Typography>
-              <Box height={400}>
+              <Box height={isMobile ? 300 : 400}>
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart
                     data={historicalData}

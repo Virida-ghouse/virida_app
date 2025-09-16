@@ -10,7 +10,9 @@ import {
   MenuItem, 
   Divider,
   ListItemIcon,
-  ListItemText
+  ListItemText,
+  useMediaQuery,
+  useTheme
 } from '@mui/material';
 import LocalFloristIcon from '@mui/icons-material/LocalFlorist';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -59,6 +61,8 @@ const LogoBox = styled(Box)(({ theme }) => ({
 
 const Header: React.FC = () => {
   const { user, logout } = useAuth();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -90,25 +94,31 @@ const Header: React.FC = () => {
         </LogoBox>
         <Box sx={{ flexGrow: 1 }} />
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <IconButton
-            color="inherit"
-            sx={{ color: '#FFFFFF' }}
-          >
-            <NotificationsIcon />
-          </IconButton>
-          <IconButton
-            color="inherit"
-            sx={{ color: '#FFFFFF' }}
-          >
-            <SettingsIcon />
-          </IconButton>
+          {!isMobile && (
+            <>
+              <IconButton
+                color="inherit"
+                sx={{ color: '#FFFFFF' }}
+              >
+                <NotificationsIcon />
+              </IconButton>
+              <IconButton
+                color="inherit"
+                sx={{ color: '#FFFFFF' }}
+              >
+                <SettingsIcon />
+              </IconButton>
+            </>
+          )}
           
           {user && (
             <>
-              <Box sx={{ ml: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
-                <Typography variant="body2" sx={{ color: '#FFFFFF', fontWeight: 500 }}>
-                  {user.firstName} {user.lastName}
-                </Typography>
+              <Box sx={{ ml: isMobile ? 1 : 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+                {!isMobile && (
+                  <Typography variant="body2" sx={{ color: '#FFFFFF', fontWeight: 500 }}>
+                    {user.firstName} {user.lastName}
+                  </Typography>
+                )}
                 <IconButton onClick={handleClick} size="small">
                   <Avatar 
                     sx={{ 
