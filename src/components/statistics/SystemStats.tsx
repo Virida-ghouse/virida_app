@@ -26,18 +26,21 @@ import ThermostatIcon from '@mui/icons-material/Thermostat';
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
 
 const StyledCard = styled(Card)(({ theme }) => ({
-  background: '#FFFFFF',
-  boxShadow: '0 2px 10px rgba(0, 0, 0, 0.08)',
-  border: '1px solid rgba(0, 0, 0, 0.1)',
+  background: 'rgba(255, 255, 255, 0.9)',
+  backdropFilter: 'blur(10px)',
+  boxShadow: '0 8px 32px rgba(46, 125, 50, 0.1)',
+  border: '1px solid rgba(46, 125, 50, 0.2)',
+  borderRadius: '16px',
   height: '100%',
 }));
 
 const StatBox = styled(Box)(({ theme }) => ({
   padding: theme.spacing(2),
-  background: '#FFFFFF',
-  boxShadow: '0 2px 10px rgba(0, 0, 0, 0.08)',
-  border: '1px solid rgba(0, 0, 0, 0.1)',
-  borderRadius: theme.shape.borderRadius,
+  background: 'rgba(255, 255, 255, 0.9)',
+  backdropFilter: 'blur(10px)',
+  boxShadow: '0 8px 32px rgba(46, 125, 50, 0.1)',
+  border: '1px solid rgba(46, 125, 50, 0.2)',
+  borderRadius: '12px',
   display: 'flex',
   alignItems: 'center',
   gap: theme.spacing(2),
@@ -52,15 +55,15 @@ const ResourceProgress = styled(Box)(({ theme }) => ({
   },
 }));
 
-const COLORS = ['#27ae60', '#2ecc71', '#3498db', '#e74c3c'];
+const COLORS = ['#2E7D32', '#388E3C', '#4CAF50', '#66BB6A'];
 
 const SystemStats: React.FC = () => {
   // Exemple de données pour les statistiques
   const resourceUsage = [
-    { name: 'Water', value: 75, icon: <OpacityIcon />, color: '#3498db' },
-    { name: 'Energy', value: 60, icon: <BoltIcon />, color: '#f1c40f' },
-    { name: 'Temperature', value: 85, icon: <ThermostatIcon />, color: '#e74c3c' },
-    { name: 'Light', value: 45, icon: <WbSunnyIcon />, color: '#f39c12' },
+    { name: 'Water', value: 75, icon: <OpacityIcon />, color: '#2E7D32' },
+    { name: 'Energy', value: 60, icon: <BoltIcon />, color: '#2E7D32' },
+    { name: 'Temperature', value: 85, icon: <ThermostatIcon />, color: '#2E7D32' },
+    { name: 'Light', value: 45, icon: <WbSunnyIcon />, color: '#2E7D32' },
   ];
 
   const weeklyData = [
@@ -93,10 +96,10 @@ const SystemStats: React.FC = () => {
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.1)" />
                   <XAxis dataKey="name" stroke="rgba(0,0,0,0.5)" />
                   <YAxis stroke="rgba(0,0,0,0.5)" />
-                  <Bar dataKey="water" fill="#3498db" stackId="a" />
-                  <Bar dataKey="energy" fill="#f1c40f" stackId="a" />
-                  <Bar dataKey="temp" fill="#e74c3c" stackId="a" />
-                  <Bar dataKey="light" fill="#f39c12" stackId="a" />
+                  <Bar dataKey="water" fill="#2E7D32" stackId="a" />
+                  <Bar dataKey="energy" fill="#388E3C" stackId="a" />
+                  <Bar dataKey="temp" fill="#4CAF50" stackId="a" />
+                  <Bar dataKey="light" fill="#66BB6A" stackId="a" />
                 </BarChart>
               </ResponsiveContainer>
             </Box>

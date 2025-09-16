@@ -143,7 +143,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ sensorData }) => {
     return (
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 bg-green-500 hover:bg-green-600 text-white rounded-full p-4 shadow-lg transition-all duration-300 hover:scale-110 z-50"
+        className="fixed bottom-6 right-6 bg-green-800 hover:bg-green-900 text-white rounded-full p-4 shadow-lg transition-all duration-300 hover:scale-110 z-50"
         title="Discuter avec EVE"
       >
         <MessageCircle size={24} />
@@ -156,10 +156,10 @@ const ChatBot: React.FC<ChatBotProps> = ({ sensorData }) => {
       isMinimized ? 'w-80 h-16' : 'w-96 h-[500px]'
     }`}>
       {/* Header */}
-      <div className="bg-gradient-to-r from-green-500 to-green-600 text-white p-4 rounded-t-lg flex items-center justify-between">
+      <div className="bg-gradient-to-r from-green-800 to-green-900 text-white p-4 rounded-t-lg flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
-            <span className="text-green-500 font-bold text-sm">🤖</span>
+            <span className="text-green-800 font-bold text-sm">🤖</span>
           </div>
           <div>
             <h3 className="font-semibold text-sm">EVE - Assistant IA</h3>
@@ -169,13 +169,13 @@ const ChatBot: React.FC<ChatBotProps> = ({ sensorData }) => {
         <div className="flex space-x-2">
           <button
             onClick={() => setIsMinimized(!isMinimized)}
-            className="hover:bg-green-600 p-1 rounded"
+            className="hover:bg-green-700 p-1 rounded"
           >
             {isMinimized ? <Maximize2 size={16} /> : <Minimize2 size={16} />}
           </button>
           <button
             onClick={() => setIsOpen(false)}
-            className="hover:bg-green-600 p-1 rounded"
+            className="hover:bg-green-700 p-1 rounded"
           >
             <X size={16} />
           </button>
@@ -194,7 +194,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ sensorData }) => {
                 <div
                   className={`max-w-xs px-4 py-2 rounded-lg ${
                     message.sender === 'user'
-                      ? 'bg-green-500 text-white'
+                      ? 'bg-green-800 text-white'
                       : 'bg-white text-gray-800 border border-gray-200'
                   }`}
                 >
@@ -232,13 +232,13 @@ const ChatBot: React.FC<ChatBotProps> = ({ sensorData }) => {
                 onChange={(e) => setInputText(e.target.value)}
                 onKeyPress={handleKeyPress}
                 placeholder="Posez votre question à EVE..."
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-sm"
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-800 text-sm"
                 disabled={isTyping}
               />
               <button
                 onClick={handleSendMessage}
                 disabled={!inputText.trim() || isTyping}
-                className="bg-green-500 hover:bg-green-600 disabled:bg-gray-300 text-white p-2 rounded-lg transition-colors"
+                className="bg-green-800 hover:bg-green-900 disabled:bg-gray-300 text-white p-2 rounded-lg transition-colors"
               >
                 <Send size={16} />
               </button>

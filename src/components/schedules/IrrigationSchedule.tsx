@@ -29,9 +29,11 @@ import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 
 const StyledCard = styled(Card)(({ theme }) => ({
-  background: '#FFFFFF',
-  boxShadow: '0 2px 10px rgba(0, 0, 0, 0.08)',
-  border: '1px solid rgba(0, 0, 0, 0.1)',
+  background: 'rgba(255, 255, 255, 0.9)',
+  backdropFilter: 'blur(10px)',
+  boxShadow: '0 8px 32px rgba(46, 125, 50, 0.1)',
+  border: '1px solid rgba(46, 125, 50, 0.2)',
+  borderRadius: '16px',
 }));
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -133,9 +135,14 @@ const IrrigationSchedule: React.FC = () => {
           <Typography variant="h6">Irrigation Schedule</Typography>
           <Button
             variant="contained"
-            color="primary"
             startIcon={<AddIcon />}
             onClick={handleAddSchedule}
+            sx={{
+              backgroundColor: '#2E7D32',
+              '&:hover': {
+                backgroundColor: '#1B5E20',
+              },
+            }}
           >
             Add Schedule
           </Button>
@@ -170,21 +177,28 @@ const IrrigationSchedule: React.FC = () => {
                           )
                         )
                       }
-                      color="primary"
+                      sx={{
+                        '& .MuiSwitch-switchBase.Mui-checked': {
+                          color: '#2E7D32',
+                        },
+                        '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                          backgroundColor: '#2E7D32',
+                        },
+                      }}
                     />
                   </StyledTableCell>
                   <StyledTableCell>
                     <IconButton
                       size="small"
                       onClick={() => handleEditSchedule(schedule)}
-                      sx={{ color: 'primary.main' }}
+                      sx={{ color: '#2E7D32' }}
                     >
                       <EditIcon />
                     </IconButton>
                     <IconButton
                       size="small"
                       onClick={() => handleDeleteSchedule(schedule.id)}
-                      sx={{ color: 'error.main' }}
+                      sx={{ color: '#d32f2f' }}
                     >
                       <DeleteIcon />
                     </IconButton>

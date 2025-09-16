@@ -42,17 +42,21 @@ import ShowChartIcon from '@mui/icons-material/ShowChart';
 import SaveIcon from '@mui/icons-material/Save';
 
 const StyledCard = styled(Card)(({ theme }) => ({
-  background: '#FFFFFF',
-  boxShadow: '0 2px 10px rgba(0, 0, 0, 0.08)',
-  border: '1px solid rgba(0, 0, 0, 0.1)',
+  background: 'rgba(255, 255, 255, 0.9)',
+  backdropFilter: 'blur(10px)',
+  boxShadow: '0 8px 32px rgba(46, 125, 50, 0.1)',
+  border: '1px solid rgba(46, 125, 50, 0.2)',
+  borderRadius: '16px',
   height: '100%',
 }));
 
 const MetricCard = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
-  background: '#FFFFFF',
-  boxShadow: '0 2px 10px rgba(0, 0, 0, 0.08)',
-  border: '1px solid rgba(0, 0, 0, 0.1)',
+  background: 'rgba(255, 255, 255, 0.9)',
+  backdropFilter: 'blur(10px)',
+  boxShadow: '0 8px 32px rgba(46, 125, 50, 0.1)',
+  border: '1px solid rgba(46, 125, 50, 0.2)',
+  borderRadius: '12px',
 }));
 
 const EnergyManagement: React.FC = () => {
@@ -121,7 +125,7 @@ const EnergyManagement: React.FC = () => {
     return () => clearInterval(interval);
   }, [energyData]);
 
-  const COLORS = ['#2ecc71', '#3498db', '#e74c3c', '#f1c40f', '#9b59b6'];
+  const COLORS = ['#2E7D32', '#388E3C', '#4CAF50', '#66BB6A', '#81C784'];
 
   return (
     <Box p={3}>
@@ -260,7 +264,14 @@ const EnergyManagement: React.FC = () => {
                 <Switch
                   checked={autoMode}
                   onChange={(e) => setAutoMode(e.target.checked)}
-                  color="primary"
+                  sx={{
+                    '& .MuiSwitch-switchBase.Mui-checked': {
+                      color: '#2E7D32',
+                    },
+                    '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                      backgroundColor: '#2E7D32',
+                    },
+                  }}
                 />
               </Box>
               <Box mb={3}>
@@ -295,10 +306,15 @@ const EnergyManagement: React.FC = () => {
               </Box>
               <Button
                 variant="contained"
-                color="primary"
                 fullWidth
                 disabled={autoMode}
                 startIcon={<SaveIcon />}
+                sx={{
+                  backgroundColor: '#2E7D32',
+                  '&:hover': {
+                    backgroundColor: '#1B5E20',
+                  },
+                }}
               >
                 Save Settings
               </Button>

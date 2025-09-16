@@ -41,9 +41,11 @@ import BackupIcon from '@mui/icons-material/Backup';
 import StorageIcon from '@mui/icons-material/Storage';
 
 const StyledCard = styled(Card)(({ theme }) => ({
-  background: '#FFFFFF',
-  boxShadow: '0 2px 10px rgba(0, 0, 0, 0.08)',
-  border: '1px solid rgba(0, 0, 0, 0.1)',
+  background: 'rgba(255, 255, 255, 0.9)',
+  backdropFilter: 'blur(10px)',
+  boxShadow: '0 8px 32px rgba(46, 125, 50, 0.1)',
+  border: '1px solid rgba(46, 125, 50, 0.2)',
+  borderRadius: '16px',
   height: '100%',
 }));
 
@@ -136,9 +138,14 @@ const SettingsPanel: React.FC = () => {
         <Typography variant="h4">Settings</Typography>
         <Button
           variant="contained"
-          color="primary"
           startIcon={<SaveIcon />}
           onClick={handleSaveSettings}
+          sx={{
+            backgroundColor: '#2E7D32',
+            '&:hover': {
+              backgroundColor: '#1B5E20',
+            },
+          }}
         >
           Save All Changes
         </Button>
@@ -237,6 +244,14 @@ const SettingsPanel: React.FC = () => {
                 <Switch
                   edge="end"
                   checked={settings.notifications.emailAlerts}
+                  sx={{
+                    '& .MuiSwitch-switchBase.Mui-checked': {
+                      color: '#2E7D32',
+                    },
+                    '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                      backgroundColor: '#2E7D32',
+                    },
+                  }}
                 />
               </ListItemSecondaryAction>
             </ListItem>
