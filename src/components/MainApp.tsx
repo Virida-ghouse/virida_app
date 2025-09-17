@@ -101,8 +101,8 @@ const MainApp: React.FC = () => {
         onViewChange={setCurrentView}
       />
       
-      {/* Chatbot EVE - Visible seulement sur mobile */}
-      {isMobile && <ChatBot sensorData={sensorData} />}
+      {/* Chatbot EVE - Visible sur desktop et mobile */}
+      <ChatBot sensorData={sensorData} />
       
     </Box>
   );
