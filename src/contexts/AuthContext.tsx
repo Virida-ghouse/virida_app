@@ -102,12 +102,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       setIsLoading(true);
       
+      // Générer un username à partir de l'email
+      const username = userData.email.split('@')[0].toLowerCase();
+      
       const response = await fetch(`${API_BASE_URL}/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(userData),
+        body: JSON.stringify({
+          ...userData,
+          username
+        }),
       });
 
       if (!response.ok) {
