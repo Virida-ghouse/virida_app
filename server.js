@@ -68,13 +68,9 @@ function isBuildComplete() {
   return isComplete;
 }
 
-// Tenter un build au démarrage si nécessaire
+// Vérifier si le build existe (fait pendant postinstall)
 if (!isBuildComplete()) {
-  console.log('🔨 Build manquant, tentative de build au démarrage...');
-  const buildSuccess = buildApp();
-  if (!buildSuccess) {
-    console.log('⚠️ Build échoué, serveur démarrera avec page d\'attente');
-  }
+  console.log('⚠️ Build manquant - doit être fait pendant postinstall');
 }
 
 // Middleware pour servir les fichiers statiques avec des headers de cache adaptés
