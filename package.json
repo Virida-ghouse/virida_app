@@ -9,7 +9,7 @@
     "build:simple": "NODE_OPTIONS='--max-old-space-size=2048 --no-warnings' vite build --mode development --minify false",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "postinstall": "echo 'Skipping build during install - will be handled by start script'",
+    "postinstall": "NODE_OPTIONS='--max-old-space-size=2048 --no-warnings' npm run build:simple",
     "start": "node server.js"
   },
   "dependencies": {
