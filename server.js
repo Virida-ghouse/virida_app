@@ -20,9 +20,9 @@ console.log(`Contenu du répertoire courant: ${fs.readdirSync(__dirname).join(',
 function buildApp() {
   console.log('🔨 Démarrage du build Vite...');
   try {
-    execSync('NODE_OPTIONS="--max-old-space-size=1024 --no-warnings" npm run build:simple', {
+    execSync('NODE_OPTIONS="--max-old-space-size=2048 --no-warnings" npm run build:simple', {
       stdio: 'inherit',
-      timeout: 120000 // 2 minutes max
+      timeout: 300000 // 5 minutes max
     });
     console.log('✅ Build terminé avec succès');
     return true;
