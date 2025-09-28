@@ -6,6 +6,12 @@ interface Message {
   text: string;
   sender: 'user' | 'eve';
   timestamp: Date;
+  metadata?: {
+    method?: string;
+    processingTime?: number;
+    ragUsed?: boolean;
+    sources?: any[];
+  };
 }
 
 interface ChatBotProps {
@@ -32,6 +38,10 @@ const ChatBot: React.FC<ChatBotProps> = ({ sensorData }) => {
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // Configuration de l'API
+  const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
+  const N8N_WEBHOOK_URL = process.env.REACT_APP_N8N_WEBHOOK_URL || `${API_BASE_URL}/api/eve/chat-n8n`;
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -40,68 +50,50 @@ const ChatBot: React.FC<ChatBotProps> = ({ sensorData }) => {
     scrollToBottom();
   }, [messages]);
 
-  const generateEveResponse = (userMessage: string): string => {
-    const message = userMessage.toLowerCase();
-    
-    // Réponses basées sur les données des capteurs
-    if (sensorData) {
-      if (message.includes('température') || message.includes('temp') || message.includes('chaude') || message.includes('chaud') || message.includes('froide') || message.includes('froid')) {
-        const temp = sensorData.temperature;
-        if (temp < 18) {
-          return `La température actuelle est de ${temp}°C. C'est un peu froid pour la plupart des plantes. Je recommande d'augmenter le chauffage ou de fermer les ouvertures pour maintenir une température entre 20-25°C. 🌡️`;
-        } else if (temp > 28) {
-          return `La température est de ${temp}°C, c'est assez chaud ! Pensez à aérer la serre ou à activer l'ombrage pour éviter le stress thermique des plantes. 🔥`;
-        } else {
-          return `Parfait ! La température de ${temp}°C est idéale pour la croissance des plantes. Vos cultures se développent dans de bonnes conditions. ✨`;
-        }
-      }
-      
-      if (message.includes('humidité') || message.includes('humid') || message.includes('sec') || message.includes('sèche') || message.includes('mouillé') || message.includes('humide')) {
-        const humidity = sensorData.humidity;
-        if (humidity < 50) {
-          return `L'humidité est de ${humidity}%, c'est un peu sec. Je suggère d'augmenter l'arrosage ou d'utiliser un humidificateur pour atteindre 60-70%. 💧`;
-        } else if (humidity > 80) {
-          return `L'humidité de ${humidity}% est élevée. Attention aux risques de moisissures ! Améliorez la ventilation pour réduire l'humidité. 🌪️`;
-        } else {
-          return `Excellent ! L'humidité de ${humidity}% est parfaite pour vos plantes. Elles peuvent bien absorber l'eau et les nutriments. 🌿`;
-        }
-      }
-      
-      if (message.includes('conditions') || message.includes('état')) {
-        return `Actuellement dans votre serre : 🌡️ ${sensorData.temperature}°C, 💧 ${sensorData.humidity}%. ${sensorData.temperature >= 20 && sensorData.temperature <= 26 && sensorData.humidity >= 50 && sensorData.humidity <= 75 ? 'Les conditions sont optimales !' : 'Quelques ajustements pourraient améliorer l\'environnement.'}`;
-      }
-    }
+  // Fonction pour appeler l'API EVE via n8n/virida_api
+  const callEveAPI = async (message: string) => {
+    try {
+      console.log('Calling EVE API with message:', message);
 
-    // Réponses générales sur le jardinage
-    if (message.includes('arrosage') || message.includes('arroser')) {
-      return "Pour l'arrosage, vérifiez l'humidité du sol avec votre doigt. Arrosez tôt le matin ou en fin de journée. Les plantes préfèrent un arrosage profond mais moins fréquent ! 🚿";
-    }
-    
-    if (message.includes('plantation') || message.includes('planter')) {
-      return "Pour planter, choisissez des variétés adaptées à votre climat. Préparez bien le sol avec du compost. Respectez les distances de plantation et la profondeur des graines ! 🌱";
-    }
-    
-    if (message.includes('maladie') || message.includes('problème') || message.includes('jaunisse') || message.includes('tache') || message.includes('flétr') || message.includes('pourr')) {
-      return "Pour identifier les maladies, observez les feuilles : jaunissement, taches, déformation. Assurez-vous d'une bonne circulation d'air et évitez l'excès d'humidité. En cas de doute, envoyez-moi une photo ! 🔍";
-    }
-    
-    if (message.includes('fertilisant') || message.includes('engrais')) {
-      return "Utilisez un engrais équilibré NPK pour la croissance générale. Les plantes à fleurs ont besoin de plus de phosphore, les légumes verts de plus d'azote. L'engrais organique est toujours préférable ! 🌿";
-    }
-    
-    if (message.includes('saison') || message.includes('calendrier')) {
-      return "Chaque saison a ses tâches : printemps (semis, repiquage), été (arrosage, récolte), automne (préparation hivernale), hiver (planification, entretien). Voulez-vous des conseils pour une saison spécifique ? 📅";
-    }
+      const response = await fetch(N8N_WEBHOOK_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message,
+          userId: 'frontend-user',
+          sensorData: sensorData || null
+        })
+      });
 
-    // Réponses par défaut
-    const defaultResponses = [
-      "C'est une excellente question ! Pouvez-vous me donner plus de détails pour que je puisse mieux vous aider ? 🤔",
-      "Je suis là pour vous aider avec votre serre ! Parlez-moi de vos plantes, des conditions ou de tout problème que vous rencontrez. 🌱",
-      "En tant qu'assistante IA spécialisée en jardinage, je peux vous conseiller sur l'arrosage, la plantation, les maladies, et bien plus ! Que souhaitez-vous savoir ? 💚",
-      "N'hésitez pas à me poser des questions sur la température, l'humidité, l'arrosage, ou tout autre aspect de votre serre ! 🏡"
-    ];
-    
-    return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log('EVE API response:', data);
+
+      if (data.success) {
+        return {
+          text: data.response,
+          metadata: data.metadata
+        };
+      } else {
+        throw new Error(data.error || 'API error');
+      }
+    } catch (error) {
+      console.error('Error calling EVE API:', error);
+
+      // Fallback en cas d'erreur
+      return {
+        text: "Désolée, je rencontre une difficulté technique. Pouvez-vous répéter votre question ? En attendant, je peux vous aider avec des conseils généraux sur votre serre ! 🌱",
+        metadata: {
+          method: 'fallback',
+          error: error instanceof Error ? error.message : 'Unknown error'
+        }
+      };
+    }
   };
 
   const handleSendMessage = async () => {
@@ -114,22 +106,43 @@ const ChatBot: React.FC<ChatBotProps> = ({ sensorData }) => {
       timestamp: new Date()
     };
 
+    const messageToSend = inputText;
     setMessages(prev => [...prev, userMessage]);
     setInputText('');
     setIsTyping(true);
 
-    // Simuler un délai de réponse
-    setTimeout(() => {
+    try {
+      // Appeler l'API EVE
+      const eveResult = await callEveAPI(messageToSend);
+
       const eveResponse: Message = {
         id: (Date.now() + 1).toString(),
-        text: generateEveResponse(inputText),
+        text: eveResult.text,
         sender: 'eve',
-        timestamp: new Date()
+        timestamp: new Date(),
+        metadata: eveResult.metadata
       };
-      
+
       setMessages(prev => [...prev, eveResponse]);
+    } catch (error) {
+      console.error('Error in handleSendMessage:', error);
+
+      // Message d'erreur en cas d'échec total
+      const errorResponse: Message = {
+        id: (Date.now() + 1).toString(),
+        text: "Désolée, je ne peux pas répondre pour le moment. Veuillez réessayer dans quelques instants. 🤖",
+        sender: 'eve',
+        timestamp: new Date(),
+        metadata: {
+          method: 'error',
+          error: error instanceof Error ? error.message : 'Unknown error'
+        }
+      };
+
+      setMessages(prev => [...prev, errorResponse]);
+    } finally {
       setIsTyping(false);
-    }, 1000 + Math.random() * 2000);
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -199,12 +212,42 @@ const ChatBot: React.FC<ChatBotProps> = ({ sensorData }) => {
                   }`}
                 >
                   <p className="text-sm">{message.text}</p>
-                  <p className="text-xs mt-1 opacity-70">
-                    {message.timestamp.toLocaleTimeString('fr-FR', { 
-                      hour: '2-digit', 
-                      minute: '2-digit' 
-                    })}
-                  </p>
+                  <div className="flex items-center justify-between mt-1">
+                    <p className="text-xs opacity-70">
+                      {message.timestamp.toLocaleTimeString('fr-FR', {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      })}
+                    </p>
+                    {message.sender === 'eve' && message.metadata && (
+                      <div className="flex items-center space-x-1">
+                        {message.metadata.ragUsed && (
+                          <span
+                            className="text-xs bg-blue-100 text-blue-800 px-1 py-0.5 rounded"
+                            title="Réponse IA avancée"
+                          >
+                            🧠
+                          </span>
+                        )}
+                        {message.metadata.method === 'quick' && (
+                          <span
+                            className="text-xs bg-green-100 text-green-800 px-1 py-0.5 rounded"
+                            title="Réponse rapide"
+                          >
+                            ⚡
+                          </span>
+                        )}
+                        {message.metadata.cached && (
+                          <span
+                            className="text-xs bg-yellow-100 text-yellow-800 px-1 py-0.5 rounded"
+                            title="Réponse mise en cache"
+                          >
+                            💾
+                          </span>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             ))}
