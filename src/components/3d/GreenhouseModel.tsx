@@ -14,10 +14,8 @@ const VIRIDA_COLORS = {
 };
 
 // Modèle 3D de la serre
-// Chemin conditionnel selon l'environnement
-const serreModelPath = import.meta.env.DEV 
-  ? '/src/components/3d/Serre_max.gltf'
-  : './assets/Serre_max-jN1h0Aau.gltf';
+// Chemin vers le modèle 3D dans public/
+const serreModelPath = '/Serre_max.gltf';
 
 const SerreModel = () => {
   const { scene, materials } = useGLTF(serreModelPath);
