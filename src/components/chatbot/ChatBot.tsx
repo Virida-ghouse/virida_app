@@ -39,8 +39,8 @@ const ChatBot: React.FC<ChatBotProps> = ({ sensorData }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Configuration de l'API
-  const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
-  const N8N_WEBHOOK_URL = process.env.REACT_APP_N8N_WEBHOOK_URL || `${API_BASE_URL}/api/eve/chat-n8n`;
+  const API_BASE_URL = import.meta.env.VITE_API_URL || import.meta.env.REACT_APP_API_URL || 'http://localhost:3001';
+  const N8N_WEBHOOK_URL = import.meta.env.VITE_N8N_WEBHOOK_URL || import.meta.env.REACT_APP_N8N_WEBHOOK_URL || `${API_BASE_URL}/api/eve/chat-n8n`;
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
