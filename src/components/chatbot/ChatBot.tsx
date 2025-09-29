@@ -63,7 +63,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ sensorData }) => {
         body: JSON.stringify({
           message,
           userId: 'frontend-user',
-          sensorData: sensorData || null
+          ...(sensorData && { sensorData })
         })
       });
 
