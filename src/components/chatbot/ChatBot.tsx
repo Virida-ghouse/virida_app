@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, MessageCircle, X, Minimize2, Maximize2 } from 'lucide-react';
+import { useChatHistory } from '../../contexts/ChatHistoryContext';
+import type { ChatMessage } from '../../contexts/ChatHistoryContext';
 
 interface Message {
   id: string;
@@ -11,6 +13,8 @@ interface Message {
     processingTime?: number;
     ragUsed?: boolean;
     sources?: any[];
+    cached?: boolean;
+    error?: string;
   };
 }
 
@@ -24,23 +28,58 @@ interface ChatBotProps {
 }
 
 const ChatBot: React.FC<ChatBotProps> = ({ sensorData }) => {
+  const { currentConversation, addMessage, startNewConversation } = useChatHistory();
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      text: "Bonjour ! Je suis EVE, votre assistante IA pour la serre Virida. Comment puis-je vous aider aujourd'hui ? 🌱",
-      sender: 'eve',
-      timestamp: new Date()
-    }
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const isInitialized = useRef(false);
 
   // Configuration de l'API
   const API_BASE_URL = import.meta.env.VITE_API_URL || import.meta.env.REACT_APP_API_URL || 'http://localhost:3001';
   const N8N_WEBHOOK_URL = import.meta.env.VITE_N8N_WEBHOOK_URL || import.meta.env.REACT_APP_N8N_WEBHOOK_URL || `${API_BASE_URL}/api/eve/chat-n8n`;
+
+  // 📥 Charger l'historique de conversation au démarrage
+  useEffect(() => {
+    if (isInitialized.current) return;
+
+    if (currentConversation && currentConversation.messages.length > 0) {
+      // Convertir les messages de l'historique au format local
+      const historyMessages: Message[] = currentConversation.messages.map(msg => ({
+        id: msg.id,
+        text: msg.text,
+        sender: msg.sender,
+        timestamp: typeof msg.timestamp === 'string' ? new Date(msg.timestamp) : msg.timestamp,
+        metadata: msg.metadata
+      }));
+      setMessages(historyMessages);
+      isInitialized.current = true;
+    } else if (currentConversation && currentConversation.messages.length === 0) {
+      // Nouvelle conversation, ajouter le message de bienvenue
+      const welcomeMessage: Message = {
+        id: `welcome_${Date.now()}`,
+        text: "Bonjour ! Je suis EVE, votre assistante IA pour la serre Virida. Comment puis-je vous aider aujourd'hui ? 🌱",
+        sender: 'eve',
+        timestamp: new Date()
+      };
+      setMessages([welcomeMessage]);
+
+      // Sauvegarder dans l'historique
+      const welcomeChatMessage: ChatMessage = {
+        id: welcomeMessage.id,
+        text: welcomeMessage.text,
+        sender: welcomeMessage.sender,
+        timestamp: welcomeMessage.timestamp
+      };
+      addMessage(welcomeChatMessage);
+      isInitialized.current = true;
+    } else if (!currentConversation) {
+      // Pas de conversation, en créer une
+      startNewConversation();
+    }
+  }, [currentConversation, addMessage, startNewConversation]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -55,6 +94,13 @@ const ChatBot: React.FC<ChatBotProps> = ({ sensorData }) => {
     try {
       console.log('Calling EVE API with message:', message);
 
+      // 📜 Préparer l'historique de conversation pour le contexte RAG
+      const conversationHistory = messages.map(msg => ({
+        role: msg.sender === 'user' ? 'user' : 'assistant',
+        content: msg.text,
+        timestamp: msg.timestamp.toISOString()
+      }));
+
       const response = await fetch(N8N_WEBHOOK_URL, {
         method: 'POST',
         headers: {
@@ -63,6 +109,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ sensorData }) => {
         body: JSON.stringify({
           message,
           userId: 'frontend-user',
+          conversationHistory, // 📜 Envoyer l'historique pour le RAG
           ...(sensorData && { sensorData })
         })
       });
@@ -111,6 +158,15 @@ const ChatBot: React.FC<ChatBotProps> = ({ sensorData }) => {
     setInputText('');
     setIsTyping(true);
 
+    // 💾 Sauvegarder le message utilisateur dans l'historique
+    const userChatMessage: ChatMessage = {
+      id: userMessage.id,
+      text: userMessage.text,
+      sender: userMessage.sender,
+      timestamp: userMessage.timestamp
+    };
+    addMessage(userChatMessage);
+
     try {
       // Appeler l'API EVE
       const eveResult = await callEveAPI(messageToSend);
@@ -124,6 +180,16 @@ const ChatBot: React.FC<ChatBotProps> = ({ sensorData }) => {
       };
 
       setMessages(prev => [...prev, eveResponse]);
+
+      // 💾 Sauvegarder la réponse d'Eve dans l'historique
+      const eveChatMessage: ChatMessage = {
+        id: eveResponse.id,
+        text: eveResponse.text,
+        sender: eveResponse.sender,
+        timestamp: eveResponse.timestamp,
+        metadata: eveResponse.metadata
+      };
+      addMessage(eveChatMessage);
     } catch (error) {
       console.error('Error in handleSendMessage:', error);
 
@@ -140,6 +206,16 @@ const ChatBot: React.FC<ChatBotProps> = ({ sensorData }) => {
       };
 
       setMessages(prev => [...prev, errorResponse]);
+
+      // 💾 Sauvegarder le message d'erreur dans l'historique
+      const errorChatMessage: ChatMessage = {
+        id: errorResponse.id,
+        text: errorResponse.text,
+        sender: errorResponse.sender,
+        timestamp: errorResponse.timestamp,
+        metadata: errorResponse.metadata
+      };
+      addMessage(errorChatMessage);
     } finally {
       setIsTyping(false);
     }

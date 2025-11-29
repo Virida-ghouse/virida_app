@@ -5,6 +5,10 @@ import { Box, CircularProgress } from '@mui/material';
 import MainApp from './components/MainApp';
 import AuthContainer from './components/auth/AuthContainer';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { RGPDProvider } from './contexts/RGPDContext';
+import { ChatHistoryProvider } from './contexts/ChatHistoryContext';
+import CookieConsentBanner from './components/rgpd/CookieConsentBanner';
+import CookiePreferencesModal from './components/rgpd/CookiePreferencesModal';
 import theme from './theme';
 
 // Composant pour gérer l'état d'authentification
@@ -40,9 +44,16 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <AuthProvider>
-        <AppContent />
-      </AuthProvider>
+      <RGPDProvider>
+        <AuthProvider>
+          <ChatHistoryProvider>
+            <AppContent />
+            {/* 🍪 Composants RGPD - Affichés globalement */}
+            <CookieConsentBanner />
+            <CookiePreferencesModal />
+          </ChatHistoryProvider>
+        </AuthProvider>
+      </RGPDProvider>
     </ThemeProvider>
   );
 }
