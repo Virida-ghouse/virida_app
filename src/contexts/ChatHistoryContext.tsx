@@ -61,7 +61,7 @@ const STORAGE_KEY = 'virida_chat_history';
 const API_SYNC_INTERVAL = 5 * 60 * 1000; // Sync toutes les 5 minutes
 
 export const ChatHistoryProvider: React.FC<ChatHistoryProviderProps> = ({ children }) => {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [currentConversation, setCurrentConversation] = useState<Conversation | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -118,7 +118,7 @@ export const ChatHistoryProvider: React.FC<ChatHistoryProviderProps> = ({ childr
   // 🔄 Synchronisation périodique avec le backend
   useEffect(() => {
     const syncToBackend = async () => {
-      if (!user || conversations.length === 0) return;
+      if (!user || !token || conversations.length === 0) return;
 
       try {
         const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
@@ -127,7 +127,7 @@ export const ChatHistoryProvider: React.FC<ChatHistoryProviderProps> = ({ childr
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${user.token}`, // Suppose que user contient un token
+            'Authorization': `Bearer ${token}`,
           },
           body: JSON.stringify({
             userId: user.id,
@@ -151,7 +151,7 @@ export const ChatHistoryProvider: React.FC<ChatHistoryProviderProps> = ({ childr
     const interval = setInterval(syncToBackend, API_SYNC_INTERVAL);
 
     return () => clearInterval(interval);
-  }, [conversations, user]);
+  }, [conversations, user, token]);
 
   // 🆕 Démarrer une nouvelle conversation
   const startNewConversation = (): string => {
@@ -188,22 +188,38 @@ export const ChatHistoryProvider: React.FC<ChatHistoryProviderProps> = ({ childr
       });
       setCurrentConversation(newConv);
     } else {
-      // Ajouter à la conversation existante
-      const updatedConv: Conversation = {
-        ...currentConversation,
-        messages: [...currentConversation.messages, message],
-        updatedAt: new Date(),
-        title: currentConversation.title || (message.sender === 'user' ? message.text.substring(0, 50) : 'Conversation sans titre'),
-      };
+      // Ajouter à la conversation existante - utiliser updater function pour éviter race conditions
+      const currentId = currentConversation.id;
 
       setConversations(prev => {
-        const filtered = prev.filter(c => c.id !== currentConversation.id);
+        const current = prev.find(c => c.id === currentId);
+        if (!current) return prev;
+
+        const updatedConv: Conversation = {
+          ...current,
+          messages: [...current.messages, message],
+          updatedAt: new Date(),
+          title: current.title || (message.sender === 'user' ? message.text.substring(0, 50) : 'Conversation sans titre'),
+        };
+
+        const filtered = prev.filter(c => c.id !== currentId);
         return [...filtered, updatedConv];
       });
-      setCurrentConversation(updatedConv);
+
+      // Mettre à jour currentConversation avec updater function
+      setCurrentConversation(prev => {
+        if (!prev || prev.id !== currentId) return prev;
+
+        return {
+          ...prev,
+          messages: [...prev.messages, message],
+          updatedAt: new Date(),
+          title: prev.title || (message.sender === 'user' ? message.text.substring(0, 50) : 'Conversation sans titre'),
+        };
+      });
     }
 
-    console.log('➕ Message ajouté à la conversation');
+    console.log('➕ Message ajouté à la conversation:', message.sender, message.text.substring(0, 30));
   };
 
   // 📖 Récupérer une conversation par ID
