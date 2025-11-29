@@ -41,6 +41,8 @@ import LanguageIcon from '@mui/icons-material/Language';
 import DisplaySettingsIcon from '@mui/icons-material/DisplaySettings';
 import BackupIcon from '@mui/icons-material/Backup';
 import StorageIcon from '@mui/icons-material/Storage';
+import ShieldIcon from '@mui/icons-material/Shield';
+import RGPDSettings from '../rgpd/RGPDSettings';
 
 const StyledCard = styled(Card)(({ theme }) => ({
   background: 'rgba(255, 255, 255, 0.9)',
@@ -185,6 +187,7 @@ const SettingsPanel: React.FC = () => {
             <Tab icon={<DisplaySettingsIcon />} label={isMobile ? "" : "Display"} />
             <Tab icon={<BackupIcon />} label={isMobile ? "" : "Backup"} />
             <Tab icon={<StorageIcon />} label={isMobile ? "" : "Storage"} />
+            <Tab icon={<ShieldIcon />} label={isMobile ? "" : "Confidentialité"} />
           </Tabs>
         </Box>
 
@@ -520,6 +523,11 @@ const SettingsPanel: React.FC = () => {
               </ListItemSecondaryAction>
             </ListItem>
           </List>
+        </TabPanel>
+
+        {/* RGPD & Confidentialité Settings */}
+        <TabPanel value={activeTab} index={6} isMobile={isMobile}>
+          <RGPDSettings />
         </TabPanel>
       </StyledCard>
     </Box>
