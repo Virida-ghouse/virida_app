@@ -41,6 +41,13 @@ interface PlantCatalog {
   description?: string;
 }
 
+interface Greenhouse {
+  id: string;
+  name: string;
+  description?: string;
+  location?: string;
+}
+
 interface AddPlantDialogProps {
   open: boolean;
   onClose: () => void;
@@ -63,13 +70,18 @@ export const AddPlantDialog: React.FC<AddPlantDialogProps> = ({
   const [loadingCatalog, setLoadingCatalog] = useState(false);
   const [catalogError, setCatalogError] = useState<string | null>(null);
 
+  // Greenhouses state
+  const [greenhouses, setGreenhouses] = useState<Greenhouse[]>([]);
+  const [loadingGreenhouses, setLoadingGreenhouses] = useState(false);
+
+
   // Selected plant
   const [selectedPlant, setSelectedPlant] = useState<PlantCatalog | null>(null);
 
   // Configuration
   const [plantName, setPlantName] = useState('');
   const [zone, setZone] = useState('Zone 1');
-  const [greenhouse, setGreenhouse] = useState('greenhouse-demo-1');
+  const [greenhouse, setGreenhouse] = useState('');
   const [plantedAt, setPlantedAt] = useState(new Date().toISOString().split('T')[0]);
   const [notes, setNotes] = useState('');
 
@@ -81,6 +93,7 @@ export const AddPlantDialog: React.FC<AddPlantDialogProps> = ({
   useEffect(() => {
     if (open) {
       fetchCatalog();
+      fetchGreenhouses();
       // Reset state
       setActiveStep(0);
       setSelectedPlant(null);
@@ -114,6 +127,34 @@ export const AddPlantDialog: React.FC<AddPlantDialogProps> = ({
       setLoadingCatalog(false);
     }
   };
+
+  const fetchGreenhouses = async () => {
+    try {
+      setLoadingGreenhouses(true);
+      const token = localStorage.getItem('virida_token');
+      const response = await fetch(`${apiUrl}/api/greenhouses`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) throw new Error('Failed to fetch greenhouses');
+
+      const data = await response.json();
+      setGreenhouses(data.data || []);
+
+      // Auto-select first greenhouse if none selected
+      if (data.data && data.data.length > 0 && !greenhouse) {
+        setGreenhouse(data.data[0].id);
+      }
+    } catch (error) {
+      console.error('Error fetching greenhouses:', error);
+      setGreenhouses([]);
+    } finally {
+      setLoadingGreenhouses(false);
+    }
+  };
+
 
   const handleSelectPlant = (plant: PlantCatalog) => {
     setSelectedPlant(plant);
@@ -363,8 +404,18 @@ export const AddPlantDialog: React.FC<AddPlantDialogProps> = ({
                         },
                       }}
                     >
-                      <MenuItem value="greenhouse-demo-1">Serre Principale</MenuItem>
-                      <MenuItem value="greenhouse-demo-2">Serre Expérimentale</MenuItem>
+                      {loadingGreenhouses ? (
+                        <MenuItem disabled>Chargement...</MenuItem>
+                      ) : greenhouses.length === 0 ? (
+                        <MenuItem disabled>Aucune serre disponible</MenuItem>
+                      ) : (
+                        greenhouses.map((gh) => (
+                          <MenuItem key={gh.id} value={gh.id}>
+                            {gh.name}
+                            {gh.location && ` - ${gh.location}`}
+                          </MenuItem>
+                        ))
+                      )}
                     </Select>
                   </FormControl>
                 </Grid>
