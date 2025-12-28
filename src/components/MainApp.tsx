@@ -4,8 +4,8 @@ import Dashboard from './dashboard/Dashboard';
 import Header from './layout/Header';
 import Sidebar from './layout/Sidebar';
 import BottomNavigationBar from './layout/BottomNavigation';
-import PlantConfiguration from './plants/PlantConfiguration';
-import SystemStats from './statistics/SystemStats';
+//import PlantsPage from './plants/PlantsPage';
+import PlantsPage from './plants/PlantsLayout';
 import IrrigationSchedule from './schedules/IrrigationSchedule';
 import AutomationRules from './automation/AutomationRules';
 import EnergyManagement from './energy/EnergyManagement';
@@ -20,7 +20,6 @@ const MainApp: React.FC = () => {
   
   const [sidebarOpen, setSidebarOpen] = React.useState(!isMobile);
   const [currentView, setCurrentView] = React.useState('dashboard');
-  const [configureOpen, setConfigureOpen] = React.useState(false);
   
   // Données des capteurs simulées pour EVE
   const [sensorData] = React.useState({
@@ -30,22 +29,14 @@ const MainApp: React.FC = () => {
     soilMoisture: 45
   });
   
-  console.log('📊 État MainApp:', { sidebarOpen, currentView, configureOpen });
+  console.log('📊 État MainApp:', { sidebarOpen, currentView });
 
   const renderView = () => {
     switch (currentView) {
       case 'dashboard':
         return <Dashboard />;
       case 'plants':
-        return (
-          <>
-            <PlantConfiguration
-              open={configureOpen}
-              onClose={() => setConfigureOpen(false)}
-            />
-            <SystemStats />
-          </>
-        );
+        return <PlantsPage />;
       case 'irrigation':
         return <IrrigationSchedule />;
       case 'automation':

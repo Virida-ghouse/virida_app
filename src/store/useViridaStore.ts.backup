@@ -1,11 +1,29 @@
 import { create } from 'zustand';
-import { mockSensors, mockZones, mockAutomationRules } from '../data/mockData';
-import type { SensorData, Zone, AutomationRule } from '../data/mockData';
+import { mockSensors, mockZones, mockAutomationRules, SensorData, Zone, AutomationRule } from '../data/mockData';
 
-// Re-export types for external use
-export type { SensorData, Zone, AutomationRule };
+export interface SensorData {
+  id: string;
+  type: string;
+  value: number;
+  unit: string;
+  status: 'normal' | 'warning' | 'alert';
+  timestamp: Date;
+  history: Array<{
+    value: number;
+    timestamp: Date;
+  }>;
+}
 
-// Plant interface for the new Plants module
+interface Zone {
+  id: string;
+  name: string;
+}
+
+interface AutomationRule {
+  id: string;
+  enabled: boolean;
+}
+
 export interface Plant {
   id: string;
   name: string;

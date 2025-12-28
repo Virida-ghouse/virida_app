@@ -1,0 +1,310 @@
+import React, { useEffect, useState } from 'react';
+import {
+  Container,
+  Grid,
+  Card,
+  CardContent,
+  TextField,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Box,
+  Typography,
+  Button,
+  CircularProgress,
+  Alert,
+  Chip,
+  IconButton,
+} from '@mui/material';
+import { styled } from '@mui/material/styles';
+import AddIcon from '@mui/icons-material/Add';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import PlantCardComponent from './PlantCard';
+import PlantDetails from './PlantDetails';
+import { useViridaStore } from '../../store/useViridaStore';
+
+const StyledCard = styled(Card)(() => ({
+  background: '#FFFFFF',
+  boxShadow: '0 2px 10px rgba(0, 0, 0, 0.08)',
+  border: '1px solid rgba(0, 0, 0, 0.1)',
+  borderRadius: '8px',
+}));
+
+const HeaderSection = styled(Box)(() => ({
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  marginBottom: '24px',
+}));
+
+const FilterSection = styled(Box)(() => ({
+  display: 'flex',
+  gap: '12px',
+  marginBottom: '24px',
+  flexWrap: 'wrap',
+  alignItems: 'center',
+}));
+
+interface Plant {
+  id: string;
+  name: string;
+  species: string;
+  category: string;
+  difficulty: string;
+  health: number;
+  growthStage: string;
+  daysToHarvest?: number;
+  imageUrl?: string;
+  iconEmoji?: string;
+}
+
+const PlantsPage: React.FC = () => {
+  const plants = useViridaStore((state) => state.plants || []);
+  const [selectedPlant, setSelectedPlant] = useState<Plant | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // Filtres
+  const [searchText, setSearchText] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedHealthRange, setSelectedHealthRange] = useState('');
+  const [filteredPlants, setFilteredPlants] = useState<Plant[]>([]);
+
+  // Appliquer les filtres
+  useEffect(() => {
+    let filtered = plants || [];
+
+    if (searchText) {
+      filtered = filtered.filter(
+        (plant) =>
+          plant.name.toLowerCase().includes(searchText.toLowerCase()) ||
+          plant.species.toLowerCase().includes(searchText.toLowerCase())
+      );
+    }
+
+    if (selectedCategory) {
+      filtered = filtered.filter((plant) => plant.category === selectedCategory);
+    }
+
+    if (selectedHealthRange) {
+      if (selectedHealthRange === 'excellent') {
+        filtered = filtered.filter((plant) => plant.health >= 80);
+      } else if (selectedHealthRange === 'good') {
+        filtered = filtered.filter((plant) => plant.health >= 60 && plant.health < 80);
+      } else if (selectedHealthRange === 'fair') {
+        filtered = filtered.filter((plant) => plant.health >= 40 && plant.health < 60);
+      } else if (selectedHealthRange === 'poor') {
+        filtered = filtered.filter((plant) => plant.health < 40);
+      }
+    }
+
+    setFilteredPlants(filtered);
+  }, [plants, searchText, selectedCategory, selectedHealthRange]);
+
+  // Catégories uniques
+  const categories = [...new Set(plants.map((p) => p.category))];
+
+  return (
+    <Container maxWidth="lg" sx={{ py: 4 }}>
+      {/* En-tête */}
+      <HeaderSection>
+        <Box>
+          <Typography variant="h5" sx={{ fontWeight: 700, color: '#121A21', mb: 0.5 }}>
+            🌱 Mes Plantes
+          </Typography>
+          <Typography variant="body2" color="#8091A0">
+            Gérez et surveillez vos cultures en temps réel
+          </Typography>
+        </Box>
+        <Box sx={{ display: 'flex', gap: 1 }}>
+          <IconButton
+            size="small"
+            onClick={() => setLoading(true)}
+            sx={{
+              borderRadius: '50%',
+              border: '1px solid #2AD388',
+              color: '#2AD388',
+            }}
+          >
+            <RefreshIcon />
+          </IconButton>
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            sx={{
+              background: '#2AD388',
+              color: '#FFFFFF',
+              textTransform: 'none',
+              fontSize: '0.95rem',
+              fontWeight: 600,
+              borderRadius: '6px',
+              '&:hover': {
+                background: '#23A075',
+              },
+            }}
+          >
+            Ajouter une plante
+          </Button>
+        </Box>
+      </HeaderSection>
+
+      {/* Filtres */}
+      <StyledCard sx={{ mb: 3 }}>
+        <CardContent>
+          <FilterSection>
+            <TextField
+              placeholder="Rechercher une plante..."
+              variant="outlined"
+              size="small"
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+              sx={{
+                minWidth: 250,
+                '& .MuiOutlinedInput-root': {
+                  '&:hover fieldset': {
+                    borderColor: '#2AD388',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#2AD388',
+                  },
+                },
+              }}
+            />
+
+            <FormControl size="small" sx={{ minWidth: 200 }}>
+              <InputLabel sx={{ color: '#8091A0' }}>Catégorie</InputLabel>
+              <Select
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                label="Catégorie"
+                sx={{
+                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                    borderColor: '#2AD388',
+                  },
+                }}
+              >
+                <MenuItem value="">Toutes</MenuItem>
+                {categories.map((cat) => (
+                  <MenuItem key={cat} value={cat}>
+                    {cat}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+            <FormControl size="small" sx={{ minWidth: 200 }}>
+              <InputLabel sx={{ color: '#8091A0' }}>Santé</InputLabel>
+              <Select
+                value={selectedHealthRange}
+                onChange={(e) => setSelectedHealthRange(e.target.value)}
+                label="Santé"
+                sx={{
+                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                    borderColor: '#2AD388',
+                  },
+                }}
+              >
+                <MenuItem value="">Toutes</MenuItem>
+                <MenuItem value="excellent">Excellente (≥80%)</MenuItem>
+                <MenuItem value="good">Bonne (60-79%)</MenuItem>
+                <MenuItem value="fair">Acceptable (40-59%)</MenuItem>
+                <MenuItem value="poor">Mauvaise (&lt;40%)</MenuItem>
+              </Select>
+            </FormControl>
+
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={() => {
+                setSearchText('');
+                setSelectedCategory('');
+                setSelectedHealthRange('');
+              }}
+              sx={{
+                color: '#8091A0',
+                borderColor: '#E1E8EE',
+                '&:hover': {
+                  borderColor: '#2AD388',
+                  color: '#2AD388',
+                },
+              }}
+            >
+              Réinitialiser
+            </Button>
+          </FilterSection>
+        </CardContent>
+      </StyledCard>
+
+      {/* État et compteurs */}
+      {filteredPlants.length > 0 && (
+        <Box sx={{ display: 'flex', gap: 1, mb: 3, flexWrap: 'wrap' }}>
+          <Chip
+            label={`Total: ${filteredPlants.length}`}
+            sx={{
+              background: '#2AD38820',
+              color: '#2AD388',
+              fontWeight: 600,
+            }}
+          />
+          <Chip
+            label={`Excellente santé: ${filteredPlants.filter((p) => p.health >= 80).length}`}
+            sx={{
+              background: '#2AD38820',
+              color: '#2AD388',
+            }}
+          />
+          <Chip
+            label={`À surveiller: ${filteredPlants.filter((p) => p.health < 60).length}`}
+            sx={{
+              background: '#f1c40f20',
+              color: '#f1c40f',
+            }}
+          />
+        </Box>
+      )}
+
+      {/* Erreur */}
+      {error && <Alert severity="error" sx={{ mb: 3 }}>{error}</Alert>}
+
+      {/* Loading */}
+      {loading && (
+        <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
+          <CircularProgress sx={{ color: '#2AD388' }} />
+        </Box>
+      )}
+
+      {/* Grille de plantes */}
+      {!loading && filteredPlants.length > 0 ? (
+        <Grid container spacing={3}>
+          {filteredPlants.map((plant) => (
+            <Grid item xs={12} sm={6} md={4} lg={3} key={plant.id}>
+              <PlantCardComponent
+                plant={plant}
+                onSelect={() => setSelectedPlant(plant)}
+              />
+            </Grid>
+          ))}
+        </Grid>
+      ) : !loading && filteredPlants.length === 0 ? (
+        <StyledCard>
+          <CardContent sx={{ textAlign: 'center', py: 4 }}>
+            <Typography variant="h6" color="#121A21" sx={{ mb: 1 }}>
+              Aucune plante ne correspond à vos filtres
+            </Typography>
+            <Typography variant="body2" color="#8091A0">
+              Commencez par ajouter une nouvelle plante à votre serre
+            </Typography>
+          </CardContent>
+        </StyledCard>
+      ) : null}
+
+      {/* Panneau de détails */}
+      {selectedPlant && (
+        <PlantDetails plant={selectedPlant} onClose={() => setSelectedPlant(null)} />
+      )}
+    </Container>
+  );
+};
+
+export default PlantsPage;

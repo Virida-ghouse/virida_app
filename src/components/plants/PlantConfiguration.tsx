@@ -12,7 +12,7 @@ import {
   Autocomplete,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { useViridaStore } from '../../store/useViridaStore';
+import { useViridaStore, Plant } from '../../store/useViridaStore';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialog-paper': {
@@ -35,7 +35,7 @@ const RangeInput = styled(Box)(({ theme }) => ({
 interface PlantConfigurationProps {
   open: boolean;
   onClose: () => void;
-  editPlant?: PlantData;
+  editPlant?: Plant;
 }
 
 const plantSpecies = [
@@ -50,7 +50,7 @@ const PlantConfiguration: React.FC<PlantConfigurationProps> = ({
   onClose,
   editPlant,
 }) => {
-  const { addPlant } = useViridaStore();
+  const { setPlants, plants } = useViridaStore();
   const [formData, setFormData] = React.useState({
     name: '',
     species: '',
@@ -65,10 +65,10 @@ const PlantConfiguration: React.FC<PlantConfigurationProps> = ({
       setFormData({
         name: editPlant.name,
         species: editPlant.species,
-        temperature: editPlant.optimalConditions.temperature,
-        humidity: editPlant.optimalConditions.humidity,
-        ph: editPlant.optimalConditions.ph,
-        light: editPlant.optimalConditions.light,
+        temperature: { min: 20, max: 25 },
+        humidity: { min: 60, max: 80 },
+        ph: { min: 6.0, max: 6.8 },
+        light: { min: 3000, max: 6000 },
       });
     }
   }, [editPlant]);
@@ -88,20 +88,22 @@ const PlantConfiguration: React.FC<PlantConfigurationProps> = ({
   };
 
   const handleSubmit = () => {
-    const newPlant = {
+    const newPlant: Plant = {
+      id: editPlant?.id || Math.random().toString(36),
       name: formData.name,
       species: formData.species,
-      plantedDate: new Date(),
-      status: 'healthy' as const,
-      optimalConditions: {
-        temperature: formData.temperature,
-        humidity: formData.humidity,
-        ph: formData.ph,
-        light: formData.light,
-      },
+      category: 'vegetable',
+      difficulty: 'medium',
+      health: 100,
+      growthStage: 'seedling',
+      daysToHarvest: 30,
     };
 
-    addPlant(newPlant);
+    if (editPlant) {
+      setPlants(plants.map(p => p.id === editPlant.id ? newPlant : p));
+    } else {
+      setPlants([...plants, newPlant]);
+    }
     onClose();
   };
 
@@ -110,169 +112,30 @@ const PlantConfiguration: React.FC<PlantConfigurationProps> = ({
       <DialogTitle>
         {editPlant ? 'Edit Plant' : 'Add New Plant'}
       </DialogTitle>
-      <DialogContent>
-        <Grid container spacing={3}>
-          <Grid item xs={12} sm={6}>
+      <DialogContent sx={{ pt: 2 }}>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
             <TextField
               fullWidth
               label="Plant Name"
               value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              margin="normal"
+              onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12}>
             <Autocomplete
               options={plantSpecies}
               getOptionLabel={(option) => option.label}
               onChange={handleSpeciesChange}
-              value={plantSpecies.find((s) => s.label === formData.species) || null}
-              renderInput={(params) => (
-                <TextField {...params} label="Species" margin="normal" />
-              )}
+              renderInput={(params) => <TextField {...params} label="Species" />}
             />
-          </Grid>
-
-          <Grid item xs={12}>
-            <Typography variant="subtitle1" gutterBottom>
-              Optimal Conditions
-            </Typography>
-          </Grid>
-
-          <Grid item xs={12} sm={6}>
-            <Typography variant="body2" color="text.secondary">
-              Temperature Range (°C)
-            </Typography>
-            <RangeInput>
-              <TextField
-                type="number"
-                label="Min"
-                value={formData.temperature.min}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    temperature: { ...formData.temperature, min: Number(e.target.value) },
-                  })
-                }
-              />
-              <Typography>-</Typography>
-              <TextField
-                type="number"
-                label="Max"
-                value={formData.temperature.max}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    temperature: { ...formData.temperature, max: Number(e.target.value) },
-                  })
-                }
-              />
-            </RangeInput>
-          </Grid>
-
-          <Grid item xs={12} sm={6}>
-            <Typography variant="body2" color="text.secondary">
-              Humidity Range (%)
-            </Typography>
-            <RangeInput>
-              <TextField
-                type="number"
-                label="Min"
-                value={formData.humidity.min}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    humidity: { ...formData.humidity, min: Number(e.target.value) },
-                  })
-                }
-              />
-              <Typography>-</Typography>
-              <TextField
-                type="number"
-                label="Max"
-                value={formData.humidity.max}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    humidity: { ...formData.humidity, max: Number(e.target.value) },
-                  })
-                }
-              />
-            </RangeInput>
-          </Grid>
-
-          <Grid item xs={12} sm={6}>
-            <Typography variant="body2" color="text.secondary">
-              pH Range
-            </Typography>
-            <RangeInput>
-              <TextField
-                type="number"
-                label="Min"
-                value={formData.ph.min}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    ph: { ...formData.ph, min: Number(e.target.value) },
-                  })
-                }
-              />
-              <Typography>-</Typography>
-              <TextField
-                type="number"
-                label="Max"
-                value={formData.ph.max}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    ph: { ...formData.ph, max: Number(e.target.value) },
-                  })
-                }
-              />
-            </RangeInput>
-          </Grid>
-
-          <Grid item xs={12} sm={6}>
-            <Typography variant="body2" color="text.secondary">
-              Light Range (lux)
-            </Typography>
-            <RangeInput>
-              <TextField
-                type="number"
-                label="Min"
-                value={formData.light.min}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    light: { ...formData.light, min: Number(e.target.value) },
-                  })
-                }
-              />
-              <Typography>-</Typography>
-              <TextField
-                type="number"
-                label="Max"
-                value={formData.light.max}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    light: { ...formData.light, max: Number(e.target.value) },
-                  })
-                }
-              />
-            </RangeInput>
           </Grid>
         </Grid>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
-        <Button
-          onClick={handleSubmit}
-          variant="contained"
-          color="primary"
-          disabled={!formData.name || !formData.species}
-        >
-          {editPlant ? 'Update' : 'Add'} Plant
+        <Button onClick={handleSubmit} variant="contained">
+          {editPlant ? 'Update' : 'Add'}
         </Button>
       </DialogActions>
     </StyledDialog>
