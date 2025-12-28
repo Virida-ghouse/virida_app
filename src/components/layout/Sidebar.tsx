@@ -47,7 +47,9 @@ const StyledDrawer = styled(Drawer)(({ theme }) => ({
   },
 }));
 
-const StyledListItem = styled(ListItem)<{ active?: boolean }>(({ theme, active }) => ({
+const StyledListItem = styled(ListItem, {
+  shouldForwardProp: (prop) => prop !== 'active',
+})<{ active?: boolean }>(({ theme, active }) => ({
   margin: '2px 16px',
   borderRadius: theme.shape.borderRadius,
   backgroundColor: active ? '#2E7D32' : 'transparent',

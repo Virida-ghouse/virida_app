@@ -22,6 +22,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import PersonIcon from '@mui/icons-material/Person';
 import { styled } from '@mui/material/styles';
 import { useAuth } from '../../contexts/AuthContext';
+import { NotificationMenu } from '../plants/ui/NotificationMenu';
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
   background: 'linear-gradient(135deg, #2E7D32 0%, #388E3C 100%)',
@@ -96,12 +97,7 @@ const Header: React.FC = () => {
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           {!isMobile && (
             <>
-              <IconButton
-                color="inherit"
-                sx={{ color: '#FFFFFF' }}
-              >
-                <NotificationsIcon />
-              </IconButton>
+              <NotificationMenu />
               <IconButton
                 color="inherit"
                 sx={{ color: '#FFFFFF' }}
