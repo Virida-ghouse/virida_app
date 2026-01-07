@@ -305,6 +305,8 @@ const ElectronicsComponents = () => {
   return (
     <group>
       {/* Capteurs d'environnement - en haut de la serre */}
+      {/* HIDDEN: temperatureSensor */}
+      {/*
       <EditableComponent
         id="temperatureSensor"
         position={toArray(ELECTRONICS_CONFIG.temperatureSensor.position)}
@@ -312,7 +314,9 @@ const ElectronicsComponents = () => {
         scale={[1, 1, 1]}
       >
         <TemperatureSensor position={[0, 0, 0]} rotation={[0, 0, 0]} scale={[1, 1, 1]} />
-      </EditableComponent>
+      </EditableComponent>*/}
+      {/* HIDDEN: lightSensor */}
+      {/*
 
       <EditableComponent
         id="lightSensor"
@@ -321,7 +325,9 @@ const ElectronicsComponents = () => {
         scale={[1, 1, 1]}
       >
         <LightSensor position={[0, 0, 0]} rotation={[0, 0, 0]} scale={[1, 1, 1]} />
-      </EditableComponent>
+      </EditableComponent>*/}
+      {/* HIDDEN: co2Sensor */}
+      {/*
 
       <EditableComponent
         id="co2Sensor"
@@ -330,7 +336,7 @@ const ElectronicsComponents = () => {
         scale={[1, 1, 1]}
       >
         <CO2Sensor3D position={[0, 0, 0]} rotation={[0, 0, 0]} scale={[1, 1, 1]} />
-      </EditableComponent>
+      </EditableComponent>*/}
 
       {/* Capteurs du sol - près du pot */}
       <EditableComponent
@@ -341,6 +347,8 @@ const ElectronicsComponents = () => {
       >
         <SoilMoistureSensor3D position={[0, 0, 0]} rotation={[0, 0, 0]} scale={[1, 1, 1]} />
       </EditableComponent>
+      {/* HIDDEN: phSensor */}
+      {/*
 
       <EditableComponent
         id="phSensor"
@@ -349,7 +357,9 @@ const ElectronicsComponents = () => {
         scale={[1, 1, 1]}
       >
         <Sensor position={[0, 0, 0]} rotation={[0, 0, 0]} scale={[1, 1, 1]} color={VIRIDA_COLORS.SENSOR_BLUE} label="pH" />
-      </EditableComponent>
+      </EditableComponent>*/}
+      {/* HIDDEN: tdsSensor */}
+      {/*
 
       <EditableComponent
         id="tdsSensor"
@@ -358,9 +368,11 @@ const ElectronicsComponents = () => {
         scale={[1, 1, 1]}
       >
         <Sensor position={[0, 0, 0]} rotation={[0, 0, 0]} scale={[1, 1, 1]} color={VIRIDA_COLORS.SENSOR_BLUE} label="TDS" />
-      </EditableComponent>
+      </EditableComponent>*/}
 
       {/* Système d'irrigation - pompe au sol */}
+      {/* HIDDEN: waterPump */}
+      {/*
       <EditableComponent
         id="waterPump"
         position={toArray(ELECTRONICS_CONFIG.waterPump.position)}
@@ -368,7 +380,9 @@ const ElectronicsComponents = () => {
         scale={[1, 1, 1]}
       >
         <WaterPump position={[0, 0, 0]} rotation={[0, 0, 0]} scale={[1, 1, 1]} />
-      </EditableComponent>
+      </EditableComponent>*/}
+      {/* HIDDEN: mistingNozzle1 */}
+      {/*
 
       <EditableComponent
         id="mistingNozzle1"
@@ -377,7 +391,9 @@ const ElectronicsComponents = () => {
         scale={[1, 1, 1]}
       >
         <MistingNozzle position={[0, 0, 0]} rotation={[0, 0, 0]} scale={[1, 1, 1]} />
-      </EditableComponent>
+      </EditableComponent>*/}
+      {/* HIDDEN: mistingNozzle2 */}
+      {/*
 
       <EditableComponent
         id="mistingNozzle2"
@@ -386,7 +402,9 @@ const ElectronicsComponents = () => {
         scale={[1, 1, 1]}
       >
         <MistingNozzle position={[0, 0, 0]} rotation={[0, 0, 0]} scale={[1, 1, 1]} />
-      </EditableComponent>
+      </EditableComponent>*/}
+      {/* HIDDEN: mistingNozzle3 */}
+      {/*
 
       <EditableComponent
         id="mistingNozzle3"
@@ -395,9 +413,11 @@ const ElectronicsComponents = () => {
         scale={[1, 1, 1]}
       >
         <MistingNozzle position={[0, 0, 0]} rotation={[0, 0, 0]} scale={[1, 1, 1]} />
-      </EditableComponent>
+      </EditableComponent>*/}
 
       {/* Ventilation - sur les côtés */}
+      {/* HIDDEN: fan1 */}
+      {/*
       <EditableComponent
         id="fan1"
         position={toArray(ELECTRONICS_CONFIG.fan1.position)}
@@ -405,7 +425,9 @@ const ElectronicsComponents = () => {
         scale={toArray(ELECTRONICS_CONFIG.fan1.scale)}
       >
         <Fan3D position={[0, 0, 0]} rotation={[0, 0, 0]} scale={[1, 1, 1]} />
-      </EditableComponent>
+      </EditableComponent>*/}
+      {/* HIDDEN: fan2 */}
+      {/*
 
       <EditableComponent
         id="fan2"
@@ -414,9 +436,11 @@ const ElectronicsComponents = () => {
         scale={toArray(ELECTRONICS_CONFIG.fan2.scale)}
       >
         <Fan3D position={[0, 0, 0]} rotation={[0, 0, 0]} scale={[1, 1, 1]} />
-      </EditableComponent>
+      </EditableComponent>*/}
 
       {/* Éclairage UV - en haut au centre */}
+      {/* HIDDEN: uvLight1 */}
+      {/*
       <EditableComponent
         id="uvLight1"
         position={toArray(ELECTRONICS_CONFIG.uvLight1.position)}
@@ -424,7 +448,9 @@ const ElectronicsComponents = () => {
         scale={[1, 1, 1]}
       >
         <UVLight position={[0, 0, 0]} rotation={[0, 0, 0]} scale={[1, 1, 1]} />
-      </EditableComponent>
+      </EditableComponent>*/}
+      {/* HIDDEN: uvLight2 */}
+      {/*
 
       <EditableComponent
         id="uvLight2"
@@ -433,7 +459,7 @@ const ElectronicsComponents = () => {
         scale={[1, 1, 1]}
       >
         <UVLight position={[0, 0, 0]} rotation={[0, 0, 0]} scale={[1, 1, 1]} />
-      </EditableComponent>
+      </EditableComponent>*/}
 
       {/* Contrôleurs - au sol, coin de la serre */}
       <EditableComponent
@@ -455,6 +481,8 @@ const ElectronicsComponents = () => {
       </EditableComponent>
 
       {/* Servomoteur - pour ventilation/ouvertures */}
+      {/* HIDDEN: servoMotor */}
+      {/*
       <EditableComponent
         id="servoMotor"
         position={toArray(ELECTRONICS_CONFIG.servoMotor.position)}
@@ -462,9 +490,11 @@ const ElectronicsComponents = () => {
         scale={[1, 1, 1]}
       >
         <ServoMotor position={[0, 0, 0]} rotation={[0, 0, 0]} scale={[1, 1, 1]} />
-      </EditableComponent>
+      </EditableComponent>*/}
 
       {/* Caméra ESP32-CAM - en haut, vue d'ensemble */}
+      {/* HIDDEN: camera */}
+      {/*
       <EditableComponent
         id="camera"
         position={toArray(ELECTRONICS_CONFIG.camera.position)}
@@ -472,7 +502,7 @@ const ElectronicsComponents = () => {
         scale={[2, 2, 2]}
       >
         <Camera position={[0, 0, 0]} rotation={[0, 0, 0]} scale={[1, 1, 1]} />
-      </EditableComponent>
+      </EditableComponent>*/}
     </group>
   );
 };
