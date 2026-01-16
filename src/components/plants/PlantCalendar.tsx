@@ -73,7 +73,8 @@ const PlantCalendar: React.FC = () => {
     'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'
   ];
 
-  const dayNames = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
+  // Semaine française : commence par Lundi
+  const dayNames = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
 
   // Mapper les types de l'API vers les types du calendrier
   const mapTaskType = (apiType: APITask['type']): CalendarTask['type'] => {
