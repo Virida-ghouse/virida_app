@@ -126,7 +126,7 @@ interface PlantDetail {
   };
 }
 
-const VIRIDA_GREEN = '#2E7D32';
+const VIRIDA_GREEN = '#052E1C';
 const VIRIDA_LIGHT_GREEN = '#E8F5E9';
 
 export const PlantLibraryDetailsDialog: React.FC<PlantLibraryDetailsDialogProps> = ({
@@ -286,7 +286,7 @@ export const PlantLibraryDetailsDialog: React.FC<PlantLibraryDetailsDialogProps>
                 sx={{
                   width: '100%',
                   height: '100%',
-                  background: `linear-gradient(135deg, ${VIRIDA_GREEN} 0%, #1B5E20 100%)`,
+                  background: `linear-gradient(135deg, ${VIRIDA_GREEN} 0%, #041E13 100%)`,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',

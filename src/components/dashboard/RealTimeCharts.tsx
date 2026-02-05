@@ -22,7 +22,7 @@ const ChartsContainer = styled(motion.div)(({ theme }) => ({
     left: 0,
     right: 0,
     height: '2px',
-    background: 'linear-gradient(90deg, #3B82F6, #2AD388, #F59E0B)',
+    background: 'linear-gradient(90deg, #3B82F6, #2AD368, #F59E0B)',
   },
 }));
 
@@ -32,12 +32,12 @@ const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
     border: '1px solid rgba(148, 163, 184, 0.2)',
     backgroundColor: 'rgba(15, 23, 42, 0.6)',
     '&.Mui-selected': {
-      backgroundColor: 'rgba(42, 211, 136, 0.2)',
-      color: '#2AD388',
-      border: '1px solid #2AD388',
+      backgroundColor: 'rgba(42, 211, 104, 0.2)',
+      color: '#2AD368',
+      border: '1px solid #2AD368',
     },
     '&:hover': {
-      backgroundColor: 'rgba(42, 211, 136, 0.1)',
+      backgroundColor: 'rgba(42, 211, 104, 0.1)',
     },
   },
 }));
@@ -48,7 +48,7 @@ const ChartWrapper = styled(motion.div)({
   '& .recharts-tooltip-wrapper': {
     '& .recharts-default-tooltip': {
       backgroundColor: 'rgba(15, 23, 42, 0.95)',
-      border: '1px solid rgba(42, 211, 136, 0.3)',
+      border: '1px solid rgba(42, 211, 104, 0.3)',
       borderRadius: '8px',
       color: '#E2E8F0',
     },
@@ -127,7 +127,7 @@ const RealTimeCharts: React.FC<RealTimeChartsProps> = ({ data }) => {
         <Box
           sx={{
             background: 'rgba(15, 23, 42, 0.95)',
-            border: '1px solid rgba(42, 211, 136, 0.3)',
+            border: '1px solid rgba(42, 211, 104, 0.3)',
             borderRadius: '8px',
             padding: 1.5,
             backdropFilter: 'blur(8px)',
@@ -178,7 +178,7 @@ const RealTimeCharts: React.FC<RealTimeChartsProps> = ({ data }) => {
       {/* Header avec métriques et contrôles */}
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <TrendingUpIcon sx={{ color: '#2AD388' }} />
+          <TrendingUpIcon sx={{ color: '#2AD368' }} />
           <Typography
             variant="h6"
             sx={{

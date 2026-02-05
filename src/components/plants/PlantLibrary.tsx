@@ -68,7 +68,7 @@ const PlantLibrary: React.FC = () => {
         setLoading(true);
         setError(null);
         const token = localStorage.getItem('virida_token');
-        const response = await fetch(`${apiUrl}/api/plant-catalog`, {
+        const response = await fetch(`${apiUrl}/api/plants/catalog`, {
           headers: {
             'Authorization': `Bearer ${token}`,
           },
@@ -127,7 +127,7 @@ const PlantLibrary: React.FC = () => {
             label={`${totalPlants} plante${totalPlants > 1 ? 's' : ''}`}
             sx={{
               bgcolor: '#F0F9F4',
-              color: '#2E7D32',
+              color: '#052E1C',
               fontWeight: 600,
             }}
           />
@@ -137,7 +137,7 @@ const PlantLibrary: React.FC = () => {
               onDelete={() => setSelectedCategory('')}
               sx={{
                 bgcolor: '#E8F5E9',
-                color: '#2E7D32',
+                color: '#052E1C',
               }}
             />
           )}
@@ -147,7 +147,7 @@ const PlantLibrary: React.FC = () => {
               onDelete={() => setSelectedDifficulty('')}
               sx={{
                 bgcolor: '#E8F5E9',
-                color: '#2E7D32',
+                color: '#052E1C',
               }}
             />
           )}
@@ -169,8 +169,8 @@ const PlantLibrary: React.FC = () => {
               bgcolor: 'white',
               '& .MuiOutlinedInput-root': {
                 '& fieldset': { borderColor: '#E0E0E0' },
-                '&:hover fieldset': { borderColor: '#2E7D32' },
-                '&.Mui-focused fieldset': { borderColor: '#2E7D32' },
+                '&:hover fieldset': { borderColor: '#052E1C' },
+                '&.Mui-focused fieldset': { borderColor: '#052E1C' },
               },
             }}
           />
@@ -183,8 +183,8 @@ const PlantLibrary: React.FC = () => {
               border: '1px solid #E0E0E0',
               '&:hover': {
                 bgcolor: '#F5F5F5',
-                borderColor: '#2E7D32',
-                color: '#2E7D32',
+                borderColor: '#052E1C',
+                color: '#052E1C',
               },
             }}
           >
@@ -203,7 +203,7 @@ const PlantLibrary: React.FC = () => {
                 label="Catégorie"
                 sx={{
                   '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                    borderColor: '#2E7D32',
+                    borderColor: '#052E1C',
                   },
                 }}
               >
@@ -224,7 +224,7 @@ const PlantLibrary: React.FC = () => {
                 label="Difficulté"
                 sx={{
                   '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                    borderColor: '#2E7D32',
+                    borderColor: '#052E1C',
                   },
                 }}
               >
@@ -250,7 +250,7 @@ const PlantLibrary: React.FC = () => {
       {/* Loading */}
       {loading && (
         <Box display="flex" justifyContent="center" py={8}>
-          <CircularProgress sx={{ color: '#2E7D32' }} size={60} />
+          <CircularProgress sx={{ color: '#052E1C' }} size={60} />
         </Box>
       )}
 

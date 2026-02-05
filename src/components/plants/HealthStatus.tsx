@@ -30,7 +30,7 @@ const HealthStatus: React.FC<HealthStatusProps> = ({ plant, healthData }) => {
   };
 
   const getStatusColor = (status: string) => {
-    if (status === 'optimal') return '#2AD388';
+    if (status === 'optimal') return '#2AD368';
     if (status === 'low' || status === 'high') return '#f1c40f';
     return '#8091A0';
   };
@@ -66,11 +66,11 @@ const HealthStatus: React.FC<HealthStatusProps> = ({ plant, healthData }) => {
                       borderRadius: '3px',
                       background: '#E1E8EE',
                       '& .MuiLinearProgress-bar': {
-                        backgroundColor: '#2AD388',
+                        backgroundColor: '#2AD368',
                       },
                     }}
                   />
-                  <Typography variant="caption" sx={{ color: '#2AD388', fontWeight: 600 }}>
+                  <Typography variant="caption" sx={{ color: '#2AD368', fontWeight: 600 }}>
                     {getConditionStatus(
                       healthData.currentConditions.temperature,
                       healthData.optimalConditions.temperature?.min || 15,
@@ -107,11 +107,11 @@ const HealthStatus: React.FC<HealthStatusProps> = ({ plant, healthData }) => {
                       borderRadius: '3px',
                       background: '#E1E8EE',
                       '& .MuiLinearProgress-bar': {
-                        backgroundColor: '#2AD388',
+                        backgroundColor: '#2AD368',
                       },
                     }}
                   />
-                  <Typography variant="caption" sx={{ color: '#2AD388', fontWeight: 600 }}>
+                  <Typography variant="caption" sx={{ color: '#2AD368', fontWeight: 600 }}>
                     {getConditionStatus(
                       healthData.currentConditions.humidity,
                       healthData.optimalConditions.humidity?.min || 50,
@@ -148,11 +148,11 @@ const HealthStatus: React.FC<HealthStatusProps> = ({ plant, healthData }) => {
                       borderRadius: '3px',
                       background: '#E1E8EE',
                       '& .MuiLinearProgress-bar': {
-                        backgroundColor: '#2AD388',
+                        backgroundColor: '#2AD368',
                       },
                     }}
                   />
-                  <Typography variant="caption" sx={{ color: '#2AD388', fontWeight: 600 }}>
+                  <Typography variant="caption" sx={{ color: '#2AD368', fontWeight: 600 }}>
                     {getConditionStatus(
                       healthData.currentConditions.soil_ph,
                       healthData.optimalConditions.ph?.min || 6.0,
@@ -183,7 +183,7 @@ const HealthStatus: React.FC<HealthStatusProps> = ({ plant, healthData }) => {
               ))
             ) : (
               <li>
-                <Typography variant="body2" sx={{ color: '#2AD388', fontWeight: 600 }}>
+                <Typography variant="body2" sx={{ color: '#2AD368', fontWeight: 600 }}>
                   ✓ Les conditions sont optimales pour votre plante
                 </Typography>
               </li>

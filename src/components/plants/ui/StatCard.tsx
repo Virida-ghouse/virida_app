@@ -12,7 +12,7 @@ export const StatCard: React.FC<StatCardProps> = ({
   label,
   value,
   subtitle,
-  color = '#2AD388',
+  color = '#2AD368',
 }) => {
   return (
     <Box

@@ -2,7 +2,7 @@ import React from 'react';
 import {
   Drawer,
   List,
-  ListItem,
+  ListItemButton,
   ListItemIcon,
   ListItemText,
   IconButton,
@@ -20,41 +20,45 @@ import AutomationIcon from '@mui/icons-material/SmartToy';
 import BoltIcon from '@mui/icons-material/Bolt';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import MenuIcon from '@mui/icons-material/Menu';
+import { VIRIDA_COLORS } from '../../theme/colors';
 
 const StyledDrawer = styled(Drawer)(({ theme }) => ({
   '& .MuiDrawer-paper': {
     width: 240,
-    background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(46, 125, 50, 0.05) 100%)',
+    background: VIRIDA_COLORS.greenDark, // Vert foncé de la charte pour la sidebar
     backdropFilter: 'blur(10px)',
     border: 'none',
-    borderRight: 'none',
+    borderRight: `1px solid rgba(42, 211, 104, 0.1)`, // Bordure subtile avec vert vif
     boxShadow: 'none',
     transition: 'all 0.3s ease',
-    '&::before': {
-      content: '""',
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      background: `
-        radial-gradient(circle at 20% 20%, rgba(46, 125, 50, 0.03) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(56, 142, 60, 0.03) 0%, transparent 50%),
-        radial-gradient(circle at 40% 60%, rgba(67, 160, 71, 0.02) 0%, transparent 50%)
-      `,
-      pointerEvents: 'none',
-    },
   },
 }));
 
-const StyledListItem = styled(ListItem, {
+const StyledListItemButton = styled(ListItemButton, {
   shouldForwardProp: (prop) => prop !== 'active',
 })<{ active?: boolean }>(({ theme, active }) => ({
-  margin: '2px 16px',
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: active ? '#2E7D32' : 'transparent',
+  margin: '4px 12px',
+  borderRadius: '12px',
+  backgroundColor: active ? VIRIDA_COLORS.greenBright : 'transparent', // Vert vif pour l'item actif
+  transition: 'all 0.2s ease',
+  position: 'relative',
+  minHeight: '48px',
+  ...(active && {
+    '&::before': {
+      content: '""',
+      position: 'absolute',
+      left: 0,
+      top: '50%',
+      transform: 'translateY(-50%)',
+      width: '4px',
+      height: '60%',
+      backgroundColor: VIRIDA_COLORS.greenBright,
+      borderRadius: '0 4px 4px 0',
+    },
+  }),
   '&:hover': {
-    backgroundColor: 'rgba(46, 125, 50, 0.1)',
+    backgroundColor: active ? VIRIDA_COLORS.greenBright : 'rgba(42, 211, 104, 0.15)', // Hover avec vert vif
+    transform: 'translateX(4px)',
   },
 }));
 
@@ -116,45 +120,62 @@ const Sidebar: React.FC<SidebarProps> = ({
           alignItems: 'center',
           justifyContent: open ? 'flex-end' : 'center',
           p: 2,
+          borderBottom: '1px solid rgba(42, 211, 104, 0.1)',
         }}
       >
-        <IconButton onClick={onToggle} sx={{ color: '#121A21' }}>
+        <IconButton 
+          onClick={onToggle} 
+          sx={{ 
+            color: VIRIDA_COLORS.white,
+            '&:hover': {
+              backgroundColor: 'rgba(42, 211, 104, 0.1)',
+            },
+          }}
+        >
           <MenuIcon />
         </IconButton>
       </Box>
 
-      <List>
-        {menuItems.map((item) => (
-          <Tooltip
-            key={item.id}
-            title={!open ? item.label : ''}
-            placement="right"
-          >
-            <StyledListItem
-              button
-              active={currentView === item.id}
-              onClick={() => onViewChange(item.id)}
+      <List sx={{ px: 1, py: 2 }}>
+        {menuItems.map((item) => {
+          const isActive = currentView === item.id;
+          return (
+            <Tooltip
+              key={item.id}
+              title={!open ? item.label : ''}
+              placement="right"
             >
-              <ListItemIcon
-                sx={{
-                  minWidth: open ? 36 : 'auto',
-                  color: currentView === item.id ? '#FFFFFF' : 'rgba(46, 125, 50, 0.7)',
-                }}
+              <StyledListItemButton
+                active={isActive}
+                onClick={() => onViewChange(item.id)}
               >
-                {item.icon}
-              </ListItemIcon>
-              {open && (
-                <ListItemText
-                  primary={item.label}
+                <ListItemIcon
                   sx={{
-                    color:
-                      currentView === item.id ? '#FFFFFF' : 'rgba(46, 125, 50, 0.7)',
+                    minWidth: open ? 40 : 'auto',
+                    color: isActive ? VIRIDA_COLORS.white : 'rgba(255, 255, 255, 0.7)',
+                    transition: 'color 0.2s ease',
+                    justifyContent: open ? 'flex-start' : 'center',
                   }}
-                />
-              )}
-            </StyledListItem>
-          </Tooltip>
-        ))}
+                >
+                  {item.icon}
+                </ListItemIcon>
+                {open && (
+                  <ListItemText
+                    primary={item.label}
+                    sx={{
+                      '& .MuiTypography-root': {
+                        color: isActive ? VIRIDA_COLORS.white : 'rgba(255, 255, 255, 0.7)',
+                        fontWeight: isActive ? 600 : 500,
+                        fontSize: '0.95rem',
+                        transition: 'all 0.2s ease',
+                      },
+                    }}
+                  />
+                )}
+              </StyledListItemButton>
+            </Tooltip>
+          );
+        })}
       </List>
     </StyledDrawer>
   );

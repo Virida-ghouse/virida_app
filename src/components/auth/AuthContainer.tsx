@@ -48,7 +48,7 @@ const AuthContainer: React.FC = () => {
         sx={{
           width: sidebarWidth,
           minHeight: sidebarMinHeight,
-          background: 'linear-gradient(180deg, #2E7D32 0%, #1B5E20 100%)',
+          background: '#052E1C', // Vert foncé de la charte
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',

@@ -1,0 +1,330 @@
+import React, { useState, useEffect } from 'react';
+import { PlantCardMinimal, ConfirmDialog, AddPlantDialog, PlantDetailsDialog } from './ui';
+import { useViridaStore } from '../../store/useViridaStore';
+
+interface UserPlant {
+  id: string;
+  name: string;
+  species: string;
+  imageUrl?: string;
+  iconEmoji?: string;
+  health: number;
+  daysToHarvest?: number;
+  status: string;
+  plantedAt?: string;
+}
+
+const MyGardenNew: React.FC = () => {
+  const apiUrl = useViridaStore((state) => state.apiUrl);
+  const [currentFilter, setCurrentFilter] = useState<'all' | 'active' | 'ready'>('all');
+  const [userPlants, setUserPlants] = useState<UserPlant[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const [plantToDelete, setPlantToDelete] = useState<{ id: string; name: string } | null>(null);
+  const [addPlantDialogOpen, setAddPlantDialogOpen] = useState(false);
+  const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
+  const [selectedPlantId, setSelectedPlantId] = useState<string | null>(null);
+
+  // Récupérer les plantes de l'utilisateur
+  useEffect(() => {
+    const fetchUserPlants = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const token = localStorage.getItem('virida_token');
+        const response = await fetch(`${apiUrl}/api/plants`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('Erreur lors du chargement des plantes');
+        }
+
+        const data = await response.json();
+        setUserPlants(data.data || []);
+      } catch (err) {
+        console.error('Erreur chargement plantes utilisateur:', err);
+        setError(err instanceof Error ? err.message : 'Erreur inconnue');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserPlants();
+  }, [apiUrl]);
+
+  const handleDeletePlant = (plantId: string) => {
+    const plant = userPlants.find(p => p.id === plantId);
+    if (plant) {
+      setPlantToDelete({ id: plant.id, name: plant.name });
+      setConfirmDialogOpen(true);
+    }
+  };
+
+  const confirmDeletePlant = async () => {
+    if (!plantToDelete) return;
+
+    try {
+      const token = localStorage.getItem('virida_token');
+      const response = await fetch(`${apiUrl}/api/plants/${plantToDelete.id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Erreur lors de la suppression de la plante');
+      }
+
+      setUserPlants((prev) => prev.filter((plant) => plant.id !== plantToDelete.id));
+      setConfirmDialogOpen(false);
+      setPlantToDelete(null);
+    } catch (err) {
+      console.error('Erreur suppression plante:', err);
+      setError(err instanceof Error ? err.message : 'Erreur lors de la suppression');
+    }
+  };
+
+  const handleAddPlant = () => {
+    setAddPlantDialogOpen(true);
+  };
+
+  const handleCloseAddPlant = () => {
+    setAddPlantDialogOpen(false);
+  };
+
+  const handlePlantAdded = () => {
+    const fetchUserPlants = async () => {
+      try {
+        const token = localStorage.getItem('virida_token');
+        const response = await fetch(`${apiUrl}/api/plants`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setUserPlants(data.data || []);
+        }
+      } catch (err) {
+        console.error('Erreur rechargement plantes:', err);
+      }
+    };
+    fetchUserPlants();
+  };
+
+  const handleOpenPlantDetails = (plantId: string) => {
+    setSelectedPlantId(plantId);
+    setDetailsDialogOpen(true);
+  };
+
+  const handleClosePlantDetails = () => {
+    setDetailsDialogOpen(false);
+    setSelectedPlantId(null);
+  };
+
+  const handlePlantUpdated = () => {
+    const fetchUserPlants = async () => {
+      try {
+        const token = localStorage.getItem('virida_token');
+        const response = await fetch(`${apiUrl}/api/plants`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setUserPlants(data.data || []);
+        }
+      } catch (err) {
+        console.error('Erreur rechargement plantes:', err);
+      }
+    };
+    fetchUserPlants();
+  };
+
+  const handlePlantDeleted = () => {
+    const fetchUserPlants = async () => {
+      try {
+        const token = localStorage.getItem('virida_token');
+        const response = await fetch(`${apiUrl}/api/plants`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setUserPlants(data.data || []);
+        }
+      } catch (err) {
+        console.error('Erreur rechargement plantes:', err);
+      }
+    };
+    fetchUserPlants();
+  };
+
+  const filteredPlants = userPlants.filter((plant) => {
+    if (currentFilter === 'all') return true;
+    if (currentFilter === 'active') return (plant.daysToHarvest || 0) > 0;
+    if (currentFilter === 'ready') return plant.daysToHarvest === 0;
+    return true;
+  });
+
+  const totalPlants = userPlants.length;
+  const activePlants = userPlants.filter(p => (p.daysToHarvest || 0) > 0).length;
+  const readyToHarvest = userPlants.filter(p => p.daysToHarvest === 0).length;
+
+  // Loading
+  if (loading) {
+    return (
+      <div className="flex justify-center py-20">
+        <div className="w-16 h-16 border-4 border-[#2AD368]/30 border-t-[#2AD368] rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
+  // Erreur
+  if (error) {
+    return (
+      <div className="p-4 glass-card backdrop-blur-xl rounded-2xl border border-red-500/30 bg-red-500/10">
+        <div className="flex items-center gap-3">
+          <span className="material-symbols-outlined text-red-400">error</span>
+          <p className="text-red-400 font-medium">{error}</p>
+        </div>
+      </div>
+    );
+  }
+
+  // État vide
+  if (userPlants.length === 0) {
+    return (
+      <div>
+        <div className="glass-card backdrop-blur-xl rounded-3xl p-12 text-center border border-white/10">
+          <div className="mb-6">
+            <span className="text-8xl">🌱</span>
+          </div>
+          <h3 className="text-2xl font-bold text-white mb-3">
+            Votre jardin est vide
+          </h3>
+          <p className="text-gray-400 mb-8 max-w-md mx-auto">
+            Commencez votre culture en ajoutant une plante depuis la bibliothèque. Suivez sa croissance et recevez des conseils personnalisés.
+          </p>
+          <button
+            onClick={handleAddPlant}
+            className="px-6 py-3 bg-[#2AD368] hover:bg-[#1fc75c] text-[#121A21] font-bold rounded-xl transition-all shadow-[0_8px_30px_rgba(42,211,104,0.4)] hover:shadow-[0_12px_40px_rgba(42,211,104,0.6)] hover:scale-105 flex items-center gap-2 mx-auto"
+          >
+            <span className="material-symbols-outlined">add</span>
+            Ajouter ma première plante
+          </button>
+        </div>
+
+        <AddPlantDialog
+          open={addPlantDialogOpen}
+          onClose={handleCloseAddPlant}
+          onPlantAdded={handlePlantAdded}
+        />
+      </div>
+    );
+  }
+
+  // Contenu avec plantes
+  return (
+    <div>
+      {/* Stats */}
+      <div className="grid grid-cols-3 gap-4 mb-6">
+        <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-white/10">
+          <p className="text-gray-400 text-xs font-semibold uppercase mb-1">Total</p>
+          <p className="text-3xl font-black text-white">{totalPlants}</p>
+        </div>
+        <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-white/10">
+          <p className="text-gray-400 text-xs font-semibold uppercase mb-1">En croissance</p>
+          <p className="text-3xl font-black text-[#2AD368]">{activePlants}</p>
+        </div>
+        <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-white/10">
+          <p className="text-gray-400 text-xs font-semibold uppercase mb-1">Prêtes</p>
+          <p className="text-3xl font-black text-[#CBED62]">{readyToHarvest}</p>
+        </div>
+      </div>
+
+      {/* Filtres */}
+      <div className="flex gap-2 mb-6">
+        <button
+          onClick={() => setCurrentFilter('all')}
+          className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
+            currentFilter === 'all'
+              ? 'bg-[#2AD368] text-[#121A21]'
+              : 'glass-card backdrop-blur-xl text-gray-400 hover:text-white border border-white/10'
+          }`}
+        >
+          Toutes ({totalPlants})
+        </button>
+        <button
+          onClick={() => setCurrentFilter('active')}
+          className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
+            currentFilter === 'active'
+              ? 'bg-[#2AD368] text-[#121A21]'
+              : 'glass-card backdrop-blur-xl text-gray-400 hover:text-white border border-white/10'
+          }`}
+        >
+          En croissance ({activePlants})
+        </button>
+        <button
+          onClick={() => setCurrentFilter('ready')}
+          className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
+            currentFilter === 'ready'
+              ? 'bg-[#2AD368] text-[#121A21]'
+              : 'glass-card backdrop-blur-xl text-gray-400 hover:text-white border border-white/10'
+          }`}
+        >
+          Prêtes ({readyToHarvest})
+        </button>
+      </div>
+
+      {/* Grille de plantes */}
+      <div className="grid grid-cols-3 gap-4">
+        {filteredPlants.map((plant) => (
+          <PlantCardMinimal
+            key={plant.id}
+            plant={plant}
+            onDelete={handleDeletePlant}
+            onClick={handleOpenPlantDetails}
+          />
+        ))}
+      </div>
+
+      {/* Dialogs */}
+      <ConfirmDialog
+        open={confirmDialogOpen}
+        onClose={() => setConfirmDialogOpen(false)}
+        onConfirm={confirmDeletePlant}
+        title="Supprimer cette plante ?"
+        message={`Êtes-vous sûr de vouloir supprimer "${plantToDelete?.name}" ? Cette action est irréversible.`}
+      />
+
+      <AddPlantDialog
+        open={addPlantDialogOpen}
+        onClose={handleCloseAddPlant}
+        onPlantAdded={handlePlantAdded}
+      />
+
+      {selectedPlantId && (
+        <PlantDetailsDialog
+          open={detailsDialogOpen}
+          onClose={handleClosePlantDetails}
+          plantId={selectedPlantId}
+          onPlantUpdated={handlePlantUpdated}
+          onPlantDeleted={handlePlantDeleted}
+        />
+      )}
+    </div>
+  );
+};
+
+export default MyGardenNew;

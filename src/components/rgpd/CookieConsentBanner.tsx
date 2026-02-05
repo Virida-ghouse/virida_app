@@ -40,7 +40,7 @@ const CookieConsentBanner: React.FC = () => {
           right: 0,
           zIndex: 9999,
           backgroundColor: '#FFFFFF',
-          borderTop: `3px solid #2AD388`,
+          borderTop: `3px solid #2AD368`,
           borderRadius: '16px 16px 0 0',
           maxWidth: isMobile ? '100%' : '900px',
           margin: '0 auto',
@@ -57,7 +57,7 @@ const CookieConsentBanner: React.FC = () => {
         >
           {/* 🔒 En-tête avec icône */}
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-            <Shield size={28} color="#2AD388" />
+            <Shield size={28} color="#2AD368" />
             <Typography
               variant="h6"
               sx={{
@@ -114,7 +114,7 @@ const CookieConsentBanner: React.FC = () => {
                 console.log('Ouvrir politique de confidentialité');
               }}
               sx={{
-                color: '#2AD388',
+                color: '#2AD368',
                 textDecoration: 'underline',
                 fontWeight: 500,
                 '&:hover': { color: '#25B876' },
@@ -128,7 +128,7 @@ const CookieConsentBanner: React.FC = () => {
               target="_blank"
               rel="noopener noreferrer"
               sx={{
-                color: '#2AD388',
+                color: '#2AD368',
                 textDecoration: 'underline',
                 fontWeight: 500,
                 '&:hover': { color: '#25B876' },
@@ -174,8 +174,8 @@ const CookieConsentBanner: React.FC = () => {
               onClick={openPreferences}
               sx={{
                 flex: 1,
-                borderColor: '#2AD388',
-                color: '#2AD388',
+                borderColor: '#2AD368',
+                color: '#2AD368',
                 fontWeight: 500,
                 textTransform: 'none',
                 padding: '10px 20px',
@@ -194,7 +194,7 @@ const CookieConsentBanner: React.FC = () => {
               onClick={acceptAll}
               sx={{
                 flex: 1,
-                backgroundColor: '#2AD388',
+                backgroundColor: '#2AD368',
                 color: '#FFFFFF',
                 fontWeight: 600,
                 textTransform: 'none',

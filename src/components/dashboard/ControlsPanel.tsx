@@ -24,13 +24,13 @@ const ControlsContainer = styled(motion.div)(({ theme }) => ({
     left: 0,
     right: 0,
     height: '2px',
-    background: 'linear-gradient(90deg, #3B82F6, #2AD388, #3B82F6)',
+    background: 'linear-gradient(90deg, #3B82F6, #2AD368, #3B82F6)',
   },
 }));
 
 const ControlItem = styled(motion.div)<{ active: boolean }>(({ theme, active }) => ({
   background: 'rgba(15, 23, 42, 0.6)',
-  border: `1px solid ${active ? '#2AD388' : 'rgba(148, 163, 184, 0.2)'}`,
+  border: `1px solid ${active ? '#2AD368' : 'rgba(148, 163, 184, 0.2)'}`,
   borderRadius: '8px',
   padding: theme.spacing(1.5),
   marginBottom: theme.spacing(1.5),
@@ -43,19 +43,19 @@ const ControlItem = styled(motion.div)<{ active: boolean }>(({ theme, active }) 
     top: 0,
     bottom: 0,
     width: '3px',
-    background: active ? '#2AD388' : 'transparent',
+    background: active ? '#2AD368' : 'transparent',
   },
 }));
 
 const StyledSwitch = styled(Switch)(({ theme }) => ({
   '& .MuiSwitch-switchBase.Mui-checked': {
-    color: '#2AD388',
+    color: '#2AD368',
     '&:hover': {
-      backgroundColor: 'rgba(42, 211, 136, 0.08)',
+      backgroundColor: 'rgba(42, 211, 104, 0.08)',
     },
   },
   '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-    backgroundColor: '#2AD388',
+    backgroundColor: '#2AD368',
   },
   '& .MuiSwitch-track': {
     backgroundColor: 'rgba(148, 163, 184, 0.3)',
@@ -63,12 +63,12 @@ const StyledSwitch = styled(Switch)(({ theme }) => ({
 }));
 
 const StyledSlider = styled(Slider)(({ theme }) => ({
-  color: '#2AD388',
+  color: '#2AD368',
   '& .MuiSlider-track': {
-    background: 'linear-gradient(90deg, #2AD388, #10B981)',
+    background: 'linear-gradient(90deg, #2AD368, #10B981)',
   },
   '& .MuiSlider-thumb': {
-    backgroundColor: '#2AD388',
+    backgroundColor: '#2AD368',
     border: '2px solid rgba(42, 211, 136, 0.3)',
     '&:hover': {
       boxShadow: '0 0 0 8px rgba(42, 211, 136, 0.16)',
@@ -159,7 +159,7 @@ const ControlsPanel: React.FC<ControlsPanelProps> = ({ systemStatus, onSystemTog
       animate="visible"
     >
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-        <PlayArrowIcon sx={{ color: '#2AD388', mr: 1 }} />
+        <PlayArrowIcon sx={{ color: '#2AD368', mr: 1 }} />
         <Typography
           variant="h6"
           sx={{
@@ -177,12 +177,12 @@ const ControlsPanel: React.FC<ControlsPanelProps> = ({ systemStatus, onSystemTog
             py: 0.25,
             borderRadius: '12px',
             background: 'rgba(42, 211, 136, 0.2)',
-            border: '1px solid #2AD388',
+            border: '1px solid #2AD368',
           }}
         >
           <Typography
             variant="caption"
-            sx={{ color: '#2AD388', fontWeight: 600, fontSize: '10px' }}
+            sx={{ color: '#2AD368', fontWeight: 600, fontSize: '10px' }}
           >
             AUTO
           </Typography>
@@ -314,8 +314,8 @@ const ControlsPanel: React.FC<ControlsPanelProps> = ({ systemStatus, onSystemTog
           size="small"
           sx={{
             background: 'rgba(42, 211, 136, 0.2)',
-            color: '#2AD388',
-            border: '1px solid #2AD388',
+            color: '#2AD368',
+            border: '1px solid #2AD368',
             '&:hover': {
               background: 'rgba(42, 211, 136, 0.3)',
             },

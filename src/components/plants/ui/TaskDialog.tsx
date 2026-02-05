@@ -347,8 +347,8 @@ export const TaskDialog: React.FC<TaskDialogProps> = ({
           variant="contained"
           disabled={loading || !title.trim()}
           sx={{
-            bgcolor: '#2E7D32',
-            '&:hover': { bgcolor: '#1B5E20' },
+            bgcolor: '#052E1C',
+            '&:hover': { bgcolor: '#041E13' },
           }}
         >
           {loading ? 'Enregistrement...' : taskId ? 'Mettre à jour' : 'Créer'}

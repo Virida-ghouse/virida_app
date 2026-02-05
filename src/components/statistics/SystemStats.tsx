@@ -57,7 +57,7 @@ const ResourceProgress = styled(Box)(({ theme }) => ({
   },
 }));
 
-const COLORS = ['#2E7D32', '#388E3C', '#4CAF50', '#66BB6A'];
+const COLORS = ['#052E1C', '#2AD368', '#2AD368', '#CBED62'];
 
 const SystemStats: React.FC = () => {
   const theme = useTheme();
@@ -66,10 +66,10 @@ const SystemStats: React.FC = () => {
   
   // Exemple de données pour les statistiques
   const resourceUsage = [
-    { name: 'Water', value: 75, icon: <OpacityIcon />, color: '#2E7D32' },
-    { name: 'Energy', value: 60, icon: <BoltIcon />, color: '#2E7D32' },
-    { name: 'Temperature', value: 85, icon: <ThermostatIcon />, color: '#2E7D32' },
-    { name: 'Light', value: 45, icon: <WbSunnyIcon />, color: '#2E7D32' },
+    { name: 'Water', value: 75, icon: <OpacityIcon />, color: '#052E1C' },
+    { name: 'Energy', value: 60, icon: <BoltIcon />, color: '#052E1C' },
+    { name: 'Temperature', value: 85, icon: <ThermostatIcon />, color: '#052E1C' },
+    { name: 'Light', value: 45, icon: <WbSunnyIcon />, color: '#052E1C' },
   ];
 
   const weeklyData = [
@@ -109,10 +109,10 @@ const SystemStats: React.FC = () => {
                     stroke="rgba(0,0,0,0.5)" 
                     fontSize={isMobile ? 12 : 14}
                   />
-                  <Bar dataKey="water" fill="#2E7D32" stackId="a" />
-                  <Bar dataKey="energy" fill="#388E3C" stackId="a" />
-                  <Bar dataKey="temp" fill="#4CAF50" stackId="a" />
-                  <Bar dataKey="light" fill="#66BB6A" stackId="a" />
+                  <Bar dataKey="water" fill="#052E1C" stackId="a" />
+                  <Bar dataKey="energy" fill="#2AD368" stackId="a" />
+                  <Bar dataKey="temp" fill="#2AD368" stackId="a" />
+                  <Bar dataKey="light" fill="#CBED62" stackId="a" />
                 </BarChart>
               </ResponsiveContainer>
             </Box>

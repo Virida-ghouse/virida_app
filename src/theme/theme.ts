@@ -3,13 +3,13 @@ import { createTheme } from '@mui/material/styles';
 export const theme = createTheme({
   palette: {
     primary: {
-      main: '#2AD388',
-      light: '#CBED82',
+      main: '#2AD368', // Vert vif de la charte
+      light: '#CBED62', // Vert clair de la charte
       dark: '#052E1C',
     },
     secondary: {
-      main: '#CBED82',
-      light: '#CBED82',
+      main: '#CBED62', // Vert clair de la charte
+      light: '#CBED62',
       dark: '#052E1C',
     },
     background: {

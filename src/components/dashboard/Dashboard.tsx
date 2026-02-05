@@ -20,8 +20,8 @@ const GridOverlay = styled(Box)(() => ({
   right: 0,
   bottom: 0,
   background: `
-    linear-gradient(90deg, rgba(46, 125, 50, 0.03) 1px, transparent 1px),
-    linear-gradient(0deg, rgba(46, 125, 50, 0.03) 1px, transparent 1px)
+    linear-gradient(90deg, rgba(42, 211, 104, 0.03) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(42, 211, 104, 0.03) 1px, transparent 1px)
   `,
   backgroundSize: '20px 20px',
   pointerEvents: 'none',
@@ -91,7 +91,7 @@ const Dashboard: React.FC = () => {
       {/* Main Content */}
       <Box sx={{ p: 3 }}>
         {/* Title */}
-        <Typography variant="h4" sx={{ mb: 3, color: '#2E7D32', textAlign: 'center', fontFamily: 'Chillax, sans-serif', fontWeight: 600 }}>
+        <Typography variant="h4" sx={{ mb: 3, color: '#052E1C', textAlign: 'center', fontWeight: 600 }}>
           Greenhouse Monitor
         </Typography>
         

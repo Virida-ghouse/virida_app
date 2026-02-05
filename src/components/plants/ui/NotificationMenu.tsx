@@ -137,7 +137,7 @@ export const NotificationMenu: React.FC = () => {
       case 'WATERING':
         return <OpacityIcon sx={{ fontSize: size, color: '#2196F3' }} />;
       case 'FERTILIZING':
-        return <SpaIcon sx={{ fontSize: size, color: '#4CAF50' }} />;
+        return <SpaIcon sx={{ fontSize: size, color: '#2AD368' }} />;
       case 'PRUNING':
         return <ContentCutIcon sx={{ fontSize: size, color: '#FF9800' }} />;
       case 'PEST_CONTROL':
@@ -399,7 +399,7 @@ export const NotificationMenu: React.FC = () => {
                   <Typography variant="caption" sx={{ color: '#666' }}>
                     + {notifications.length - displayedNotifications.length} autre{notifications.length - displayedNotifications.length > 1 ? 's' : ''} tâche{notifications.length - displayedNotifications.length > 1 ? 's' : ''}
                   </Typography>
-                  <Typography variant="caption" sx={{ color: '#2E7D32', display: 'block', mt: 0.5, fontWeight: 600, cursor: 'pointer' }}>
+                  <Typography variant="caption" sx={{ color: '#052E1C', display: 'block', mt: 0.5, fontWeight: 600, cursor: 'pointer' }}>
                     Voir le calendrier complet
                   </Typography>
                 </Box>

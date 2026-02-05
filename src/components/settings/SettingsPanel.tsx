@@ -150,9 +150,9 @@ const SettingsPanel: React.FC = () => {
           onClick={handleSaveSettings}
           fullWidth={isMobile}
           sx={{
-            backgroundColor: '#2E7D32',
+            backgroundColor: '#052E1C',
             '&:hover': {
-              backgroundColor: '#1B5E20',
+              backgroundColor: '#041E13',
             },
           }}
         >
@@ -262,10 +262,10 @@ const SettingsPanel: React.FC = () => {
                   checked={settings.notifications.emailAlerts}
                   sx={{
                     '& .MuiSwitch-switchBase.Mui-checked': {
-                      color: '#2E7D32',
+                      color: '#052E1C',
                     },
                     '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                      backgroundColor: '#2E7D32',
+                      backgroundColor: '#052E1C',
                     },
                   }}
                 />

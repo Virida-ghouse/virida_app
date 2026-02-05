@@ -11,7 +11,7 @@ const WidgetContainer = styled(Paper)(({ theme }) => ({
   position: 'relative',
   background: 'rgba(255, 255, 255, 0.95)',
   backdropFilter: 'blur(10px)',
-  border: '1px solid rgba(46, 125, 50, 0.2)',
+  border: '1px solid rgba(42, 211, 104, 0.2)',
   borderRadius: '16px',
   padding: theme.spacing(2),
   width: '100%',
@@ -20,7 +20,7 @@ const WidgetContainer = styled(Paper)(({ theme }) => ({
   transition: 'all 0.3s ease',
   '&:hover': {
     transform: 'translateY(-4px)',
-    boxShadow: '0 12px 40px rgba(46, 125, 50, 0.15)',
+    boxShadow: '0 12px 40px rgba(42, 211, 104, 0.15)',
   },
 }));
 
@@ -36,7 +36,7 @@ const StatusIndicator = styled(Box)<{ status: string }>(({ status }) => ({
   height: 8,
   borderRadius: '50%',
   backgroundColor: 
-    status === 'normal' ? '#2AD388' :
+    status === 'normal' ? '#2AD368' :
     status === 'warning' ? '#FFA726' : '#FF5252',
   animation: status !== 'normal' ? 'pulse 2s infinite' : 'none',
   '@keyframes pulse': {
@@ -66,21 +66,21 @@ interface EnhancedSensorWidgetProps {
 const EnhancedSensorWidget: React.FC<EnhancedSensorWidgetProps> = ({ sensor }) => {
   const getIcon = () => {
     switch (sensor.type) {
-      case 'temperature': return <ThermostatIcon sx={{ color: '#2E7D32' }} />;
-      case 'humidity': return <OpacityIcon sx={{ color: '#2E7D32' }} />;
-      case 'light': return <WbSunnyIcon sx={{ color: '#2E7D32' }} />;
-      case 'ph': return <ScienceIcon sx={{ color: '#2E7D32' }} />;
+      case 'temperature': return <ThermostatIcon sx={{ color: '#2AD368' }} />;
+      case 'humidity': return <OpacityIcon sx={{ color: '#2AD368' }} />;
+      case 'light': return <WbSunnyIcon sx={{ color: '#2AD368' }} />;
+      case 'ph': return <ScienceIcon sx={{ color: '#2AD368' }} />;
       default: return null;
     }
   };
 
   const getColor = () => {
     switch (sensor.type) {
-      case 'temperature': return '#2E7D32';
-      case 'humidity': return '#2E7D32';
-      case 'light': return '#2E7D32';
-      case 'ph': return '#2E7D32';
-      default: return '#2E7D32';
+      case 'temperature': return '#2AD368';
+      case 'humidity': return '#2AD368';
+      case 'light': return '#2AD368';
+      case 'ph': return '#2AD368';
+      default: return '#2AD368';
     }
   };
 
@@ -155,7 +155,7 @@ const EnhancedSensorWidget: React.FC<EnhancedSensorWidgetProps> = ({ sensor }) =
               type="monotone" 
               dataKey="value" 
               fill='url(#colorGradient)'
-              stroke="#2E7D32"
+              stroke="#2AD368"
               strokeWidth={2}
             />
             <Tooltip 
@@ -175,7 +175,7 @@ const EnhancedSensorWidget: React.FC<EnhancedSensorWidgetProps> = ({ sensor }) =
       <Typography 
         variant="caption" 
         sx={{ 
-          color: sensor.status === 'normal' ? '#2AD388' : 
+          color: sensor.status === 'normal' ? '#2AD368' : 
                 sensor.status === 'warning' ? '#FFA726' : '#FF5252',
           fontWeight: 'medium',
           textAlign: 'center',

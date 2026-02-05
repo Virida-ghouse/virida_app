@@ -43,7 +43,7 @@ const sensorLabels: Record<SensorType, string> = {
 };
 
 const statusColors: Record<SensorStatus, string> = {
-  ok: '#2AD388',
+  ok: '#2AD368',
   warning: '#FFA726',
   critical: '#EF5350',
 };

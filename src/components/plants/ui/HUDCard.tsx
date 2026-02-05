@@ -13,7 +13,7 @@ interface HUDCardProps {
 }
 
 const statusColors: Record<HUDStatus, string> = {
-  success: '#2AD388',
+  success: '#2AD368',
   warning: '#FFA726',
   danger: '#EF5350',
   neutral: '#121A21',

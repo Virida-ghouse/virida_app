@@ -108,7 +108,7 @@ const CareEvents: React.FC<CareEventsProps> = ({ plantId }) => {
   if (loading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
-        <CircularProgress sx={{ color: '#2AD388' }} />
+        <CircularProgress sx={{ color: '#2AD368' }} />
       </Box>
     );
   }
@@ -135,7 +135,7 @@ const CareEvents: React.FC<CareEventsProps> = ({ plantId }) => {
             variant="contained"
             startIcon={<AddIcon />}
             sx={{
-              background: '#2AD388',
+              background: '#2AD368',
               color: '#FFFFFF',
               textTransform: 'none',
               '&:hover': {
@@ -161,7 +161,7 @@ const CareEvents: React.FC<CareEventsProps> = ({ plantId }) => {
           variant="contained"
           startIcon={<AddIcon />}
           sx={{
-            background: '#2AD388',
+            background: '#2AD368',
             color: '#FFFFFF',
             textTransform: 'none',
             fontSize: '0.85rem',
@@ -180,7 +180,7 @@ const CareEvents: React.FC<CareEventsProps> = ({ plantId }) => {
             <TimelineSeparator>
               <TimelineDot
                 sx={{
-                  background: '#2AD388',
+                  background: '#2AD368',
                   fontSize: '1.5rem',
                   display: 'flex',
                   alignItems: 'center',
@@ -210,7 +210,7 @@ const CareEvents: React.FC<CareEventsProps> = ({ plantId }) => {
                     </Typography>
                   )}
                   {event.amount && (
-                    <Typography variant="caption" sx={{ color: '#2AD388', fontWeight: 600, mt: 1, display: 'block' }}>
+                    <Typography variant="caption" sx={{ color: '#2AD368', fontWeight: 600, mt: 1, display: 'block' }}>
                       Quantité: {event.amount} {event.unit}
                     </Typography>
                   )}

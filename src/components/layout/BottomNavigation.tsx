@@ -15,7 +15,7 @@ import BoltIcon from '@mui/icons-material/Bolt';
 import SettingsIcon from '@mui/icons-material/Settings';
 
 const StyledBottomNavigation = styled(BottomNavigation)(() => ({
-  backgroundColor: '#2E7D32',
+  backgroundColor: '#052E1C',
   borderTop: '1px solid rgba(255, 255, 255, 0.1)',
   '& .MuiBottomNavigationAction-root': {
     color: 'rgba(255, 255, 255, 0.7)',

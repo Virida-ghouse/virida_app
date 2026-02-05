@@ -25,7 +25,7 @@ const StyledCard = styled(Card)<{ status: string }>(({ theme, status }) => ({
   overflow: 'visible',
   borderTop: `2px solid ${
     status === 'normal' 
-      ? '#2AD388'
+      ? '#2AD368'
       : status === 'warning'
       ? '#f1c40f'
       : '#e74c3c'
@@ -43,15 +43,15 @@ const IconWrapper = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  border: `1px solid #2AD388`,
-  color: '#2AD388',
+  border: `1px solid #2AD368`,
+  color: '#2AD368',
   boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
 }));
 
 const ValueDisplay = styled(Typography)(({ theme }) => ({
   fontSize: '2rem',
   fontWeight: 700,
-  color: '#2AD388',
+  color: '#2AD368',
 }));
 
 const mockData = Array.from({ length: 10 }, (_, i) => ({
@@ -98,7 +98,7 @@ const SensorCard: React.FC<SensorProps> = ({ sensor }) => {
               <Line
                 type="monotone"
                 dataKey="value"
-                stroke="#2AD388"
+                stroke="#2AD368"
                 strokeWidth={2}
                 dot={false}
               />

@@ -153,11 +153,11 @@ const PlantsPageNew: React.FC = () => {
         }}
       >
         <Box display="flex" alignItems="center" gap={2}>
-          <Avatar sx={{ backgroundColor: '#2E7D32', width: 56, height: 56 }}>
+          <Avatar sx={{ backgroundColor: '#052E1C', width: 56, height: 56 }}>
             <LocalFloristIcon sx={{ fontSize: 28 }} />
           </Avatar>
           <Box>
-            <Typography variant={isMobile ? "h5" : "h4"} sx={{ color: '#2E7D32', fontWeight: 700 }}>
+            <Typography variant={isMobile ? "h5" : "h4"} sx={{ color: '#052E1C', fontWeight: 700 }}>
               Mes Plantes
             </Typography>
             <Typography variant="body1" sx={{ color: '#666', mt: 0.5 }}>
@@ -170,7 +170,7 @@ const PlantsPageNew: React.FC = () => {
           startIcon={<AddIcon />}
           fullWidth={isMobile}
           sx={{
-            backgroundColor: '#2E7D32',
+            backgroundColor: '#052E1C',
             borderRadius: '12px',
             px: 3,
             py: 1.5,
@@ -179,7 +179,7 @@ const PlantsPageNew: React.FC = () => {
             textTransform: 'none',
             boxShadow: '0 4px 12px rgba(46, 125, 50, 0.3)',
             '&:hover': {
-              backgroundColor: '#1B5E20',
+              backgroundColor: '#041E13',
               boxShadow: '0 6px 16px rgba(46, 125, 50, 0.4)',
             },
           }}
@@ -195,14 +195,14 @@ const PlantsPageNew: React.FC = () => {
             label="Plantes"
             value={totalPlants}
             subtitle={excellentHealth > 0 ? `${excellentHealth} en bonne santé` : ''}
-            color="#2AD388"
+            color="#2AD368"
           />
         </Grid>
         <Grid item xs={6} sm={3}>
           <StatCard
             label="Santé moyenne"
             value={`${avgHealth}%`}
-            color={avgHealth >= 80 ? '#2AD388' : avgHealth >= 60 ? '#FFA726' : '#EF5350'}
+            color={avgHealth >= 80 ? '#2AD368' : avgHealth >= 60 ? '#FFA726' : '#EF5350'}
           />
         </Grid>
         <Grid item xs={6} sm={3}>
@@ -210,7 +210,7 @@ const PlantsPageNew: React.FC = () => {
             label="À surveiller"
             value={toWatch}
             subtitle={toWatch === 0 ? 'Tout va bien' : ''}
-            color={toWatch === 0 ? '#2AD388' : '#FFA726'}
+            color={toWatch === 0 ? '#2AD368' : '#FFA726'}
           />
         </Grid>
         <Grid item xs={6} sm={3}>
@@ -218,7 +218,7 @@ const PlantsPageNew: React.FC = () => {
             label="Progression"
             value={`${avgProgress}%`}
             subtitle="Vers récolte"
-            color="#2AD388"
+            color="#2AD368"
           />
         </Grid>
       </Grid>
@@ -238,8 +238,8 @@ const PlantsPageNew: React.FC = () => {
               bgcolor: 'white',
               '& .MuiOutlinedInput-root': {
                 '& fieldset': { borderColor: '#E0E0E0' },
-                '&:hover fieldset': { borderColor: '#2AD388' },
-                '&.Mui-focused fieldset': { borderColor: '#2AD388' },
+                '&:hover fieldset': { borderColor: '#2AD368' },
+                '&.Mui-focused fieldset': { borderColor: '#2AD368' },
               },
             }}
           />
@@ -252,8 +252,8 @@ const PlantsPageNew: React.FC = () => {
               border: '1px solid #E0E0E0',
               '&:hover': {
                 bgcolor: '#F5F5F5',
-                borderColor: '#2AD388',
-                color: '#2AD388',
+                borderColor: '#2AD368',
+                color: '#2AD368',
               },
             }}
           >
@@ -272,7 +272,7 @@ const PlantsPageNew: React.FC = () => {
                   label="Catégorie"
                   sx={{
                     '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                      borderColor: '#2AD388',
+                      borderColor: '#2AD368',
                     },
                   }}
                 >
@@ -293,7 +293,7 @@ const PlantsPageNew: React.FC = () => {
                   label="Santé"
                   sx={{
                     '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                      borderColor: '#2AD388',
+                      borderColor: '#2AD368',
                     },
                   }}
                 >
@@ -317,9 +317,9 @@ const PlantsPageNew: React.FC = () => {
                   color: '#757575',
                   borderColor: '#E0E0E0',
                   '&:hover': {
-                    borderColor: '#2AD388',
-                    color: '#2AD388',
-                    bgcolor: '#2AD38810',
+                    borderColor: '#2AD368',
+                    color: '#2AD368',
+                    bgcolor: '#2AD36810',
                   },
                 }}
               >
@@ -339,7 +339,7 @@ const PlantsPageNew: React.FC = () => {
       {/* Loading */}
       {loading && (
         <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
-          <CircularProgress sx={{ color: '#2AD388' }} size={60} />
+          <CircularProgress sx={{ color: '#2AD368' }} size={60} />
         </Box>
       )}
 
@@ -375,7 +375,7 @@ const PlantsPageNew: React.FC = () => {
               variant="contained"
               startIcon={<AddIcon />}
               sx={{
-                bgcolor: '#2AD388',
+                bgcolor: '#2AD368',
                 color: 'white',
                 fontWeight: 600,
                 px: 4,

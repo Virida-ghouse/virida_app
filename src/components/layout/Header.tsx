@@ -25,24 +25,11 @@ import { useAuth } from '../../contexts/AuthContext';
 import { NotificationMenu } from '../plants/ui/NotificationMenu';
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
-  background: 'linear-gradient(135deg, #2E7D32 0%, #388E3C 100%)',
+  background: '#052E1C', // Vert foncé de la charte pour le header
   backdropFilter: 'blur(10px)',
   border: 'none',
-  borderBottom: '1px solid rgba(46, 125, 50, 0.2)',
-  boxShadow: '0 4px 20px rgba(46, 125, 50, 0.3)',
-  '&::before': {
-    content: '""',
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    background: `
-      radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-      radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 50%)
-    `,
-    pointerEvents: 'none',
-  },
+  borderBottom: '1px solid rgba(42, 211, 104, 0.2)', // Bordure avec vert vif
+  boxShadow: '0 4px 20px rgba(5, 46, 28, 0.3)',
 }));
 
 const LogoBox = styled(Box)(({ theme }) => ({
@@ -120,7 +107,7 @@ const Header: React.FC = () => {
                     sx={{ 
                       width: 32, 
                       height: 32, 
-                      bgcolor: '#2E7D32',
+                      bgcolor: '#2AD368', // Vert vif de la charte
                       fontSize: '0.875rem'
                     }}
                   >

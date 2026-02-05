@@ -39,7 +39,7 @@ const categoryColors: Record<string, string> = {
   HERB: '#81C784',
   VEGETABLE: '#FFB74D',
   FRUIT: '#EF5350',
-  LEAFY_GREEN: '#66BB6A',
+  LEAFY_GREEN: '#CBED62',
 };
 
 const stageLabels: Record<string, string> = {
@@ -200,8 +200,8 @@ export const PlantCard: React.FC<PlantCardProps> = ({
             size="small"
             variant="outlined"
             sx={{
-              borderColor: '#2AD388',
-              color: '#2AD388',
+              borderColor: '#2AD368',
+              color: '#2AD368',
               fontWeight: 600,
               fontSize: '0.65rem',
             }}
@@ -214,7 +214,7 @@ export const PlantCard: React.FC<PlantCardProps> = ({
             <Typography variant="caption" sx={{ color: '#757575', fontWeight: 600 }}>
               Progression
             </Typography>
-            <Typography variant="caption" sx={{ color: '#2AD388', fontWeight: 700 }}>
+            <Typography variant="caption" sx={{ color: '#2AD368', fontWeight: 700 }}>
               {growthProgress}%
             </Typography>
           </Box>
@@ -226,7 +226,7 @@ export const PlantCard: React.FC<PlantCardProps> = ({
               borderRadius: 4,
               bgcolor: '#F5F5F5',
               '& .MuiLinearProgress-bar': {
-                bgcolor: '#2AD388',
+                bgcolor: '#2AD368',
                 borderRadius: 4,
               },
             }}
@@ -258,7 +258,7 @@ export const PlantCard: React.FC<PlantCardProps> = ({
           <Typography
             variant="caption"
             sx={{
-              color: healthScore >= 80 ? '#2AD388' : healthScore >= 60 ? '#FFA726' : '#EF5350',
+              color: healthScore >= 80 ? '#2AD368' : healthScore >= 60 ? '#FFA726' : '#EF5350',
               fontWeight: 700,
               textTransform: 'uppercase',
               letterSpacing: '0.5px',

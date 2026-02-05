@@ -1,9 +1,9 @@
-// Palette de couleurs Virida
+// Palette de couleurs Virida - Charte graphique officielle
 export const VIRIDA_COLORS = {
-  PRIMARY_GREEN: '#2AD388',
-  LIGHT_GREEN: '#CBED82',
-  DARK_GREEN: '#052E1C',
-  DARK_BLUE: '#121A21',
+  PRIMARY_GREEN: '#2AD368', // Vert vif de la charte
+  LIGHT_GREEN: '#CBED62', // Vert clair de la charte
+  DARK_GREEN: '#052E1C', // Vert foncé de la charte
+  DARK_BLUE: '#121A21', // Gris foncé de la charte
   WHITE: '#FFFFFF',
   LIGHT_GRAY: '#F5F5F5',
   SENSOR_BLUE: '#4A90E2',

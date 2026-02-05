@@ -92,7 +92,7 @@ const CookiePreferencesModal: React.FC = () => {
     {
       key: 'essential' as keyof CookieConsent,
       title: 'Cookies Essentiels',
-      icon: <Shield size={24} color="#2AD388" />,
+      icon: <Shield size={24} color="#2AD368" />,
       description:
         'Ces cookies sont nécessaires au fonctionnement de Virida. Ils permettent la navigation, la connexion et la sécurité. Ils ne peuvent pas être désactivés.',
       required: true,
@@ -149,12 +149,12 @@ const CookiePreferencesModal: React.FC = () => {
           justifyContent: 'space-between',
           alignItems: 'center',
           backgroundColor: '#F5F5F5',
-          borderBottom: '2px solid #2AD388',
+          borderBottom: '2px solid #2AD368',
           padding: 2,
         }}
       >
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-          <Shield size={28} color="#2AD388" />
+          <Shield size={28} color="#2AD368" />
           <Typography variant="h6" sx={{ fontWeight: 600, color: '#052E1C' }}>
             Préférences de confidentialité
           </Typography>
@@ -183,7 +183,7 @@ const CookiePreferencesModal: React.FC = () => {
                 '&:before': { display: 'none' },
                 '&.Mui-expanded': {
                   margin: 0,
-                  borderColor: '#2AD388',
+                  borderColor: '#2AD368',
                 },
               }}
             >
@@ -208,7 +208,7 @@ const CookiePreferencesModal: React.FC = () => {
                     {category.required && (
                       <Typography
                         variant="caption"
-                        sx={{ color: '#2AD388', fontWeight: 500 }}
+                        sx={{ color: '#2AD368', fontWeight: 500 }}
                       >
                         Toujours activé
                       </Typography>
@@ -222,10 +222,10 @@ const CookiePreferencesModal: React.FC = () => {
                   onClick={(e) => e.stopPropagation()}
                   sx={{
                     '& .MuiSwitch-switchBase.Mui-checked': {
-                      color: '#2AD388',
+                      color: '#2AD368',
                     },
                     '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                      backgroundColor: '#2AD388',
+                      backgroundColor: '#2AD368',
                     },
                   }}
                 />
@@ -263,7 +263,7 @@ const CookiePreferencesModal: React.FC = () => {
             padding: 2,
             backgroundColor: '#E8F8F1',
             borderRadius: '8px',
-            borderLeft: '4px solid #2AD388',
+            borderLeft: '4px solid #2AD368',
           }}
         >
           <Typography variant="caption" sx={{ color: '#052E1C', lineHeight: 1.6 }}>
@@ -293,8 +293,8 @@ const CookiePreferencesModal: React.FC = () => {
             variant="outlined"
             onClick={handleAcceptAll}
             sx={{
-              borderColor: '#2AD388',
-              color: '#2AD388',
+              borderColor: '#2AD368',
+              color: '#2AD368',
               textTransform: 'none',
               fontWeight: 500,
               '&:hover': {
@@ -309,7 +309,7 @@ const CookiePreferencesModal: React.FC = () => {
             variant="contained"
             onClick={handleSave}
             sx={{
-              backgroundColor: '#2AD388',
+              backgroundColor: '#2AD368',
               color: '#FFFFFF',
               textTransform: 'none',
               fontWeight: 600,

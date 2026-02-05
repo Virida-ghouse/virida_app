@@ -26,7 +26,7 @@ const StatusContainer = styled(motion.div)(({ theme }) => ({
     left: 0,
     right: 0,
     height: '2px',
-    background: 'linear-gradient(90deg, #10B981, #2AD388, #10B981)',
+    background: 'linear-gradient(90deg, #10B981, #2AD368, #10B981)',
   },
 }));
 

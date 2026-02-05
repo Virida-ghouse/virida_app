@@ -50,10 +50,10 @@ const AutomationRules: React.FC = () => {
                       onChange={() => toggleAutomationRule(rule.id)}
                       sx={{
                         '& .MuiSwitch-switchBase.Mui-checked': {
-                          color: '#2E7D32',
+                          color: '#052E1C',
                         },
                         '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                          backgroundColor: '#2E7D32',
+                          backgroundColor: '#052E1C',
                         },
                       }}
                     />
@@ -67,7 +67,7 @@ const AutomationRules: React.FC = () => {
                     </Typography>
                   </Box>
                   <Box display="flex" justifyContent="flex-end" gap={1}>
-                    <IconButton size="small" sx={{ color: '#2E7D32' }}>
+                    <IconButton size="small" sx={{ color: '#052E1C' }}>
                       <EditIcon />
                     </IconButton>
                     <IconButton size="small" sx={{ color: '#d32f2f' }}>
@@ -86,14 +86,14 @@ const AutomationRules: React.FC = () => {
                         onChange={() => toggleAutomationRule(rule.id)}
                         sx={{
                           '& .MuiSwitch-switchBase.Mui-checked': {
-                            color: '#2E7D32',
+                            color: '#052E1C',
                           },
                           '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                            backgroundColor: '#2E7D32',
+                            backgroundColor: '#052E1C',
                           },
                         }}
                       />
-                      <IconButton size="small" sx={{ color: '#2E7D32' }}>
+                      <IconButton size="small" sx={{ color: '#052E1C' }}>
                         <EditIcon />
                       </IconButton>
                       <IconButton size="small" sx={{ color: '#d32f2f' }}>

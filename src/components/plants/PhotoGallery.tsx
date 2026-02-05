@@ -95,7 +95,7 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({ plantId }) => {
   if (loading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
-        <CircularProgress sx={{ color: '#2AD388' }} />
+        <CircularProgress sx={{ color: '#2AD368' }} />
       </Box>
     );
   }
@@ -129,7 +129,7 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({ plantId }) => {
             variant="contained"
             startIcon={<AddPhotoAlternateIcon />}
             sx={{
-              background: '#2AD388',
+              background: '#2AD368',
               color: '#FFFFFF',
               textTransform: 'none',
               '&:hover': {
@@ -155,7 +155,7 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({ plantId }) => {
           variant="contained"
           startIcon={<AddPhotoAlternateIcon />}
           sx={{
-            background: '#2AD388',
+            background: '#2AD368',
             color: '#FFFFFF',
             textTransform: 'none',
             fontSize: '0.85rem',

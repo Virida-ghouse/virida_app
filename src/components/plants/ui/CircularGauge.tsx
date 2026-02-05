@@ -17,8 +17,8 @@ const sizeMap: Record<GaugeSize, number> = {
 };
 
 const getColor = (value: number): string => {
-  if (value >= 80) return '#2AD388'; // Vert - Excellent
-  if (value >= 60) return '#CBED82'; // Vert clair - Bon
+  if (value >= 80) return '#2AD368'; // Vert - Excellent
+  if (value >= 60) return '#CBED62'; // Vert clair - Bon
   if (value >= 40) return '#FFA726'; // Orange - Attention
   return '#EF5350'; // Rouge - Critique
 };

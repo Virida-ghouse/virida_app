@@ -39,8 +39,8 @@ const StyledCard = styled(Card)(() => ({
 }));
 
 const RecommendationCard = styled(Card)(() => ({
-  background: '#2AD38810',
-  border: '1px solid #2AD38840',
+  background: '#2AD36810',
+  border: '1px solid #2AD36840',
   borderRadius: '8px',
 }));
 
@@ -95,7 +95,7 @@ const GrowthTimeline: React.FC<GrowthTimelineProps> = ({ plantId, recommendation
   if (loading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
-        <CircularProgress sx={{ color: '#2AD388' }} />
+        <CircularProgress sx={{ color: '#2AD368' }} />
       </Box>
     );
   }
@@ -115,9 +115,9 @@ const GrowthTimeline: React.FC<GrowthTimelineProps> = ({ plantId, recommendation
         <RecommendationCard sx={{ mb: 3 }}>
           <CardContent>
             <Box display="flex" alignItems="flex-start" gap={1}>
-              <TrendingUpIcon sx={{ color: '#2AD388', mt: 0.5, flexShrink: 0 }} />
+              <TrendingUpIcon sx={{ color: '#2AD368', mt: 0.5, flexShrink: 0 }} />
               <Box>
-                <Typography variant="subtitle2" sx={{ color: '#2AD388', fontWeight: 700, mb: 1 }}>
+                <Typography variant="subtitle2" sx={{ color: '#2AD368', fontWeight: 700, mb: 1 }}>
                   💡 Recommandations d'EVE
                 </Typography>
                 <Typography variant="body2" sx={{ color: '#121A21', lineHeight: 1.6 }}>
@@ -138,7 +138,7 @@ const GrowthTimeline: React.FC<GrowthTimelineProps> = ({ plantId, recommendation
               <Typography variant="caption" color="#8091A0" sx={{ mb: 1, display: 'block' }}>
                 Santé moyenne
               </Typography>
-              <Typography variant="h6" sx={{ color: '#2AD388', fontWeight: 700 }}>
+              <Typography variant="h6" sx={{ color: '#2AD368', fontWeight: 700 }}>
                 {stats.averageHealth}%
               </Typography>
             </CardContent>
@@ -149,7 +149,7 @@ const GrowthTimeline: React.FC<GrowthTimelineProps> = ({ plantId, recommendation
               <Typography variant="caption" color="#8091A0" sx={{ mb: 1, display: 'block' }}>
                 Température moyenne
               </Typography>
-              <Typography variant="h6" sx={{ color: '#2AD388', fontWeight: 700 }}>
+              <Typography variant="h6" sx={{ color: '#2AD368', fontWeight: 700 }}>
                 {stats.averageTemperature ? `${stats.averageTemperature}°C` : 'N/A'}
               </Typography>
             </CardContent>
@@ -163,7 +163,7 @@ const GrowthTimeline: React.FC<GrowthTimelineProps> = ({ plantId, recommendation
               <Typography
                 variant="h6"
                 sx={{
-                  color: stats.healthTrend >= 0 ? '#2AD388' : '#e74c3c',
+                  color: stats.healthTrend >= 0 ? '#2AD368' : '#e74c3c',
                   fontWeight: 700,
                 }}
               >
@@ -196,9 +196,9 @@ const GrowthTimeline: React.FC<GrowthTimelineProps> = ({ plantId, recommendation
                 <RechartLine
                   type="monotone"
                   dataKey="health"
-                  stroke="#2AD388"
+                  stroke="#2AD368"
                   strokeWidth={2}
-                  dot={{ fill: '#2AD388', r: 4 }}
+                  dot={{ fill: '#2AD368', r: 4 }}
                   activeDot={{ r: 6 }}
                   name="Santé"
                 />
@@ -237,7 +237,7 @@ const GrowthTimeline: React.FC<GrowthTimelineProps> = ({ plantId, recommendation
                     <Typography
                       variant="body2"
                       sx={{
-                        color: '#2AD388',
+                        color: '#2AD368',
                         fontWeight: 700,
                       }}
                     >

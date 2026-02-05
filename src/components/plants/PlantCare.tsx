@@ -124,7 +124,7 @@ const PlantCare: React.FC = () => {
       case 'WATERING':
         return <OpacityIcon sx={{ color: '#2196F3' }} />;
       case 'FERTILIZING':
-        return <SpaIcon sx={{ color: '#4CAF50' }} />;
+        return <SpaIcon sx={{ color: '#2AD368' }} />;
       case 'PRUNING':
         return <ContentCutIcon sx={{ color: '#FF9800' }} />;
       case 'PEST_CONTROL':
@@ -139,7 +139,7 @@ const PlantCare: React.FC = () => {
       case 'MEDIUM':
         return '#FFA726';
       case 'LOW':
-        return '#66BB6A';
+        return '#CBED62';
     }
   };
 
@@ -147,7 +147,7 @@ const PlantCare: React.FC = () => {
   if (loading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
-        <CircularProgress sx={{ color: '#2E7D32' }} size={60} />
+        <CircularProgress sx={{ color: '#052E1C' }} size={60} />
       </Box>
     );
   }
@@ -224,7 +224,7 @@ const PlantCare: React.FC = () => {
             label={`${upcomingTasks.length} à venir`}
             sx={{
               bgcolor: '#F0F9F4',
-              color: '#2E7D32',
+              color: '#052E1C',
               fontWeight: 600,
             }}
           />
@@ -243,11 +243,11 @@ const PlantCare: React.FC = () => {
               fontSize: '0.95rem',
               color: '#757575',
               '&.Mui-selected': {
-                color: '#2E7D32',
+                color: '#052E1C',
               },
             },
             '& .MuiTabs-indicator': {
-              backgroundColor: '#2E7D32',
+              backgroundColor: '#052E1C',
               height: 3,
             },
           }}
@@ -278,7 +278,7 @@ const PlantCare: React.FC = () => {
                   sx={{
                     color: '#E0E0E0',
                     '&.Mui-checked': {
-                      color: '#2E7D32',
+                      color: '#052E1C',
                     },
                   }}
                 />

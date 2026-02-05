@@ -131,7 +131,7 @@ const EnergyManagement: React.FC = () => {
     return () => clearInterval(interval);
   }, [energyData]);
 
-  const COLORS = ['#2E7D32', '#388E3C', '#4CAF50', '#66BB6A', '#81C784'];
+  const COLORS = ['#052E1C', '#2AD368', '#2AD368', '#CBED62', '#CBED62'];
 
   return (
     <Box p={isMobile ? 2 : 3}>
@@ -274,10 +274,10 @@ const EnergyManagement: React.FC = () => {
                   onChange={(e) => setAutoMode(e.target.checked)}
                   sx={{
                     '& .MuiSwitch-switchBase.Mui-checked': {
-                      color: '#2E7D32',
+                      color: '#052E1C',
                     },
                     '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                      backgroundColor: '#2E7D32',
+                      backgroundColor: '#052E1C',
                     },
                   }}
                 />
@@ -318,9 +318,9 @@ const EnergyManagement: React.FC = () => {
                 disabled={autoMode}
                 startIcon={<SaveIcon />}
                 sx={{
-                  backgroundColor: '#2E7D32',
+                  backgroundColor: '#052E1C',
                   '&:hover': {
-                    backgroundColor: '#1B5E20',
+                    backgroundColor: '#041E13',
                   },
                 }}
               >

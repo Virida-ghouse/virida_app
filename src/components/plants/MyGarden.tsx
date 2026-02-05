@@ -223,7 +223,7 @@ const MyGarden: React.FC = () => {
   if (loading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
-        <CircularProgress sx={{ color: '#2E7D32' }} size={60} />
+        <CircularProgress sx={{ color: '#052E1C' }} size={60} />
       </Box>
     );
   }
@@ -276,7 +276,7 @@ const MyGarden: React.FC = () => {
             startIcon={<AddIcon />}
             onClick={handleOpenAddPlant}
             sx={{
-              bgcolor: '#2E7D32',
+              bgcolor: '#052E1C',
               color: 'white',
               fontWeight: 600,
               px: 4,
@@ -285,7 +285,7 @@ const MyGarden: React.FC = () => {
               textTransform: 'none',
               boxShadow: '0 4px 12px rgba(46, 125, 50, 0.3)',
               '&:hover': {
-                bgcolor: '#1B5E20',
+                bgcolor: '#041E13',
                 boxShadow: '0 6px 16px rgba(46, 125, 50, 0.4)',
               },
             }}
@@ -325,7 +325,7 @@ const MyGarden: React.FC = () => {
             startIcon={<AddIcon />}
             onClick={handleOpenAddPlant}
             sx={{
-              bgcolor: '#2E7D32',
+              bgcolor: '#052E1C',
               color: 'white',
               fontWeight: 600,
               px: 3,
@@ -334,7 +334,7 @@ const MyGarden: React.FC = () => {
               textTransform: 'none',
               boxShadow: '0 2px 8px rgba(46, 125, 50, 0.2)',
               '&:hover': {
-                bgcolor: '#1B5E20',
+                bgcolor: '#041E13',
                 boxShadow: '0 4px 12px rgba(46, 125, 50, 0.3)',
               },
             }}
@@ -349,7 +349,7 @@ const MyGarden: React.FC = () => {
             label={`${activePlants} en croissance`}
             sx={{
               bgcolor: '#F0F9F4',
-              color: '#2E7D32',
+              color: '#052E1C',
               fontWeight: 600,
             }}
           />
@@ -367,7 +367,7 @@ const MyGarden: React.FC = () => {
             label={`Santé moyenne: ${avgHealth}%`}
             sx={{
               bgcolor: avgHealth >= 80 ? '#E8F5E9' : '#FFF3E0',
-              color: avgHealth >= 80 ? '#2E7D32' : '#F57C00',
+              color: avgHealth >= 80 ? '#052E1C' : '#F57C00',
               fontWeight: 600,
             }}
           />
@@ -386,11 +386,11 @@ const MyGarden: React.FC = () => {
               fontSize: '0.95rem',
               color: '#757575',
               '&.Mui-selected': {
-                color: '#2E7D32',
+                color: '#052E1C',
               },
             },
             '& .MuiTabs-indicator': {
-              backgroundColor: '#2E7D32',
+              backgroundColor: '#052E1C',
               height: 3,
             },
           }}

@@ -24,7 +24,7 @@ import { Shield, Lock, Eye, Database, Mail, FileText, CheckCircle } from 'lucide
 const PrivacyPolicy: React.FC = () => {
   const sections = [
     {
-      icon: <Shield size={24} color="#2AD388" />,
+      icon: <Shield size={24} color="#2AD368" />,
       title: '1. Responsable du Traitement',
       content: [
         'Virida est responsable de la collecte et du traitement de vos données personnelles.',
@@ -33,7 +33,7 @@ const PrivacyPolicy: React.FC = () => {
       ],
     },
     {
-      icon: <Database size={24} color="#2AD388" />,
+      icon: <Database size={24} color="#2AD368" />,
       title: '2. Données Collectées',
       content: [
         {
@@ -66,7 +66,7 @@ const PrivacyPolicy: React.FC = () => {
       ],
     },
     {
-      icon: <FileText size={24} color="#2AD388" />,
+      icon: <FileText size={24} color="#2AD368" />,
       title: '3. Base Juridique (Art. 6 RGPD)',
       content: [
         {
@@ -84,7 +84,7 @@ const PrivacyPolicy: React.FC = () => {
       ],
     },
     {
-      icon: <Lock size={24} color="#2AD388" />,
+      icon: <Lock size={24} color="#2AD368" />,
       title: '4. Sécurité et Protection (Art. 32 RGPD)',
       content: [
         {
@@ -101,7 +101,7 @@ const PrivacyPolicy: React.FC = () => {
       ],
     },
     {
-      icon: <Eye size={24} color="#2AD388" />,
+      icon: <Eye size={24} color="#2AD368" />,
       title: '5. Vos Droits (Art. 15-21 RGPD)',
       content: [
         {
@@ -126,7 +126,7 @@ const PrivacyPolicy: React.FC = () => {
       ],
     },
     {
-      icon: <Mail size={24} color="#2AD388" />,
+      icon: <Mail size={24} color="#2AD368" />,
       title: '6. Conservation des Données',
       content: [
         'Données de compte : Conservées pendant la durée du contrat + 3 ans',
@@ -137,7 +137,7 @@ const PrivacyPolicy: React.FC = () => {
       ],
     },
     {
-      icon: <CheckCircle size={24} color="#2AD388" />,
+      icon: <CheckCircle size={24} color="#2AD368" />,
       title: '7. Cookies et Traceurs',
       content: [
         {
@@ -185,7 +185,7 @@ const PrivacyPolicy: React.FC = () => {
               gap: 2,
             }}
           >
-            <Shield size={36} color="#2AD388" />
+            <Shield size={36} color="#2AD368" />
             Politique de Confidentialité
           </Typography>
           <Typography variant="subtitle1" sx={{ color: '#121A21', opacity: 0.7 }}>
@@ -205,7 +205,7 @@ const PrivacyPolicy: React.FC = () => {
             p: 2.5,
             backgroundColor: '#F5F5F5',
             borderRadius: '12px',
-            borderLeft: '4px solid #2AD388',
+            borderLeft: '4px solid #2AD368',
           }}
         >
           <Typography variant="body1" sx={{ color: '#121A21', lineHeight: 1.8 }}>
@@ -253,7 +253,7 @@ const PrivacyPolicy: React.FC = () => {
                       {item.items.map((listItem, listIndex) => (
                         <ListItem key={listIndex} sx={{ py: 0.5, pl: 2 }}>
                           <ListItemIcon sx={{ minWidth: 32 }}>
-                            <CheckCircle size={16} color="#2AD388" />
+                            <CheckCircle size={16} color="#2AD368" />
                           </ListItemIcon>
                           <ListItemText
                             primary={listItem}
@@ -280,7 +280,7 @@ const PrivacyPolicy: React.FC = () => {
             p: 2.5,
             backgroundColor: '#F5F5F5',
             borderRadius: '12px',
-            borderLeft: '4px solid #2AD388',
+            borderLeft: '4px solid #2AD368',
           }}
         >
           <Typography variant="h6" sx={{ fontWeight: 600, mb: 1.5, color: '#052E1C' }}>
@@ -299,7 +299,7 @@ const PrivacyPolicy: React.FC = () => {
               href="https://www.cnil.fr"
               target="_blank"
               rel="noopener noreferrer"
-              style={{ color: '#2AD388', fontWeight: 500, textDecoration: 'none' }}
+              style={{ color: '#2AD368', fontWeight: 500, textDecoration: 'none' }}
             >
               www.cnil.fr
             </a>

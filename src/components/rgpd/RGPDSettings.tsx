@@ -82,7 +82,7 @@ const RGPDSettings: React.FC = () => {
       {/* En-tête */}
       <Box sx={{ mb: 3 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1 }}>
-          <Shield size={28} color="#2AD388" />
+          <Shield size={28} color="#2AD368" />
           <Typography variant="h5" sx={{ fontWeight: 600, color: '#121A21' }}>
             Confidentialité & RGPD
           </Typography>
@@ -125,20 +125,20 @@ const RGPDSettings: React.FC = () => {
               <Chip
                 size="small"
                 label="Essentiels"
-                sx={{ backgroundColor: '#2AD388', color: '#FFFFFF' }}
+                sx={{ backgroundColor: '#2AD368', color: '#FFFFFF' }}
               />
               {consent.functional && (
                 <Chip
                   size="small"
                   label="Fonctionnels"
-                  sx={{ backgroundColor: '#CBED82', color: '#052E1C' }}
+                  sx={{ backgroundColor: '#CBED62', color: '#052E1C' }}
                 />
               )}
               {consent.analytics && (
                 <Chip
                   size="small"
                   label="Analytiques"
-                  sx={{ backgroundColor: '#CBED82', color: '#052E1C' }}
+                  sx={{ backgroundColor: '#CBED62', color: '#052E1C' }}
                 />
               )}
             </Box>
@@ -163,7 +163,7 @@ const RGPDSettings: React.FC = () => {
           }}
         >
           <ListItemIcon>
-            <Cookie size={24} color="#2AD388" />
+            <Cookie size={24} color="#2AD368" />
           </ListItemIcon>
           <ListItemText
             primary="Gérer les cookies"
@@ -189,7 +189,7 @@ const RGPDSettings: React.FC = () => {
           }}
         >
           <ListItemIcon>
-            <FileText size={24} color="#2AD388" />
+            <FileText size={24} color="#2AD368" />
           </ListItemIcon>
           <ListItemText
             primary="Politique de confidentialité"
@@ -217,7 +217,7 @@ const RGPDSettings: React.FC = () => {
           }}
         >
           <ListItemIcon>
-            <MessageCircle size={24} color="#2AD388" />
+            <MessageCircle size={24} color="#2AD368" />
           </ListItemIcon>
           <ListItemText
             primary="Exporter mes conversations avec Eve"
@@ -271,7 +271,7 @@ const RGPDSettings: React.FC = () => {
           }}
         >
           <ListItemIcon>
-            <Download size={24} color="#2AD388" />
+            <Download size={24} color="#2AD368" />
           </ListItemIcon>
           <ListItemText
             primary="Exporter mes données RGPD"
@@ -315,7 +315,7 @@ const RGPDSettings: React.FC = () => {
           p: 2,
           backgroundColor: '#F5F5F5',
           borderRadius: '12px',
-          borderLeft: '4px solid #2AD388',
+          borderLeft: '4px solid #2AD368',
         }}
       >
         <Typography variant="caption" sx={{ color: '#121A21', lineHeight: 1.6 }}>

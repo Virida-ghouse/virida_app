@@ -1,9 +1,9 @@
 import React from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import { Box, CircularProgress } from '@mui/material';
-import MainApp from './components/MainApp';
-import AuthContainer from './components/auth/AuthContainer';
+import { CircularProgress } from '@mui/material';
+import MainAppNew from './components/MainAppNew';
+import AuthContainerNew from './components/auth/AuthContainerNew';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { RGPDProvider } from './contexts/RGPDContext';
 import { ChatHistoryProvider } from './contexts/ChatHistoryContext';
@@ -17,28 +17,21 @@ const AppContent: React.FC = () => {
 
   if (isLoading) {
     return (
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          minHeight: '100vh',
-          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        }}
-      >
-        <CircularProgress size={60} sx={{ color: '#FFFFFF' }} />
-      </Box>
+      <div className="flex justify-center items-center min-h-screen bg-background-dark">
+        <CircularProgress size={60} sx={{ color: '#1fc75c' }} />
+      </div>
     );
   }
 
   if (!isAuthenticated) {
-    return <AuthContainer />;
+    return <AuthContainerNew />;
   }
 
-  return <MainApp />;
+  return <MainAppNew />;
 };
 
 function App() {
+  console.log(' App.tsx - Composant App en cours de rendu');
   console.log('🎯 App.tsx - Composant App en cours de rendu');
 
   return (

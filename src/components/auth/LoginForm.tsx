@@ -145,7 +145,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onToggleMode, onError }) => {
               },
               '&.Mui-focused': {
                 backgroundColor: '#ffffff',
-                borderColor: '#2E7D32',
+                borderColor: '#052E1C',
               },
             },
             '& .MuiOutlinedInput-notchedOutline': {
@@ -204,7 +204,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onToggleMode, onError }) => {
               },
               '&.Mui-focused': {
                 backgroundColor: '#ffffff',
-                borderColor: '#2E7D32',
+                borderColor: '#052E1C',
               },
             },
             '& .MuiOutlinedInput-notchedOutline': {
@@ -223,9 +223,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ onToggleMode, onError }) => {
         sx={{
           py: 2,
           borderRadius: 3,
-          backgroundColor: '#2E7D32',
+          backgroundColor: '#052E1C',
           '&:hover': {
-            backgroundColor: '#1B5E20',
+            backgroundColor: '#041E13',
           },
           '&:disabled': {
             backgroundColor: '#d1d5db',
@@ -249,11 +249,11 @@ const LoginForm: React.FC<LoginFormProps> = ({ onToggleMode, onError }) => {
             type="button"
             onClick={onToggleMode}
             sx={{
-              color: '#2E7D32',
+              color: '#052E1C',
               fontWeight: 600,
               textDecoration: 'none',
               '&:hover': {
-                color: '#1B5E20',
+                color: '#041E13',
                 textDecoration: 'underline',
               },
             }}

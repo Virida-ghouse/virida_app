@@ -61,7 +61,7 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
             <WarningAmberIcon
               sx={{
                 fontSize: '1.8rem',
-                color: isDanger ? '#EF5350' : '#2E7D32',
+                color: isDanger ? '#EF5350' : '#052E1C',
               }}
             />
           </Box>
@@ -117,7 +117,7 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
           variant="contained"
           sx={{
             flex: 1,
-            bgcolor: isDanger ? '#EF5350' : '#2E7D32',
+            bgcolor: isDanger ? '#EF5350' : '#052E1C',
             color: 'white',
             fontWeight: 600,
             textTransform: 'none',
@@ -125,12 +125,12 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
             borderRadius: 2,
             boxShadow: isDanger
               ? '0 2px 8px rgba(239, 83, 80, 0.3)'
-              : '0 2px 8px rgba(46, 125, 50, 0.3)',
+              : '0 2px 8px rgba(5, 46, 28, 0.3)',
             '&:hover': {
-              bgcolor: isDanger ? '#D32F2F' : '#1B5E20',
+              bgcolor: isDanger ? '#D32F2F' : '#041E13',
               boxShadow: isDanger
                 ? '0 4px 12px rgba(239, 83, 80, 0.4)'
-                : '0 4px 12px rgba(46, 125, 50, 0.4)',
+                : '0 4px 12px rgba(5, 46, 28, 0.4)',
             },
           }}
         >

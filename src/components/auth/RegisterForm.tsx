@@ -121,7 +121,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
               component="h1"
               sx={{
                 fontWeight: 'bold',
-                color: '#2E7D32',
+                color: '#052E1C',
                 mb: 1
               }}
             >
@@ -277,9 +277,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
                 mt: 3,
                 mb: 2,
                 py: 1.5,
-                background: 'linear-gradient(45deg, #2E7D32 30%, #4CAF50 90%)',
+                background: 'linear-gradient(45deg, #052E1C 30%, #2AD368 90%)',
                 '&:hover': {
-                  background: 'linear-gradient(45deg, #1B5E20 30%, #388E3C 90%)',
+                  background: 'linear-gradient(45deg, #041E13 30%, #2AD368 90%)',
                 }
               }}
             >
@@ -295,7 +295,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
                   onClick={onToggleMode}
                   disabled={isLoading}
                   sx={{
-                    color: '#2E7D32',
+                    color: '#052E1C',
                     textDecoration: 'none',
                     '&:hover': {
                       textDecoration: 'underline'

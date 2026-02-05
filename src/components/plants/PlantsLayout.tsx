@@ -44,11 +44,11 @@ const PlantsLayout: React.FC = () => {
       >
         <Container maxWidth="xl">
           <Box display="flex" alignItems="center" gap={2}>
-            <Avatar sx={{ backgroundColor: '#2E7D32', width: 56, height: 56 }}>
+            <Avatar sx={{ backgroundColor: '#052E1C', width: 56, height: 56 }}>
               <LocalFloristIcon sx={{ fontSize: 28 }} />
             </Avatar>
             <Box>
-              <Typography variant="h4" sx={{ color: '#2E7D32', fontWeight: 700 }}>
+              <Typography variant="h4" sx={{ color: '#052E1C', fontWeight: 700 }}>
                 Mes Plantes
               </Typography>
               <Typography variant="body1" sx={{ color: '#666', mt: 0.5 }}>
@@ -81,11 +81,11 @@ const PlantsLayout: React.FC = () => {
                 minHeight: 60,
                 color: '#757575',
                 '&.Mui-selected': {
-                  color: '#2E7D32',
+                  color: '#052E1C',
                 },
               },
               '& .MuiTabs-indicator': {
-                backgroundColor: '#2E7D32',
+                backgroundColor: '#052E1C',
                 height: 3,
               },
             }}

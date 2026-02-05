@@ -170,8 +170,8 @@ const PlantsPage: React.FC = () => {
             onClick={() => setLoading(true)}
             sx={{
               borderRadius: '50%',
-              border: '1px solid #2AD388',
-              color: '#2AD388',
+              border: '1px solid #2AD368',
+              color: '#2AD368',
             }}
           >
             <RefreshIcon />
@@ -180,7 +180,7 @@ const PlantsPage: React.FC = () => {
             variant="contained"
             startIcon={<AddIcon />}
             sx={{
-              background: '#2AD388',
+              background: '#2AD368',
               color: '#FFFFFF',
               textTransform: 'none',
               fontSize: '0.95rem',
@@ -210,10 +210,10 @@ const PlantsPage: React.FC = () => {
                 minWidth: 250,
                 '& .MuiOutlinedInput-root': {
                   '&:hover fieldset': {
-                    borderColor: '#2AD388',
+                    borderColor: '#2AD368',
                   },
                   '&.Mui-focused fieldset': {
-                    borderColor: '#2AD388',
+                    borderColor: '#2AD368',
                   },
                 },
               }}
@@ -227,7 +227,7 @@ const PlantsPage: React.FC = () => {
                 label="Catégorie"
                 sx={{
                   '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                    borderColor: '#2AD388',
+                    borderColor: '#2AD368',
                   },
                 }}
               >
@@ -248,7 +248,7 @@ const PlantsPage: React.FC = () => {
                 label="Santé"
                 sx={{
                   '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                    borderColor: '#2AD388',
+                    borderColor: '#2AD368',
                   },
                 }}
               >
@@ -272,8 +272,8 @@ const PlantsPage: React.FC = () => {
                 color: '#8091A0',
                 borderColor: '#E1E8EE',
                 '&:hover': {
-                  borderColor: '#2AD388',
-                  color: '#2AD388',
+                  borderColor: '#2AD368',
+                  color: '#2AD368',
                 },
               }}
             >
@@ -289,16 +289,16 @@ const PlantsPage: React.FC = () => {
           <Chip
             label={`Total: ${filteredPlants.length}`}
             sx={{
-              background: '#2AD38820',
-              color: '#2AD388',
+              background: '#2AD36820',
+              color: '#2AD368',
               fontWeight: 600,
             }}
           />
           <Chip
             label={`Excellente santé: ${filteredPlants.filter((p) => p.health >= 80).length}`}
             sx={{
-              background: '#2AD38820',
-              color: '#2AD388',
+              background: '#2AD36820',
+              color: '#2AD368',
             }}
           />
           <Chip
@@ -317,7 +317,7 @@ const PlantsPage: React.FC = () => {
       {/* Loading */}
       {loading && (
         <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
-          <CircularProgress sx={{ color: '#2AD388' }} />
+          <CircularProgress sx={{ color: '#2AD368' }} />
         </Box>
       )}
 

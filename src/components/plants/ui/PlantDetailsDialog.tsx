@@ -608,11 +608,11 @@ export const PlantDetailsDialog: React.FC<PlantDetailsDialogProps> = ({
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'PLANTED': return '#2E7D32';
+      case 'PLANTED': return '#052E1C';
       case 'GROWING': return '#1976d2';
       case 'FLOWERING': return '#9c27b0';
       case 'FRUITING': return '#ed6c02';
-      case 'HARVESTED': return '#388e3c';
+      case 'HARVESTED': return '#2AD368';
       case 'DORMANT': return '#757575';
       case 'DEAD': return '#d32f2f';
       default: return '#666';
@@ -860,7 +860,7 @@ export const PlantDetailsDialog: React.FC<PlantDetailsDialogProps> = ({
               {plant.daysToHarvest && (
                 <Grid item xs={12}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <CalendarMonth sx={{ color: '#2E7D32', fontSize: 20 }} />
+                    <CalendarMonth sx={{ color: '#052E1C', fontSize: 20 }} />
                     <Typography variant="body2" color="text.secondary">
                       Jours jusqu'à la récolte: {plant.daysToHarvest} jours
                     </Typography>
@@ -882,8 +882,8 @@ export const PlantDetailsDialog: React.FC<PlantDetailsDialogProps> = ({
                   onClick={() => handleOpenTaskDialog()}
                   size="small"
                   sx={{
-                    bgcolor: '#2E7D32',
-                    '&:hover': { bgcolor: '#1B5E20' },
+                    bgcolor: '#052E1C',
+                    '&:hover': { bgcolor: '#041E13' },
                     textTransform: 'none',
                   }}
                 >
@@ -931,7 +931,7 @@ export const PlantDetailsDialog: React.FC<PlantDetailsDialogProps> = ({
                                   height: 20,
                                   fontSize: '0.7rem',
                                   bgcolor: '#E8F5E9',
-                                  color: '#2E7D32',
+                                  color: '#052E1C',
                                 }}
                               />
                               {task.priority === 'HIGH' || task.priority === 'URGENT' ? (
@@ -970,7 +970,7 @@ export const PlantDetailsDialog: React.FC<PlantDetailsDialogProps> = ({
                               <IconButton
                                 size="small"
                                 onClick={() => handleCompleteTask(task.id)}
-                                sx={{ color: '#2E7D32' }}
+                                sx={{ color: '#052E1C' }}
                               >
                                 <CheckCircle fontSize="small" />
                               </IconButton>
@@ -1010,8 +1010,8 @@ export const PlantDetailsDialog: React.FC<PlantDetailsDialogProps> = ({
                 startIcon={<AddIcon />}
                 onClick={() => setShowAddHistory(!showAddHistory)}
                 sx={{
-                  bgcolor: '#2E7D32',
-                  '&:hover': { bgcolor: '#1B5E20' },
+                  bgcolor: '#052E1C',
+                  '&:hover': { bgcolor: '#041E13' },
                 }}
               >
                 Ajouter une entrée
@@ -1047,10 +1047,10 @@ export const PlantDetailsDialog: React.FC<PlantDetailsDialogProps> = ({
                             startIcon={<PhotoCamera />}
                             fullWidth
                             sx={{
-                              borderColor: '#2E7D32',
-                              color: '#2E7D32',
+                              borderColor: '#052E1C',
+                              color: '#052E1C',
                               '&:hover': {
-                                borderColor: '#1B5E20',
+                                borderColor: '#041E13',
                                 bgcolor: 'rgba(46, 125, 50, 0.04)',
                               },
                             }}
@@ -1120,8 +1120,8 @@ export const PlantDetailsDialog: React.FC<PlantDetailsDialogProps> = ({
                           onClick={handleAddHistory}
                           disabled={loading || (!selectedPhotoFile && !newLogHeight && !newLogLeafCount && !newLogNotes.trim())}
                           sx={{
-                            bgcolor: '#2E7D32',
-                            '&:hover': { bgcolor: '#1B5E20' },
+                            bgcolor: '#052E1C',
+                            '&:hover': { bgcolor: '#041E13' },
                           }}
                         >
                           {loading ? 'Ajout...' : 'Ajouter'}
@@ -1213,7 +1213,7 @@ export const PlantDetailsDialog: React.FC<PlantDetailsDialogProps> = ({
                                 <Chip
                                   label={log.eventType}
                                   size="small"
-                                  sx={{ mt: 0.5, bgcolor: '#E8F5E9', color: '#2E7D32' }}
+                                  sx={{ mt: 0.5, bgcolor: '#E8F5E9', color: '#052E1C' }}
                                 />
                               )}
                             </Box>
@@ -1223,7 +1223,7 @@ export const PlantDetailsDialog: React.FC<PlantDetailsDialogProps> = ({
                                 size="small"
                                 sx={{
                                   bgcolor: log.healthScore >= 80 ? '#E8F5E9' : log.healthScore >= 60 ? '#FFF3E0' : '#FFEBEE',
-                                  color: log.healthScore >= 80 ? '#2E7D32' : log.healthScore >= 60 ? '#F57C00' : '#C62828',
+                                  color: log.healthScore >= 80 ? '#052E1C' : log.healthScore >= 60 ? '#F57C00' : '#C62828',
                                 }}
                               />
                               <IconButton
@@ -1305,8 +1305,8 @@ export const PlantDetailsDialog: React.FC<PlantDetailsDialogProps> = ({
                 startIcon={<AddIcon />}
                 onClick={() => setShowAddHarvest(!showAddHarvest)}
                 sx={{
-                  bgcolor: '#2E7D32',
-                  '&:hover': { bgcolor: '#1B5E20' },
+                  bgcolor: '#052E1C',
+                  '&:hover': { bgcolor: '#041E13' },
                 }}
               >
                 Ajouter une récolte
@@ -1401,8 +1401,8 @@ export const PlantDetailsDialog: React.FC<PlantDetailsDialogProps> = ({
                           onClick={handleAddHarvest}
                           disabled={loading || !newHarvestQuantity}
                           sx={{
-                            bgcolor: '#2E7D32',
-                            '&:hover': { bgcolor: '#1B5E20' },
+                            bgcolor: '#052E1C',
+                            '&:hover': { bgcolor: '#041E13' },
                           }}
                         >
                           {loading ? 'Ajout...' : 'Ajouter'}
@@ -1451,7 +1451,7 @@ export const PlantDetailsDialog: React.FC<PlantDetailsDialogProps> = ({
                                 size="small"
                                 sx={{
                                   bgcolor: harvest.quality === 'EXCELLENT' ? '#E8F5E9' : harvest.quality === 'GOOD' ? '#E3F2FD' : harvest.quality === 'FAIR' ? '#FFF3E0' : '#FFEBEE',
-                                  color: harvest.quality === 'EXCELLENT' ? '#2E7D32' : harvest.quality === 'GOOD' ? '#1976d2' : harvest.quality === 'FAIR' ? '#F57C00' : '#C62828',
+                                  color: harvest.quality === 'EXCELLENT' ? '#052E1C' : harvest.quality === 'GOOD' ? '#1976d2' : harvest.quality === 'FAIR' ? '#F57C00' : '#C62828',
                                 }}
                               />
                               <IconButton

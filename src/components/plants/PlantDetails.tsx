@@ -67,11 +67,11 @@ const TabsWrapper = styled(Tabs)(() => ({
     fontWeight: 500,
     minHeight: '48px',
     '&.Mui-selected': {
-      color: '#2AD388',
+      color: '#2AD368',
     },
   },
   '& .MuiTabs-indicator': {
-    backgroundColor: '#2AD388',
+    backgroundColor: '#2AD368',
   },
 }));
 
@@ -156,7 +156,7 @@ const PlantDetails: React.FC<PlantDetailsProps> = ({ plant, onClose }) => {
   }, [plant, apiUrl]);
 
   const getHealthColor = (health: number) => {
-    if (health >= 80) return '#2AD388';
+    if (health >= 80) return '#2AD368';
     if (health >= 60) return '#f1c40f';
     if (health >= 40) return '#FF9800';
     return '#e74c3c';
@@ -198,8 +198,8 @@ const PlantDetails: React.FC<PlantDetailsProps> = ({ plant, onClose }) => {
           sx={{
             color: '#8091A0',
             '&:hover': {
-              color: '#2AD388',
-              background: '#2AD38810',
+              color: '#2AD368',
+              background: '#2AD36810',
             },
           }}
         >
@@ -260,7 +260,7 @@ const PlantDetails: React.FC<PlantDetailsProps> = ({ plant, onClose }) => {
 
         {loading && (
           <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
-            <CircularProgress sx={{ color: '#2AD388' }} />
+            <CircularProgress sx={{ color: '#2AD368' }} />
           </Box>
         )}
 
@@ -389,7 +389,7 @@ const PlantDetails: React.FC<PlantDetailsProps> = ({ plant, onClose }) => {
             color: '#8091A0',
             textTransform: 'none',
             '&:hover': {
-              color: '#2AD388',
+              color: '#2AD368',
             },
           }}
         >

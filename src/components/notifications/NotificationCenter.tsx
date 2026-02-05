@@ -5,8 +5,8 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   '& .MuiBadge-badge': {
-    backgroundColor: '#2AD388',
-    color: '#2AD388',
+    backgroundColor: '#2AD368',
+    color: '#2AD368',
   },
 }));
 

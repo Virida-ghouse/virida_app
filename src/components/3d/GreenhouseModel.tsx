@@ -128,6 +128,10 @@ const SerreModel = ({ potGroup }: { potGroup: THREE.Group | null }) => {
     // Parcourir la scène pour s'assurer que tous les matériaux sont correctement configurés
     scene.traverse((child) => {
       if (child instanceof THREE.Mesh) {
+        // Activer les ombres sur tous les meshes
+        child.castShadow = true;
+        child.receiveShadow = true;
+        
         // Vérifier si le mesh utilise le matériau cible
         if (child.material instanceof THREE.Material &&
             materials &&
@@ -525,17 +529,78 @@ const GreenhouseWithPot = () => {
 const SceneContent = () => {
   return (
     <>
-      <color attach="background" args={[VIRIDA_COLORS.LIGHT_GRAY]} />
-      <ambientLight intensity={0.8} />
-      <pointLight position={[10, 10, 10]} intensity={1.5} castShadow />
-      <directionalLight
-        position={[-5, 5, 5]}
-        intensity={1}
+      {/* Background sombre stylé - gris très foncé au lieu de noir pur */}
+      <color attach="background" args={['#1a1f26']} />
+      
+      {/* Lumière ambiante très faible pour le fond sombre */}
+      <ambientLight intensity={0.4} />
+      
+      {/* Point light au centre de la serre - éclairage intérieur */}
+      <pointLight 
+        position={[0, 2, 0]} 
+        intensity={1.8} 
+        color="#ffffff" 
+        distance={8} 
+        decay={2}
         castShadow
-        shadow-mapSize-width={1024}
-        shadow-mapSize-height={1024}
       />
+      
+      {/* Spotlight principal sur la serre - effet dramatique */}
+      <spotLight
+        position={[0, 8, 0]}
+        angle={0.6}
+        penumbra={0.5}
+        intensity={2.5}
+        castShadow
+        shadow-mapSize-width={2048}
+        shadow-mapSize-height={2048}
+        color="#2AD368"
+      />
+      
+      {/* Spotlight secondaire pour remplir les ombres */}
+      <spotLight
+        position={[-5, 6, 5]}
+        angle={0.5}
+        penumbra={0.7}
+        intensity={1.2}
+        color="#CBED62"
+        castShadow
+      />
+      
+      {/* Lumière d'appoint latérale */}
+      <pointLight 
+        position={[8, 4, -3]} 
+        intensity={0.8} 
+        color="#1fc75c"
+        castShadow
+      />
+      
+      {/* Lumière de fond pour créer de la profondeur */}
+      <directionalLight
+        position={[-3, 3, -5]}
+        intensity={0.4}
+        color="#4a90e2"
+        castShadow
+      />
+      
+      {/* <Environment preset="night" /> */}
       <Environment preset="sunset" />
+      
+      {/* Sol 3D avec réflexion améliorée */}
+      {/* <mesh 
+        rotation={[-Math.PI / 2, 0, 0]} 
+        position={[0, 0, 0]} 
+        receiveShadow
+      >
+        <planeGeometry args={[20, 20]} />
+        <meshStandardMaterial 
+          color="#0d1117"
+          roughness={0.4}
+          metalness={0.6}
+          envMapIntensity={1.2}
+        />
+      </mesh> */}
+      
       <Suspense fallback={null}>
         <GreenhouseWithPot />
       </Suspense>

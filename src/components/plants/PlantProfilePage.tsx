@@ -54,13 +54,18 @@ const PlantProfilePage: React.FC = () => {
     const fetchPlantData = async () => {
       try {
         const token = localStorage.getItem('virida_token');
-        const response = await fetch(`${apiUrl}/api/plant-catalog/${plantId}`, {
+        const response = await fetch(`${apiUrl}/api/plants/catalog?search=${plantId}`, {
           headers: { 'Authorization': `Bearer ${token}` },
         });
 
         if (response.ok) {
           const data = await response.json();
-          setPlantData(data.data);
+          // On cherche la plante correspondante dans le catalogue retourné
+          const plant =
+            data.data?.plants?.find((p: any) => p.id === plantId) ??
+            data.data?.plants?.[0] ??
+            null;
+          setPlantData(plant);
         }
       } catch (error) {
         console.error('Error fetching plant:', error);
@@ -116,7 +121,7 @@ const PlantProfilePage: React.FC = () => {
           sx={{
             bgcolor: 'white',
             border: '2px solid #E0E0E0',
-            '&:hover': { borderColor: '#2AD388' },
+            '&:hover': { borderColor: '#2AD368' },
           }}
         >
           <ArrowBackIcon />
@@ -206,11 +211,11 @@ const PlantProfilePage: React.FC = () => {
                   </Paper>
                 </Grid>
                 <Grid item xs={6}>
-                  <Paper sx={{ p: 2, bgcolor: '#2AD38820', textAlign: 'center' }}>
-                    <Typography variant="caption" color="#2AD388">
+                  <Paper sx={{ p: 2, bgcolor: '#2AD36820', textAlign: 'center' }}>
+                    <Typography variant="caption" color="#2AD368">
                       Récolte dans
                     </Typography>
-                    <Typography variant="h6" sx={{ fontWeight: 700, color: '#2AD388' }}>
+                    <Typography variant="h6" sx={{ fontWeight: 700, color: '#2AD368' }}>
                       {mockPlant.daysToHarvest} jours
                     </Typography>
                   </Paper>
@@ -230,8 +235,8 @@ const PlantProfilePage: React.FC = () => {
                   label="Floraison"
                   variant="outlined"
                   sx={{
-                    borderColor: '#2AD388',
-                    color: '#2AD388',
+                    borderColor: '#2AD368',
+                    color: '#2AD368',
                     fontWeight: 600,
                   }}
                 />
@@ -311,7 +316,7 @@ const PlantProfilePage: React.FC = () => {
       <Card sx={{ mb: 3, bgcolor: '#F5F5F5' }}>
         <CardContent>
           <Box sx={{ display: 'flex', gap: 2, alignItems: 'flex-start' }}>
-            <Avatar sx={{ bgcolor: '#2AD388', width: 48, height: 48 }}>
+            <Avatar sx={{ bgcolor: '#2AD368', width: 48, height: 48 }}>
               🤖
             </Avatar>
             <Box sx={{ flexGrow: 1 }}>
@@ -324,7 +329,7 @@ const PlantProfilePage: React.FC = () => {
                   endIcon={<ChatIcon />}
                   sx={{
                     textTransform: 'none',
-                    color: '#2AD388',
+                    color: '#2AD368',
                     fontWeight: 600,
                   }}
                 >
@@ -341,7 +346,7 @@ const PlantProfilePage: React.FC = () => {
                   size="small"
                   sx={{
                     textTransform: 'none',
-                    color: '#2AD388',
+                    color: '#2AD368',
                     fontWeight: 600,
                   }}
                 >
@@ -366,10 +371,10 @@ const PlantProfilePage: React.FC = () => {
                 fontSize: '0.95rem',
               },
               '& .Mui-selected': {
-                color: '#2AD388 !important',
+                color: '#2AD368 !important',
               },
               '& .MuiTabs-indicator': {
-                backgroundColor: '#2AD388',
+                backgroundColor: '#2AD368',
               },
             }}
           >
@@ -430,7 +435,7 @@ const PlantProfilePage: React.FC = () => {
       >
         <IconButton
           sx={{
-            bgcolor: '#2AD388',
+            bgcolor: '#2AD368',
             color: 'white',
             width: 56,
             height: 56,

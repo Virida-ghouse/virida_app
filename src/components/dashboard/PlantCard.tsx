@@ -17,7 +17,7 @@ const StyledCard = styled(Card)<{ status: string }>(({ theme, status }) => ({
   position: 'relative',
   borderTop: `2px solid ${
     status === 'healthy' 
-      ? '#2AD388'
+      ? '#2AD368'
       : status === 'attention'
       ? '#f1c40f'
       : '#e74c3c'
@@ -26,20 +26,20 @@ const StyledCard = styled(Card)<{ status: string }>(({ theme, status }) => ({
 
 const PlantIcon = styled(LocalFloristIcon)(({ theme }) => ({
   fontSize: '2rem',
-  color: '#2AD388',
+  color: '#2AD368',
 }));
 
 const PlantCard: React.FC<PlantCardProps> = ({ plant, onSelect }) => {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'healthy':
-        return '#2AD388';
+        return '#2AD368';
       case 'attention':
         return '#f1c40f';
       case 'critical':
         return '#e74c3c';
       default:
-        return '#2AD388';
+        return '#2AD368';
     }
   };
 
@@ -64,7 +64,7 @@ const PlantCard: React.FC<PlantCardProps> = ({ plant, onSelect }) => {
             <IconButton
               size="small"
               onClick={() => onSelect(plant.id)}
-              sx={{ color: '#2AD388' }}
+              sx={{ color: '#2AD368' }}
             >
               <SettingsIcon />
             </IconButton>

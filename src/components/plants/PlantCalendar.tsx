@@ -163,7 +163,7 @@ const PlantCalendar: React.FC = () => {
       case 'WATER':
         return <OpacityIcon sx={{ fontSize: size, color: '#2196F3' }} />;
       case 'FERTILIZE':
-        return <SpaIcon sx={{ fontSize: size, color: '#4CAF50' }} />;
+        return <SpaIcon sx={{ fontSize: size, color: '#2AD368' }} />;
       case 'PRUNE':
         return <ContentCutIcon sx={{ fontSize: size, color: '#FF9800' }} />;
       case 'PEST_CHECK':
@@ -239,7 +239,7 @@ const PlantCalendar: React.FC = () => {
   // Chargement
   if (loading) {
     const loadingBoxStyle = { display: 'flex', justifyContent: 'center', py: 8 };
-    const progressStyle = { color: '#2E7D32' };
+    const progressStyle = { color: '#052E1C' };
     return (
       <Box sx={loadingBoxStyle}>
         <CircularProgress sx={progressStyle} size={60} />
@@ -319,13 +319,13 @@ const PlantCalendar: React.FC = () => {
                       p: 1,
                       minHeight: 80,
                       bgcolor: isToday(day) ? '#F0F9F4' : '#FAFAFA',
-                      border: isToday(day) ? '2px solid #2E7D32' : '1px solid #F0F0F0',
+                      border: isToday(day) ? '2px solid #052E1C' : '1px solid #F0F0F0',
                       borderRadius: 1,
                       cursor: 'pointer',
                       transition: 'all 0.2s ease',
                       '&:hover': {
                         bgcolor: '#F5F5F5',
-                        borderColor: '#2E7D32',
+                        borderColor: '#052E1C',
                       },
                     }}
                   >
@@ -333,7 +333,7 @@ const PlantCalendar: React.FC = () => {
                       variant="body2"
                       sx={{
                         fontWeight: isToday(day) ? 700 : 500,
-                        color: isToday(day) ? '#2E7D32' : '#121A21',
+                        color: isToday(day) ? '#052E1C' : '#121A21',
                         mb: 0.5,
                       }}
                     >
@@ -384,7 +384,7 @@ const PlantCalendar: React.FC = () => {
           <DialogTitle sx={{ pb: 1, borderBottom: '1px solid #e0e0e0' }}>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <EventIcon sx={{ color: '#2E7D32' }} />
+                <EventIcon sx={{ color: '#052E1C' }} />
                 <Typography variant="h6" sx={{ fontWeight: 600 }}>
                   {selectedDay} {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
                 </Typography>
@@ -402,7 +402,7 @@ const PlantCalendar: React.FC = () => {
             </Box>
           </DialogContent>
           <DialogActions sx={{ px: 3, pb: 2 }}>
-            <Button onClick={handleCloseDayDialog} sx={{ color: '#2E7D32' }}>
+            <Button onClick={handleCloseDayDialog} sx={{ color: '#052E1C' }}>
               Fermer
             </Button>
           </DialogActions>
@@ -435,7 +435,7 @@ const PlantCalendar: React.FC = () => {
             icon={<SpaIcon sx={{ fontSize: 16 }} />}
             label="Fertilisation"
             size="small"
-            sx={{ bgcolor: '#E8F5E9', color: '#4CAF50' }}
+            sx={{ bgcolor: '#E8F5E9', color: '#2AD368' }}
           />
           <Chip
             icon={<ContentCutIcon sx={{ fontSize: 16 }} />}
@@ -528,7 +528,7 @@ const PlantCalendar: React.FC = () => {
                     color="primary"
                     sx={{
                       '& .MuiBadge-badge': {
-                        bgcolor: '#2E7D32',
+                        bgcolor: '#052E1C',
                         right: 8,
                         top: 8,
                       },
@@ -543,13 +543,13 @@ const PlantCalendar: React.FC = () => {
                         minHeight: 80,
                         width: '100%',
                         bgcolor: isToday(day) ? '#F0F9F4' : '#FAFAFA',
-                        border: isToday(day) ? '2px solid #2E7D32' : '1px solid #F0F0F0',
+                        border: isToday(day) ? '2px solid #052E1C' : '1px solid #F0F0F0',
                         borderRadius: 1,
                         cursor: 'pointer',
                         transition: 'all 0.2s ease',
                         '&:hover': {
                           bgcolor: '#F5F5F5',
-                          borderColor: '#2E7D32',
+                          borderColor: '#052E1C',
                         },
                       }}
                     >
@@ -557,7 +557,7 @@ const PlantCalendar: React.FC = () => {
                         variant="body2"
                         sx={{
                           fontWeight: isToday(day) ? 700 : 500,
-                          color: isToday(day) ? '#2E7D32' : '#121A21',
+                          color: isToday(day) ? '#052E1C' : '#121A21',
                           mb: 0.5,
                         }}
                       >
@@ -596,7 +596,7 @@ const PlantCalendar: React.FC = () => {
         <DialogTitle sx={{ pb: 1, borderBottom: '1px solid #e0e0e0' }}>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <EventIcon sx={{ color: '#2E7D32' }} />
+              <EventIcon sx={{ color: '#052E1C' }} />
               <Typography variant="h6" sx={{ fontWeight: 600 }}>
                 {selectedDay} {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
               </Typography>
@@ -645,7 +645,7 @@ const PlantCalendar: React.FC = () => {
           )}
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 2 }}>
-          <Button onClick={handleCloseDayDialog} sx={{ color: '#2E7D32' }}>
+          <Button onClick={handleCloseDayDialog} sx={{ color: '#052E1C' }}>
             Fermer
           </Button>
         </DialogActions>

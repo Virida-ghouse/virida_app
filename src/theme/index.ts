@@ -4,19 +4,19 @@ const theme = createTheme({
   palette: {
     mode: 'light',
     primary: {
-      main: '#2AD388',
-      light: '#CBED82',
-      dark: '#052E1C',
+      main: '#2AD368', // Vert vif de la charte
+      light: '#CBED62', // Vert clair de la charte
+      dark: '#052E1C', // Vert foncé de la charte
     },
     secondary: {
-      main: '#CBED82',
+      main: '#CBED62', // Vert clair comme couleur secondaire
     },
     background: {
       default: '#FFFFFF',
       paper: '#FFFFFF',
     },
     text: {
-      primary: '#121A21',
+      primary: '#121A21', // Gris foncé de la charte
       secondary: '#121A21',
     },
   },
@@ -56,14 +56,14 @@ const theme = createTheme({
           },
         },
         outlinedPrimary: {
-          borderColor: '#2AD388',
-          color: '#2AD388',
+          borderColor: '#2AD368',
+          color: '#2AD368',
         },
       },
     },
   },
   typography: {
-    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+    fontFamily: '"Inter", "Chillax", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif',
     h1: {
       fontSize: '2.5rem',
       fontWeight: 600,
@@ -75,7 +75,7 @@ const theme = createTheme({
       color: '#121A21',
     },
     h6: {
-      color: '#2AD388',
+      color: '#2AD368',
       fontWeight: 500,
     },
   },

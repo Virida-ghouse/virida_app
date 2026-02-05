@@ -166,11 +166,11 @@ const IrrigationSchedule: React.FC = () => {
         gap={isMobile ? 2 : 0}
       >
         <Box display="flex" alignItems="center" gap={2}>
-          <Avatar sx={{ backgroundColor: '#2E7D32', width: 56, height: 56 }}>
+          <Avatar sx={{ backgroundColor: '#052E1C', width: 56, height: 56 }}>
             <WaterDropIcon sx={{ fontSize: 28 }} />
           </Avatar>
           <Box>
-            <Typography variant={isMobile ? "h5" : "h4"} sx={{ color: '#2E7D32', fontWeight: 700 }}>
+            <Typography variant={isMobile ? "h5" : "h4"} sx={{ color: '#052E1C', fontWeight: 700 }}>
               Irrigation Schedule
             </Typography>
             <Typography variant="body1" sx={{ color: '#666', mt: 0.5 }}>
@@ -184,7 +184,7 @@ const IrrigationSchedule: React.FC = () => {
           onClick={handleAddSchedule}
           fullWidth={isMobile}
           sx={{
-            backgroundColor: '#2E7D32',
+            backgroundColor: '#052E1C',
             borderRadius: '12px',
             px: 3,
             py: 1.5,
@@ -193,7 +193,7 @@ const IrrigationSchedule: React.FC = () => {
             textTransform: 'none',
             boxShadow: '0 4px 12px rgba(46, 125, 50, 0.3)',
             '&:hover': {
-              backgroundColor: '#1B5E20',
+              backgroundColor: '#041E13',
               boxShadow: '0 6px 16px rgba(46, 125, 50, 0.4)',
             },
           }}
@@ -212,8 +212,8 @@ const IrrigationSchedule: React.FC = () => {
                 <CardContent sx={{ p: 3 }}>
                   <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={2}>
                     <Box display="flex" alignItems="center" gap={1.5}>
-                      <AccessTimeIcon sx={{ color: '#2E7D32', fontSize: 20 }} />
-                      <Typography variant="h5" sx={{ color: '#2E7D32', fontWeight: 700 }}>
+                      <AccessTimeIcon sx={{ color: '#052E1C', fontSize: 20 }} />
+                      <Typography variant="h5" sx={{ color: '#052E1C', fontWeight: 700 }}>
                         {schedule.time}
                       </Typography>
                     </Box>
@@ -228,10 +228,10 @@ const IrrigationSchedule: React.FC = () => {
                       }
                       sx={{
                         '& .MuiSwitch-switchBase.Mui-checked': {
-                          color: '#2E7D32',
+                          color: '#052E1C',
                         },
                         '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                          backgroundColor: '#2E7D32',
+                          backgroundColor: '#052E1C',
                         },
                       }}
                     />
@@ -252,7 +252,7 @@ const IrrigationSchedule: React.FC = () => {
                         size="small"
                         sx={{
                           backgroundColor: '#E8F5E8',
-                          color: '#2E7D32',
+                          color: '#052E1C',
                           fontWeight: 600,
                           borderRadius: '8px',
                         }}
@@ -265,7 +265,7 @@ const IrrigationSchedule: React.FC = () => {
                       onClick={() => handleOpenDialog(schedule)}
                       size="small"
                       sx={{ 
-                        color: '#2E7D32',
+                        color: '#052E1C',
                         backgroundColor: 'rgba(46, 125, 50, 0.1)',
                         '&:hover': {
                           backgroundColor: 'rgba(46, 125, 50, 0.2)',
@@ -297,7 +297,7 @@ const IrrigationSchedule: React.FC = () => {
         // Desktop Layout: Table
         <TableContainer component={Paper} sx={{ borderRadius: '16px', overflow: 'hidden', boxShadow: '0 8px 32px rgba(46, 125, 50, 0.1)' }}>
           <Table>
-            <TableHead sx={{ backgroundColor: '#2E7D32' }}>
+            <TableHead sx={{ backgroundColor: '#052E1C' }}>
               <TableRow>
                 <TableCell sx={{ color: 'white', fontWeight: 700, fontSize: '1rem' }}>Time</TableCell>
                 <TableCell sx={{ color: 'white', fontWeight: 700, fontSize: '1rem' }}>Duration</TableCell>
@@ -311,8 +311,8 @@ const IrrigationSchedule: React.FC = () => {
                 <TableRow key={schedule.id} hover sx={{ '&:hover': { backgroundColor: 'rgba(46, 125, 50, 0.05)' } }}>
                   <TableCell>
                     <Box display="flex" alignItems="center" gap={1}>
-                      <AccessTimeIcon sx={{ color: '#2E7D32', fontSize: 20 }} />
-                      <Typography variant="h6" sx={{ color: '#2E7D32', fontWeight: 600 }}>
+                      <AccessTimeIcon sx={{ color: '#052E1C', fontSize: 20 }} />
+                      <Typography variant="h6" sx={{ color: '#052E1C', fontWeight: 600 }}>
                         {schedule.time}
                       </Typography>
                     </Box>
@@ -331,7 +331,7 @@ const IrrigationSchedule: React.FC = () => {
                           size="small"
                           sx={{
                             backgroundColor: '#E8F5E8',
-                            color: '#2E7D32',
+                            color: '#052E1C',
                             fontWeight: 600,
                             borderRadius: '8px',
                           }}
@@ -351,10 +351,10 @@ const IrrigationSchedule: React.FC = () => {
                       }
                       sx={{
                         '& .MuiSwitch-switchBase.Mui-checked': {
-                          color: '#2E7D32',
+                          color: '#052E1C',
                         },
                         '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                          backgroundColor: '#2E7D32',
+                          backgroundColor: '#052E1C',
                         },
                       }}
                     />
@@ -364,7 +364,7 @@ const IrrigationSchedule: React.FC = () => {
                       <IconButton
                         onClick={() => handleOpenDialog(schedule)}
                         sx={{ 
-                          color: '#2E7D32',
+                          color: '#052E1C',
                           backgroundColor: 'rgba(46, 125, 50, 0.1)',
                           '&:hover': {
                             backgroundColor: 'rgba(46, 125, 50, 0.2)',
@@ -396,7 +396,7 @@ const IrrigationSchedule: React.FC = () => {
 
       {/* Add/Edit Dialog */}
       <StyledDialog open={openDialog} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
-        <DialogTitle sx={{ color: '#2E7D32', fontWeight: 700, fontSize: '1.5rem' }}>
+        <DialogTitle sx={{ color: '#052E1C', fontWeight: 700, fontSize: '1.5rem' }}>
           {editingSchedule ? 'Edit Schedule' : 'Add New Schedule'}
         </DialogTitle>
         <DialogContent>
@@ -412,17 +412,17 @@ const IrrigationSchedule: React.FC = () => {
                 '& .MuiOutlinedInput-root': {
                   borderRadius: '12px',
                   '&.Mui-focused fieldset': {
-                    borderColor: '#2E7D32',
+                    borderColor: '#052E1C',
                   },
                 },
                 '& .MuiInputLabel-root.Mui-focused': {
-                  color: '#2E7D32',
+                  color: '#052E1C',
                 },
               }}
             />
             
             <FormControl fullWidth>
-              <InputLabel sx={{ '&.Mui-focused': { color: '#2E7D32' } }}>
+              <InputLabel sx={{ '&.Mui-focused': { color: '#052E1C' } }}>
                 Duration (minutes)
               </InputLabel>
               <Select
@@ -432,7 +432,7 @@ const IrrigationSchedule: React.FC = () => {
                 sx={{
                   borderRadius: '12px',
                   '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                    borderColor: '#2E7D32',
+                    borderColor: '#052E1C',
                   },
                 }}
               >
@@ -447,7 +447,7 @@ const IrrigationSchedule: React.FC = () => {
             </FormControl>
 
             <Box>
-              <Typography variant="subtitle1" mb={2} sx={{ color: '#2E7D32', fontWeight: 700 }}>
+              <Typography variant="subtitle1" mb={2} sx={{ color: '#052E1C', fontWeight: 700 }}>
                 Select Days
               </Typography>
               <Box display="flex" flexWrap="wrap" gap={1}>
@@ -458,12 +458,12 @@ const IrrigationSchedule: React.FC = () => {
                     clickable
                     onClick={() => handleToggleDay(day)}
                     sx={{
-                      backgroundColor: selectedDays.includes(day) ? '#2E7D32' : '#f5f5f5',
+                      backgroundColor: selectedDays.includes(day) ? '#052E1C' : '#f5f5f5',
                       color: selectedDays.includes(day) ? 'white' : '#666',
                       fontWeight: 600,
                       borderRadius: '8px',
                       '&:hover': {
-                        backgroundColor: selectedDays.includes(day) ? '#1B5E20' : '#e0e0e0',
+                        backgroundColor: selectedDays.includes(day) ? '#041E13' : '#e0e0e0',
                       },
                     }}
                   />
@@ -490,13 +490,13 @@ const IrrigationSchedule: React.FC = () => {
             variant="contained"
             disabled={!selectedTime || selectedDays.length === 0}
             sx={{
-              backgroundColor: '#2E7D32',
+              backgroundColor: '#052E1C',
               borderRadius: '8px',
               px: 3,
               textTransform: 'none',
               fontWeight: 600,
               '&:hover': {
-                backgroundColor: '#1B5E20',
+                backgroundColor: '#041E13',
               },
             }}
           >

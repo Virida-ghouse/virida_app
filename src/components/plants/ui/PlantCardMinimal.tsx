@@ -38,7 +38,7 @@ interface PlantCardMinimalProps {
 }
 
 const getHealthColor = (health: number): string => {
-  if (health >= 90) return '#2AD388';
+  if (health >= 90) return '#2AD368';
   if (health >= 70) return '#81C784';
   if (health >= 50) return '#FFA726';
   return '#EF5350';
@@ -48,7 +48,7 @@ const getDifficultyConfig = (difficulty?: string) => {
   const normalizedDifficulty = difficulty?.toLowerCase();
 
   if (normalizedDifficulty === 'easy' || normalizedDifficulty === 'facile' || normalizedDifficulty === 'very easy' || normalizedDifficulty === 'très facile') {
-    return { label: 'Facile', color: '#4CAF50', bgcolor: '#E8F5E9' };
+    return { label: 'Facile', color: '#2AD368', bgcolor: '#E8F5E9' };
   }
   if (normalizedDifficulty === 'medium' || normalizedDifficulty === 'moyen' || normalizedDifficulty === 'moderate') {
     return { label: 'Moyen', color: '#FF9800', bgcolor: '#FFF3E0' };
@@ -165,7 +165,7 @@ export const PlantCardMinimal: React.FC<PlantCardMinimalProps> = ({
               position: 'absolute',
               top: 12,
               left: onDelete && isHovered ? 60 : 12,
-              bgcolor: 'rgba(46, 125, 50, 0.95)',
+              bgcolor: 'rgba(5, 46, 28, 0.95)',
               color: 'white',
               fontWeight: 600,
               fontSize: '0.7rem',

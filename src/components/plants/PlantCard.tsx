@@ -23,7 +23,7 @@ interface PlantCardProps {
 }
 
 const StyledCard = styled(Card)<{ health: number }>(({ theme, health }) => {
-  let borderTopColor = '#2AD388'; // excellent
+  let borderTopColor = '#2AD368'; // excellent
   if (health < 60) borderTopColor = '#f1c40f'; // warning
   if (health < 40) borderTopColor = '#e74c3c'; // critical
 
@@ -49,11 +49,11 @@ const IconWrapper = styled(Box)(() => ({
   width: '48px',
   height: '48px',
   borderRadius: '50%',
-  background: '#2AD38820',
+  background: '#2AD36820',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  color: '#2AD388',
+  color: '#2AD368',
   fontSize: '1.5rem',
 }));
 
@@ -67,7 +67,7 @@ const HealthBar = styled(LinearProgress)(() => ({
 }));
 
 const getHealthColor = (health: number) => {
-  if (health >= 80) return '#2AD388';
+  if (health >= 80) return '#2AD368';
   if (health >= 60) return '#f1c40f';
   if (health >= 40) return '#FF9800';
   return '#e74c3c';
@@ -83,7 +83,7 @@ const getHealthLabel = (health: number) => {
 const getDifficultyColor = (difficulty: string) => {
   switch (difficulty) {
     case 'EASY':
-      return { bg: '#2AD38820', text: '#2AD388' };
+      return { bg: '#2AD36820', text: '#2AD368' };
     case 'MEDIUM':
       return { bg: '#f1c40f20', text: '#f1c40f' };
     case 'HARD':
@@ -135,7 +135,7 @@ const PlantCard: React.FC<PlantCardProps> = ({ plant, onSelect }) => {
               e.stopPropagation();
               onSelect();
             }}
-            sx={{ color: '#2AD388' }}
+            sx={{ color: '#2AD368' }}
           >
             <InfoIcon fontSize="small" />
           </IconButton>
@@ -173,7 +173,7 @@ const PlantCard: React.FC<PlantCardProps> = ({ plant, onSelect }) => {
             {getStageLabel(plant.growthStage)}
           </Typography>
           {plant.daysToHarvest !== undefined && plant.daysToHarvest > 0 && (
-            <Typography variant="caption" sx={{ color: '#2AD388', fontWeight: 600 }}>
+            <Typography variant="caption" sx={{ color: '#2AD368', fontWeight: 600 }}>
               📅 {plant.daysToHarvest} jours jusqu'à récolte
             </Typography>
           )}

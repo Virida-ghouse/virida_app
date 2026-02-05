@@ -108,7 +108,7 @@ export const AddPlantDialog: React.FC<AddPlantDialogProps> = ({
       setLoadingCatalog(true);
       setCatalogError(null);
       const token = localStorage.getItem('virida_token');
-      const response = await fetch(`${apiUrl}/api/plant-catalog`, {
+      const response = await fetch(`${apiUrl}/api/plants/catalog`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -229,7 +229,7 @@ export const AddPlantDialog: React.FC<AddPlantDialogProps> = ({
 
           {loadingCatalog ? (
             <Box sx={{ display: 'flex', justifyContent: 'center', py: 6 }}>
-              <CircularProgress sx={{ color: '#2E7D32' }} />
+              <CircularProgress sx={{ color: '#052E1C' }} />
             </Box>
           ) : (
             <Grid container spacing={2} sx={{ maxHeight: 400, overflowY: 'auto', pr: 1 }}>
@@ -244,8 +244,8 @@ export const AddPlantDialog: React.FC<AddPlantDialogProps> = ({
                       border: '1px solid #F0F0F0',
                       '&:hover': {
                         transform: 'translateY(-4px)',
-                        boxShadow: '0 8px 20px rgba(46, 125, 50, 0.15)',
-                        borderColor: '#2E7D32',
+                        boxShadow: '0 8px 20px rgba(42, 211, 104, 0.15)',
+                        borderColor: '#052E1C',
                       },
                     }}
                   >
@@ -363,9 +363,9 @@ export const AddPlantDialog: React.FC<AddPlantDialogProps> = ({
                     placeholder={selectedPlant.commonName}
                     sx={{
                       '& .MuiOutlinedInput-root': {
-                        '&.Mui-focused fieldset': { borderColor: '#2E7D32' },
+                        '&.Mui-focused fieldset': { borderColor: '#052E1C' },
                       },
-                      '& .MuiInputLabel-root.Mui-focused': { color: '#2E7D32' },
+                      '& .MuiInputLabel-root.Mui-focused': { color: '#052E1C' },
                     }}
                   />
                 </Grid>
@@ -379,7 +379,7 @@ export const AddPlantDialog: React.FC<AddPlantDialogProps> = ({
                       label="Zone"
                       sx={{
                         '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                          borderColor: '#2E7D32',
+                          borderColor: '#052E1C',
                         },
                       }}
                     >
@@ -400,7 +400,7 @@ export const AddPlantDialog: React.FC<AddPlantDialogProps> = ({
                       label="Serre"
                       sx={{
                         '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                          borderColor: '#2E7D32',
+                          borderColor: '#052E1C',
                         },
                       }}
                     >
@@ -430,9 +430,9 @@ export const AddPlantDialog: React.FC<AddPlantDialogProps> = ({
                     InputLabelProps={{ shrink: true }}
                     sx={{
                       '& .MuiOutlinedInput-root': {
-                        '&.Mui-focused fieldset': { borderColor: '#2E7D32' },
+                        '&.Mui-focused fieldset': { borderColor: '#052E1C' },
                       },
-                      '& .MuiInputLabel-root.Mui-focused': { color: '#2E7D32' },
+                      '& .MuiInputLabel-root.Mui-focused': { color: '#052E1C' },
                     }}
                   />
                 </Grid>
@@ -448,9 +448,9 @@ export const AddPlantDialog: React.FC<AddPlantDialogProps> = ({
                     placeholder="Ajoutez des notes sur cette plante..."
                     sx={{
                       '& .MuiOutlinedInput-root': {
-                        '&.Mui-focused fieldset': { borderColor: '#2E7D32' },
+                        '&.Mui-focused fieldset': { borderColor: '#052E1C' },
                       },
-                      '& .MuiInputLabel-root.Mui-focused': { color: '#2E7D32' },
+                      '& .MuiInputLabel-root.Mui-focused': { color: '#052E1C' },
                     }}
                   />
                 </Grid>
@@ -468,7 +468,7 @@ export const AddPlantDialog: React.FC<AddPlantDialogProps> = ({
           {selectedPlant && (
             <>
               <Box sx={{ textAlign: 'center', mb: 4 }}>
-                <CheckCircleIcon sx={{ fontSize: '4rem', color: '#2E7D32', mb: 2 }} />
+                <CheckCircleIcon sx={{ fontSize: '4rem', color: '#052E1C', mb: 2 }} />
                 <Typography variant="h6" sx={{ fontWeight: 600, color: '#121A21', mb: 1 }}>
                   Prêt à ajouter votre plante
                 </Typography>
@@ -528,7 +528,7 @@ export const AddPlantDialog: React.FC<AddPlantDialogProps> = ({
                     <Chip
                       label={zone}
                       size="small"
-                      sx={{ mt: 0.5, bgcolor: '#E8F5E9', color: '#2E7D32' }}
+                      sx={{ mt: 0.5, bgcolor: '#E8F5E9', color: '#052E1C' }}
                     />
                   </Grid>
 
@@ -539,7 +539,7 @@ export const AddPlantDialog: React.FC<AddPlantDialogProps> = ({
                     <Chip
                       label={greenhouse}
                       size="small"
-                      sx={{ mt: 0.5, bgcolor: '#E8F5E9', color: '#2E7D32' }}
+                      sx={{ mt: 0.5, bgcolor: '#E8F5E9', color: '#052E1C' }}
                     />
                   </Grid>
 
@@ -619,13 +619,13 @@ export const AddPlantDialog: React.FC<AddPlantDialogProps> = ({
                 sx={{
                   '& .MuiStepLabel-label': {
                     color: '#757575',
-                    '&.Mui-active': { color: '#2E7D32', fontWeight: 600 },
-                    '&.Mui-completed': { color: '#2E7D32' },
+                    '&.Mui-active': { color: '#052E1C', fontWeight: 600 },
+                    '&.Mui-completed': { color: '#052E1C' },
                   },
                   '& .MuiStepIcon-root': {
                     color: '#E0E0E0',
-                    '&.Mui-active': { color: '#2E7D32' },
-                    '&.Mui-completed': { color: '#2E7D32' },
+                    '&.Mui-active': { color: '#052E1C' },
+                    '&.Mui-completed': { color: '#052E1C' },
                   },
                 }}
               >
@@ -691,7 +691,7 @@ export const AddPlantDialog: React.FC<AddPlantDialogProps> = ({
             endIcon={<ChevronRightIcon />}
             variant="contained"
             sx={{
-              bgcolor: '#2E7D32',
+              bgcolor: '#052E1C',
               color: 'white',
               fontWeight: 600,
               textTransform: 'none',
@@ -700,7 +700,7 @@ export const AddPlantDialog: React.FC<AddPlantDialogProps> = ({
               borderRadius: 2,
               boxShadow: '0 2px 8px rgba(46, 125, 50, 0.3)',
               '&:hover': {
-                bgcolor: '#1B5E20',
+                bgcolor: '#041E13',
                 boxShadow: '0 4px 12px rgba(46, 125, 50, 0.4)',
               },
               '&:disabled': {
@@ -717,7 +717,7 @@ export const AddPlantDialog: React.FC<AddPlantDialogProps> = ({
             disabled={submitting}
             variant="contained"
             sx={{
-              bgcolor: '#2E7D32',
+              bgcolor: '#052E1C',
               color: 'white',
               fontWeight: 600,
               textTransform: 'none',
@@ -726,7 +726,7 @@ export const AddPlantDialog: React.FC<AddPlantDialogProps> = ({
               borderRadius: 2,
               boxShadow: '0 2px 8px rgba(46, 125, 50, 0.3)',
               '&:hover': {
-                bgcolor: '#1B5E20',
+                bgcolor: '#041E13',
                 boxShadow: '0 4px 12px rgba(46, 125, 50, 0.4)',
               },
             }}
