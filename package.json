@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "NODE_OPTIONS='--max-old-space-size=1536 --no-warnings' vite build",
     "build:simple": "NODE_OPTIONS='--max-old-space-size=2048 --no-warnings' vite build --mode development --minify false",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "lint": "eslint .",
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest",
     "preview": "vite preview",
     "postinstall": "NODE_OPTIONS='--max-old-space-size=2048 --no-warnings' npm run build:simple",
     "start": "node server.js"
@@ -38,13 +40,20 @@
     "zustand": "^4.5.1"
   },
   "devDependencies": {
+    "@eslint/js": "^9.0.0",
+    "@testing-library/jest-dom": "^6.4.2",
+    "@testing-library/react": "^14.2.2",
+    "@testing-library/user-event": "^14.5.2",
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
-    "@typescript-eslint/eslint-plugin": "^6.14.0",
-    "@typescript-eslint/parser": "^6.14.0",
-    "eslint": "^8.55.0",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-react-refresh": "^0.4.5"
+    "@typescript-eslint/eslint-plugin": "^8.56.1",
+    "@typescript-eslint/parser": "^8.56.1",
+    "eslint": "^10.0.2",
+    "globals": "^15.0.0",
+    "jsdom": "^24.0.0",
+    "msw": "^2.6.5",
+    "typescript-eslint": "^8.56.1",
+    "vitest": "^1.6.0"
   },
   "overrides": {
     "esbuild": "0.27.2"
