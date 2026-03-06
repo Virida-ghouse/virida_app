@@ -1,8 +1,7 @@
 {
   "deploy": {
     "install": {
-      "prebuild": "npm install",
-      "build": "npm run build"
+      "prebuild": "npm install --production"
     },
     "postdeploy": {
       "healthcheck": "curl -f http://localhost:8080/ || exit 1"
