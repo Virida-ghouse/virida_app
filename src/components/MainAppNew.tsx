@@ -6,7 +6,7 @@ import BottomNav from './layout/BottomNav';
 import PlantsLayoutNew from './plants/PlantsLayoutNew';
 import IrrigationScheduleNew from './schedules/IrrigationScheduleNew';
 import AutomationRulesNew from './automation/AutomationRulesNew';
-import EnergyManagement from './energy/EnergyManagement';
+import EnergyManagementNew from './energy/EnergyManagementNew';
 import SettingsPanel from './settings/SettingsPanel';
 import ChatBotNew from './chatbot/ChatBotNew';
 
@@ -33,7 +33,7 @@ const MainAppNew: React.FC = () => {
       case 'automation':
         return <AutomationRulesNew />;
       case 'energy':
-        return <EnergyManagement />;
+        return <EnergyManagementNew />;
       case 'settings':
         return <SettingsPanel />;
       case 'reports':
