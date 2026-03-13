@@ -2,9 +2,10 @@ import React from 'react';
 import DashboardNew from './dashboard/DashboardNew';
 import HeaderNew from './layout/HeaderNew';
 import SidebarNew from './layout/SidebarNew';
+import BottomNav from './layout/BottomNav';
 import PlantsLayoutNew from './plants/PlantsLayoutNew';
-import IrrigationSchedule from './schedules/IrrigationSchedule';
-import AutomationRules from './automation/AutomationRules';
+import IrrigationScheduleNew from './schedules/IrrigationScheduleNew';
+import AutomationRulesNew from './automation/AutomationRulesNew';
 import EnergyManagement from './energy/EnergyManagement';
 import SettingsPanel from './settings/SettingsPanel';
 import ChatBotNew from './chatbot/ChatBotNew';
@@ -28,9 +29,9 @@ const MainAppNew: React.FC = () => {
       case 'plants':
         return <PlantsLayoutNew />;
       case 'irrigation':
-        return <IrrigationSchedule />;
+        return <IrrigationScheduleNew />;
       case 'automation':
-        return <AutomationRules />;
+        return <AutomationRulesNew />;
       case 'energy':
         return <EnergyManagement />;
       case 'settings':
@@ -57,7 +58,7 @@ const MainAppNew: React.FC = () => {
       />
 
       {/* Main Content Area */}
-      <main className="flex-1 flex flex-col overflow-hidden ml-64">
+      <main className="flex-1 flex flex-col overflow-hidden lg:ml-64">
         {/* Header */}
         <HeaderNew currentView={currentView} />
 
@@ -67,6 +68,9 @@ const MainAppNew: React.FC = () => {
 
       {/* Chatbot EVE */}
       <ChatBotNew sensorData={sensorData} />
+
+      {/* Bottom Navigation (Mobile only) */}
+      <BottomNav currentView={currentView} onViewChange={setCurrentView} />
     </div>
   );
 };

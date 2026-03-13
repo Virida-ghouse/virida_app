@@ -15,25 +15,26 @@ import WbSunnyIcon from '@mui/icons-material/WbSunny';
 import ThermostatIcon from '@mui/icons-material/Thermostat';
 
 interface PlantCardMinimalProps {
-  id: string;
-  name: string;
-  photo?: string;
-  emoji?: string;
-  healthScore: number;
-  daysToHarvest: number;
-  category?: string;
-  difficulty?: string;
-
-  // Nouvelles props pour Plant Care
-  yieldMin?: number;
-  yieldMax?: number;
-  yieldUnit?: string;
-  wateringFrequency?: string;
-  sunlightHours?: string;
-  optimalTempMin?: number;
-  optimalTempMax?: number;
-
-  onClick: () => void;
+  plant: {
+    id: string;
+    name: string;
+    imageUrl?: string;
+    iconEmoji?: string;
+    health: number;
+    daysToHarvest?: number;
+    category?: string;
+    difficulty?: string;
+    species?: string;
+    status?: string;
+    yieldMin?: number;
+    yieldMax?: number;
+    yieldUnit?: string;
+    wateringFrequency?: string;
+    sunlightHours?: string;
+    optimalTempMin?: number;
+    optimalTempMax?: number;
+  };
+  onClick: (plantId: string) => void;
   onDelete?: (id: string) => void;
 }
 
@@ -76,36 +77,22 @@ const formatYield = (yieldMin?: number, yieldMax?: number, yieldUnit?: string): 
 };
 
 export const PlantCardMinimal: React.FC<PlantCardMinimalProps> = ({
-  id,
-  name,
-  photo,
-  emoji,
-  healthScore,
-  daysToHarvest,
-  category,
-  difficulty,
-  yieldMin,
-  yieldMax,
-  yieldUnit,
-  wateringFrequency,
-  sunlightHours,
-  optimalTempMin,
-  optimalTempMax,
+  plant,
   onClick,
   onDelete,
 }) => {
-  const healthColor = getHealthColor(healthScore);
+  const healthColor = getHealthColor(plant.health);
   const [isHovered, setIsHovered] = useState(false);
-  const difficultyConfig = getDifficultyConfig(difficulty);
-  const yieldDisplay = formatYield(yieldMin, yieldMax, yieldUnit);
+  const difficultyConfig = getDifficultyConfig(plant.difficulty);
+  const yieldDisplay = formatYield(plant.yieldMin, plant.yieldMax, plant.yieldUnit);
 
-  const tempDisplay = optimalTempMin && optimalTempMax
-    ? `${optimalTempMin}-${optimalTempMax}°C`
+  const tempDisplay = plant.optimalTempMin && plant.optimalTempMax
+    ? `${plant.optimalTempMin}-${plant.optimalTempMax}°C`
     : null;
 
   return (
     <Card
-      onClick={onClick}
+      onClick={() => onClick(plant.id)}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       sx={{
@@ -130,12 +117,12 @@ export const PlantCardMinimal: React.FC<PlantCardMinimalProps> = ({
           overflow: 'hidden',
         }}
       >
-        {photo ? (
+        {plant.imageUrl ? (
           <CardMedia
             component="img"
             height="240"
-            image={photo}
-            alt={name}
+            image={plant.imageUrl}
+            alt={plant.name}
             sx={{
               objectFit: 'cover',
               width: '100%',
@@ -151,15 +138,15 @@ export const PlantCardMinimal: React.FC<PlantCardMinimalProps> = ({
             }}
           >
             <Typography sx={{ fontSize: '5rem' }}>
-              {emoji || '🌱'}
+              {plant.iconEmoji || '🌱'}
             </Typography>
           </Box>
         )}
 
         {/* Badge de catégorie en haut à gauche */}
-        {category && (
+        {plant.category && (
           <Chip
-            label={category.replace('_', ' ')}
+            label={plant.category.replace('_', ' ')}
             size="small"
             sx={{
               position: 'absolute',
@@ -181,7 +168,7 @@ export const PlantCardMinimal: React.FC<PlantCardMinimalProps> = ({
           <IconButton
             onClick={(e) => {
               e.stopPropagation();
-              onDelete(id);
+              onDelete(plant.id);
             }}
             sx={{
               position: 'absolute',
@@ -215,7 +202,7 @@ export const PlantCardMinimal: React.FC<PlantCardMinimalProps> = ({
             lineHeight: 1.3,
           }}
         >
-          {name}
+          {plant.name}
         </Typography>
 
         {/* Difficulté et rendement */}
@@ -266,23 +253,23 @@ export const PlantCardMinimal: React.FC<PlantCardMinimalProps> = ({
             flexWrap: 'wrap',
           }}
         >
-          {wateringFrequency && (
-            <Tooltip title={`Arrosage: ${wateringFrequency}`} arrow>
+          {plant.wateringFrequency && (
+            <Tooltip title={`Arrosage: ${plant.wateringFrequency}`} arrow>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                 <OpacityIcon sx={{ fontSize: 16, color: '#2196F3' }} />
                 <Typography variant="caption" sx={{ color: '#666', fontSize: '0.7rem' }}>
-                  {wateringFrequency}
+                  {plant.wateringFrequency}
                 </Typography>
               </Box>
             </Tooltip>
           )}
 
-          {sunlightHours && (
-            <Tooltip title={`Lumière: ${sunlightHours}`} arrow>
+          {plant.sunlightHours && (
+            <Tooltip title={`Lumière: ${plant.sunlightHours}`} arrow>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                 <WbSunnyIcon sx={{ fontSize: 16, color: '#FFA726' }} />
                 <Typography variant="caption" sx={{ color: '#666', fontSize: '0.7rem' }}>
-                  {sunlightHours}
+                  {plant.sunlightHours}
                 </Typography>
               </Box>
             </Tooltip>
@@ -316,14 +303,14 @@ export const PlantCardMinimal: React.FC<PlantCardMinimalProps> = ({
               fontSize: '0.875rem',
             }}
           >
-            {daysToHarvest > 0 ? `${daysToHarvest}j → Récolte` : 'Prêt à récolter'}
+            {(plant.daysToHarvest || 0) > 0 ? `${plant.daysToHarvest}j → Récolte` : 'Prêt à récolter'}
           </Typography>
         </Box>
 
         {/* Barre de progression discrète */}
         <LinearProgress
           variant="determinate"
-          value={healthScore}
+          value={plant.health || 0}
           sx={{
             height: 4,
             borderRadius: 2,

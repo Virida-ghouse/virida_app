@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import LoginFormNew from './LoginFormNew';
-import RegisterForm from './RegisterForm';
+import RegisterFormNew from './RegisterFormNew';
 
 const AuthContainerNew: React.FC = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -16,7 +16,7 @@ const AuthContainerNew: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#121A21] flex items-center justify-center p-6 relative overflow-hidden">
+    <div className="min-h-screen bg-[#121A21] flex items-center justify-center p-4 md:p-6 relative overflow-hidden">
       {/* Background Effects */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#2AD368]/10 rounded-full blur-3xl animate-pulse"></div>
@@ -29,7 +29,7 @@ const AuthContainerNew: React.FC = () => {
 
       {/* Login Card */}
       <div className="relative z-10 w-full max-w-md">
-        <div className="glass-card backdrop-blur-xl rounded-3xl p-8 border-2 border-[#2AD368]/20 shadow-2xl">
+        <div className="glass-card backdrop-blur-xl rounded-3xl p-6 md:p-8 border-2 border-[#2AD368]/20 shadow-2xl">
           {/* Error Message */}
           {error && (
             <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400 text-sm">
@@ -41,7 +41,7 @@ const AuthContainerNew: React.FC = () => {
           {isLogin ? (
             <LoginFormNew onToggleMode={handleToggleMode} onError={handleError} />
           ) : (
-            <RegisterForm onToggleMode={handleToggleMode} onError={handleError} />
+            <RegisterFormNew onToggleMode={handleToggleMode} onError={handleError} />
           )}
         </div>
 

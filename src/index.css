@@ -55,6 +55,21 @@
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     background: rgba(42, 211, 104, 0.4);
   }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* Fix pour les options des select - texte noir sur fond blanc */
+  select option {
+    background-color: white;
+    color: black;
+  }
 }
 
 @layer utilities {

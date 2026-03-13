@@ -220,7 +220,7 @@ export const PlantCard: React.FC<PlantCardProps> = ({
           </Box>
           <LinearProgress
             variant="determinate"
-            value={growthProgress}
+            value={growthProgress || 0}
             sx={{
               height: 8,
               borderRadius: 4,

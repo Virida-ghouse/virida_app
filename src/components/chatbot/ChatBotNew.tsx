@@ -211,7 +211,7 @@ const ChatBotNew: React.FC<ChatBotProps> = ({ sensorData }) => {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-[9999]">
+    <div className="fixed bottom-24 lg:bottom-6 right-4 lg:right-6 z-[9999]">
       {/* Chat Toggle Button - Abeille EVE */}
       {!isOpen && (
         <button
@@ -222,7 +222,7 @@ const ChatBotNew: React.FC<ChatBotProps> = ({ sensorData }) => {
           <img 
             src="/abeillevd.svg" 
             alt="EVE" 
-            className="w-24 h-24 drop-shadow-[0_8px_30px_rgba(42,211,104,0.6)] group-hover:drop-shadow-[0_12px_40px_rgba(42,211,104,0.9)] transition-all animate-bee-fly"
+            className="w-16 h-16 lg:w-20 lg:h-20 drop-shadow-[0_8px_30px_rgba(42,211,104,0.6)] group-hover:drop-shadow-[0_12px_40px_rgba(42,211,104,0.9)] transition-all animate-bee-fly"
             style={{
               filter: 'brightness(0) saturate(100%) invert(68%) sepia(85%) saturate(445%) hue-rotate(84deg) brightness(95%) contrast(89%)'
             }}
@@ -236,14 +236,14 @@ const ChatBotNew: React.FC<ChatBotProps> = ({ sensorData }) => {
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="glass-card backdrop-blur-xl rounded-3xl shadow-2xl w-96 max-w-sm border-2 border-[#2AD368]/30 overflow-hidden">
+        <div className="glass-card backdrop-blur-xl rounded-3xl shadow-2xl w-[calc(100vw-2rem)] sm:w-96 max-w-sm border-2 border-[#2AD368]/30 overflow-hidden">
           {/* Header */}
           <div className="bg-[#121A21] text-white p-5 flex items-center justify-between border-b border-[#2AD368]/30">
             <div className="flex items-center space-x-4">
               <img 
                 src="/abeillevd.svg" 
                 alt="EVE" 
-                className="w-16 h-16 animate-bee-fly-header"
+                className="w-12 h-12 lg:w-14 lg:h-14 animate-bee-fly-header"
                 style={{
                   filter: 'brightness(0) saturate(100%) invert(68%) sepia(85%) saturate(445%) hue-rotate(84deg) brightness(95%) contrast(89%)'
                 }}

@@ -68,7 +68,7 @@ const PlantLibrary: React.FC = () => {
         setLoading(true);
         setError(null);
         const token = localStorage.getItem('virida_token');
-        const response = await fetch(`${apiUrl}/api/plants/catalog`, {
+        const response = await fetch(`${apiUrl}/api/plant-catalog`, {
           headers: {
             'Authorization': `Bearer ${token}`,
           },

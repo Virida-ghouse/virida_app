@@ -227,6 +227,9 @@ export const TaskDialog: React.FC<TaskDialogProps> = ({
       onClose={handleClose}
       maxWidth="sm"
       fullWidth
+      sx={{
+        zIndex: 10000,
+      }}
       PaperProps={{
         sx: {
           backgroundColor: '#ffffff',

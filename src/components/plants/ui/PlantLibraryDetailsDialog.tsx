@@ -175,25 +175,8 @@ export const PlantLibraryDetailsDialog: React.FC<PlantLibraryDetailsDialogProps>
   };
 
   const fetchPlantDetails = async () => {
-    try {
-      const token = localStorage.getItem('virida_token');
-
-      const response = await fetch(
-        `${apiUrl}/api/plants/plant-info?plantName=${encodeURIComponent(plantName)}`,
-        {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (response.ok) {
-        const data = await response.json();
-        setPlantDetails(data.data || {});
-      }
-    } catch (err) {
-      // RAG data non disponible
-    }
+    // Les détails sont déjà récupérés via /api/plant-catalog/:id
+    // Pas besoin d'un appel supplémentaire
   };
 
   const formatYield = (yieldMin?: number, yieldMax?: number, yieldUnit?: string): string | null => {

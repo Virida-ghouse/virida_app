@@ -54,7 +54,7 @@ const PlantProfilePage: React.FC = () => {
     const fetchPlantData = async () => {
       try {
         const token = localStorage.getItem('virida_token');
-        const response = await fetch(`${apiUrl}/api/plants/catalog?search=${plantId}`, {
+        const response = await fetch(`${apiUrl}/api/plant-catalog?search=${plantId}`, {
           headers: { 'Authorization': `Bearer ${token}` },
         });
 

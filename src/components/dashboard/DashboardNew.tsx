@@ -14,25 +14,27 @@ const DashboardNew: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 overflow-y-auto p-8 custom-scrollbar bg-background-dark text-white relative">
+    <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 md:p-6 lg:p-8 pb-20 lg:pb-8 custom-scrollbar bg-background-dark text-white relative">
       {/* Gradient Orbs for visual interest */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl animate-pulse"></div>
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-      <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
-      
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-48 -right-48 w-96 h-96 bg-primary/5 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute -bottom-48 -left-48 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+      </div>
       <div className="relative z-10">
       {/* Welcome Section */}
-      <div className="flex items-end justify-between mb-8">
+      <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between mb-8 gap-4">
         <div>
-          <h2 className="text-4xl font-black mb-2 leading-tight">
-            <span className="text-white">Serre </span><span className="text-[#CBED62] text-5xl">Alpha-1</span>
+          <h2 className="text-3xl md:text-4xl font-black mb-2 leading-tight">
+            <span className="text-white">Serre </span><span className="text-[#CBED62] text-4xl md:text-5xl">Alpha-1</span>
           </h2>
-          <p className="text-gray-400 flex items-center gap-2">
+          <p className="text-gray-400 flex items-center gap-2 text-sm md:text-base">
             <span className="flex h-2 w-2 rounded-full bg-[#2AD368] animate-pulse shadow-[0_0_8px_rgba(42,211,104,0.6)]"></span>
-            Tous les systèmes <span className="text-[#2AD368]">opérationnels</span> • Dernière synchro il y a 2 min
+            <span className="hidden sm:inline">Tous les systèmes <span className="text-[#2AD368]">opérationnels</span> • Dernière synchro il y a 2 min</span>
+            <span className="sm:hidden text-[#2AD368]">Opérationnel</span>
           </p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-3">
           <button className="flex items-center gap-2 px-4 py-2.5 glass-card rounded-xl text-sm font-bold hover:bg-white/10 transition-all">
             <span className="material-symbols-outlined text-[18px]">
               calendar_today
@@ -47,11 +49,11 @@ const DashboardNew: React.FC = () => {
       </div>
 
       {/* Main Layout Grid */}
-      <div className="grid grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Stats Section (Left 8 Columns) */}
-        <div className="col-span-8 space-y-6">
+        <div className="lg:col-span-8 space-y-6">
           {/* Quick Stats */}
-          <div className="grid grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <StatCard
               icon="thermostat"
               iconColor="text-[#2AD368]"
@@ -97,12 +99,12 @@ const DashboardNew: React.FC = () => {
           {/* 3D Visualization / Hero Area */}
           <GlassCard className="rounded-3xl overflow-hidden relative group border-glass-border">
             <div className="absolute inset-0 bg-gradient-to-t from-background-dark via-background-dark/60 to-transparent z-[5]"></div>
-            <div className="w-full h-[400px] relative z-[1]">
+            <div className="w-full h-[300px] md:h-[400px] relative z-[1]">
               <GreenhouseModel />
             </div>
-            <div className="absolute inset-0 z-[100] p-8 flex flex-col justify-between pointer-events-none">
-              <div className="flex justify-between items-start">
-                <div className="flex gap-2">
+            <div className="absolute inset-0 z-[100] p-4 md:p-8 flex flex-col justify-between pointer-events-none">
+              <div className="flex flex-wrap justify-between items-start gap-2">
+                <div className="flex flex-wrap gap-2">
                   <span className="bg-[#2AD368] text-[#121A21] text-[10px] font-black px-4 py-1.5 rounded-full uppercase pointer-events-auto shadow-[0_4px_20px_rgba(42,211,104,0.8)] border-2 border-[#2AD368] ring-2 ring-[#2AD368]/30">
                     Zone Active
                   </span>
@@ -119,24 +121,24 @@ const DashboardNew: React.FC = () => {
                   </span>
                 </button>
               </div>
-              <div className="flex items-end justify-between pointer-events-auto gap-4">
-                <div className="bg-[#121A21]/95 backdrop-blur-xl px-5 py-4 rounded-2xl border border-white/40 shadow-xl">
-                  <h3 className="text-xl font-bold mb-1">
-                    <span className="text-white">Visualisation </span><span className="text-[#CBED62]">3D</span><span className="text-white"> de la Serre</span>
+              <div className="flex flex-col md:flex-row items-start md:items-end justify-between pointer-events-auto gap-3">
+                <div className="bg-[#121A21]/95 backdrop-blur-xl px-4 py-3 md:px-5 md:py-4 rounded-2xl border border-white/40 shadow-xl">
+                  <h3 className="text-base md:text-xl font-bold mb-1">
+                    <span className="text-white">Visualisation </span><span className="text-[#CBED62]">3D</span><span className="text-white hidden md:inline"> de la Serre</span>
                   </h3>
-                  <p className="text-gray-300 text-sm">
+                  <p className="text-gray-300 text-xs md:text-sm hidden md:block">
                     Modèle 3D en temps réel pour le monitoring environnemental.
                   </p>
                 </div>
-                <div className="flex gap-3">
-                  <div className="text-center bg-[#121A21]/95 backdrop-blur-xl px-5 py-3 rounded-xl border border-white/40 shadow-lg">
-                    <p className="text-[10px] text-gray-400 font-bold uppercase mb-1">
+                <div className="flex gap-2 md:gap-3 flex-wrap">
+                  <div className="text-center bg-[#121A21]/95 backdrop-blur-xl px-3 py-2 md:px-5 md:py-3 rounded-xl border border-white/40 shadow-lg">
+                    <p className="text-[9px] md:text-[10px] text-gray-400 font-bold uppercase mb-1">
                       Capteurs
                     </p>
-                    <p className="text-2xl font-black text-[#CBED62]">4</p>
+                    <p className="text-xl md:text-2xl font-black text-[#CBED62]">4</p>
                   </div>
-                  <div className="text-center bg-[#121A21]/95 backdrop-blur-xl px-5 py-3 rounded-xl border border-white/40 shadow-lg">
-                    <p className="text-[10px] text-gray-400 font-bold uppercase mb-1">
+                  <div className="text-center bg-[#121A21]/95 backdrop-blur-xl px-3 py-2 md:px-5 md:py-3 rounded-xl border border-white/40 shadow-lg">
+                    <p className="text-[9px] md:text-[10px] text-gray-400 font-bold uppercase mb-1">
                       Disponibilité
                     </p>
                     <p className="text-2xl font-black text-white">99.9%</p>
@@ -166,7 +168,7 @@ const DashboardNew: React.FC = () => {
         </div>
 
         {/* Side Panel (Right 4 Columns) */}
-        <div className="col-span-4 space-y-6">
+        <div className="lg:col-span-4 space-y-6">
           {/* Active Automations */}
           <GlassCard className="p-6 rounded-3xl">
             <div className="flex items-center justify-between mb-6">

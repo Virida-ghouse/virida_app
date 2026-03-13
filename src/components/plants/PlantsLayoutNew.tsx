@@ -30,43 +30,48 @@ const PlantsLayoutNew: React.FC = () => {
   ];
 
   return (
-    <div className="flex-1 overflow-auto bg-background-dark p-8">
+    <div className="flex-1 overflow-y-auto overflow-x-hidden bg-background-dark p-4 md:p-6 lg:p-8 pb-20 lg:pb-8">
       {/* Header */}
-      <div className="mb-8">
-        <div className="flex items-center gap-4 mb-6">
-          <div className="size-14 bg-[#2AD368]/10 rounded-2xl flex items-center justify-center">
-            <span className="material-symbols-outlined text-[#2AD368] text-3xl">
+      <div className="mb-6 md:mb-8">
+        <div className="flex items-center gap-3 md:gap-4 mb-4 md:mb-6">
+          <div className="size-12 md:size-14 bg-[#2AD368]/10 rounded-2xl flex items-center justify-center flex-shrink-0">
+            <span className="material-symbols-outlined text-[#2AD368] text-2xl md:text-3xl">
               local_florist
             </span>
           </div>
-          <div>
-            <h1 className="text-3xl font-black text-white mb-1">
+          <div className="min-w-0">
+            <h1 className="text-2xl md:text-3xl font-black text-white mb-1">
               Mes <span className="text-[#CBED62]">Plantes</span>
             </h1>
-            <p className="text-gray-400">
+            <p className="text-gray-400 text-sm md:text-base">
               Gérez et surveillez vos cultures en temps réel
             </p>
           </div>
         </div>
 
         {/* Tabs Navigation */}
-        <div className="flex gap-2 glass-card backdrop-blur-xl rounded-2xl p-2 border border-white/10 w-fit">
+        <div className="relative">
+          <div className="flex gap-2 overflow-x-auto glass-card backdrop-blur-xl rounded-2xl p-2 border border-white/10 scrollbar-hide">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setCurrentTab(tab.id)}
-              className={`flex items-center gap-2 px-5 py-3 rounded-xl transition-all font-semibold ${
+              className={`flex items-center gap-2 px-4 md:px-5 py-2.5 md:py-3 rounded-xl transition-all font-semibold whitespace-nowrap flex-shrink-0 ${
                 currentTab === tab.id
                   ? 'bg-[#2AD368] text-[#121A21] shadow-lg'
                   : 'text-gray-400 hover:text-white hover:bg-white/5'
               }`}
             >
-              <span className="material-symbols-outlined text-[20px]">
+              <span className="material-symbols-outlined text-[18px] md:text-[20px]">
                 {tab.icon}
               </span>
-              <span className="text-sm">{tab.label}</span>
+              <span className="text-xs md:text-sm">{tab.label}</span>
             </button>
           ))}
+          </div>
+          {/* Gradient indicators pour montrer qu'on peut slider */}
+          <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-[#121A21] to-transparent pointer-events-none lg:hidden" />
+          <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-[#121A21] to-transparent pointer-events-none lg:hidden" />
         </div>
       </div>
 

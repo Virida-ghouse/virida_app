@@ -639,61 +639,125 @@ export const PlantDetailsDialog: React.FC<PlantDetailsDialogProps> = ({
         onClose={handleClose}
         maxWidth="md"
         fullWidth
+        fullScreen={(window.innerWidth < 768)}
         PaperProps={{
           sx: {
-            backgroundColor: '#ffffff',
-            boxShadow: '0 8px 32px rgba(0,0,0,0.08)',
+            borderRadius: { xs: 0, md: 3 },
+            maxHeight: '90vh',
+            m: { xs: 0, md: 2 },
+            background: 'rgba(18, 26, 33, 0.95)',
+            backdropFilter: 'blur(20px)',
+            border: '2px solid rgba(42, 211, 104, 0.2)',
+            boxShadow: '0 20px 60px rgba(0, 0, 0, 0.5)',
           },
         }}
-    >
+      >
       <DialogTitle
         sx={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          pb: 1,
-          borderBottom: '1px solid #e0e0e0',
+          pb: 2,
+          pt: 3,
+          px: { xs: 2, md: 3 },
+          borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+          background: 'rgba(255, 255, 255, 0.02)',
         }}
       >
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1.5, md: 2 }, minWidth: 0 }}>
           {plant.imageUrl ? (
             <Avatar
               src={plant.imageUrl}
               alt={plant.name}
-              sx={{ width: 56, height: 56 }}
+              sx={{ 
+                width: { xs: 48, md: 56 }, 
+                height: { xs: 48, md: 56 },
+                border: '2px solid rgba(42, 211, 104, 0.3)',
+                flexShrink: 0,
+              }}
             />
           ) : (
-            <Avatar sx={{ width: 56, height: 56, fontSize: '2rem' }}>
+            <Avatar sx={{ 
+              width: { xs: 48, md: 56 }, 
+              height: { xs: 48, md: 56 }, 
+              fontSize: { xs: '1.5rem', md: '2rem' },
+              background: 'rgba(42, 211, 104, 0.1)',
+              border: '2px solid rgba(42, 211, 104, 0.3)',
+              flexShrink: 0,
+            }}>
               {plant.iconEmoji || '🌱'}
             </Avatar>
           )}
-          <Box>
-            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+          <Box sx={{ minWidth: 0 }}>
+            <Typography variant="h6" sx={{ 
+              fontWeight: 700, 
+              color: '#fff',
+              fontSize: { xs: '1.1rem', md: '1.25rem' },
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}>
               {plant.name}
             </Typography>
             {plant.species && (
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" sx={{ 
+                color: 'rgba(255, 255, 255, 0.6)',
+                fontSize: { xs: '0.75rem', md: '0.875rem' },
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}>
                 {plant.species} {plant.variety && `- ${plant.variety}`}
               </Typography>
             )}
           </Box>
         </Box>
-        <Box sx={{ display: 'flex', gap: 1 }}>
+        <Box sx={{ display: 'flex', gap: 1, flexShrink: 0 }}>
           {!isEditing ? (
-            <IconButton onClick={handleEditToggle} size="small">
+            <IconButton 
+              onClick={handleEditToggle} 
+              size="small"
+              sx={{
+                color: '#2AD368',
+                '&:hover': { background: 'rgba(42, 211, 104, 0.1)' },
+              }}
+            >
               <EditIcon />
             </IconButton>
           ) : (
             <>
-              <IconButton onClick={handleSave} size="small" color="primary" disabled={loading}>
+              <IconButton 
+                onClick={handleSave} 
+                size="small" 
+                disabled={loading}
+                sx={{
+                  color: '#2AD368',
+                  '&:hover': { background: 'rgba(42, 211, 104, 0.1)' },
+                }}
+              >
                 <SaveIcon />
               </IconButton>
-              <IconButton onClick={handleEditToggle} size="small" disabled={loading}>
+              <IconButton 
+                onClick={handleEditToggle} 
+                size="small" 
+                disabled={loading}
+                sx={{
+                  color: 'rgba(255, 255, 255, 0.6)',
+                  '&:hover': { background: 'rgba(255, 255, 255, 0.05)' },
+                }}
+              >
                 <CancelIcon />
               </IconButton>
             </>
           )}
-          <IconButton onClick={handleClose} size="small">
+          <IconButton 
+            onClick={handleClose} 
+            size="small"
+            sx={{
+              color: 'rgba(255, 255, 255, 0.6)',
+              '&:hover': { background: 'rgba(255, 255, 255, 0.05)' },
+            }}
+          >
             <CloseIcon />
           </IconButton>
         </Box>
@@ -703,12 +767,26 @@ export const PlantDetailsDialog: React.FC<PlantDetailsDialogProps> = ({
         <Tabs
           value={tabValue}
           onChange={handleTabChange}
+          variant="scrollable"
+          scrollButtons="auto"
           sx={{
-            borderBottom: '1px solid #e0e0e0',
-            px: 2,
+            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+            px: { xs: 1, md: 2 },
+            background: 'rgba(255, 255, 255, 0.02)',
             '& .MuiTab-root': {
               textTransform: 'none',
-              fontWeight: 500,
+              fontWeight: 600,
+              fontSize: { xs: '0.875rem', md: '1rem' },
+              minWidth: { xs: 'auto', md: 90 },
+              px: { xs: 2, md: 3 },
+              color: 'rgba(255, 255, 255, 0.6)',
+              '&.Mui-selected': {
+                color: '#2AD368',
+              },
+            },
+            '& .MuiTabs-indicator': {
+              backgroundColor: '#2AD368',
+              height: 3,
             },
           }}
         >
@@ -718,7 +796,7 @@ export const PlantDetailsDialog: React.FC<PlantDetailsDialogProps> = ({
           <Tab label="Récoltes" />
         </Tabs>
 
-        <Box sx={{ px: 3 }}>
+        <Box sx={{ px: { xs: 2, md: 3 } }}>
           <TabPanel value={tabValue} index={0}>
             <Grid container spacing={3}>
               <Grid item xs={12} sm={6}>
@@ -1482,17 +1560,42 @@ export const PlantDetailsDialog: React.FC<PlantDetailsDialogProps> = ({
         </Box>
       </DialogContent>
 
-      <DialogActions sx={{ px: 3, py: 2, borderTop: '1px solid #e0e0e0' }}>
+      <DialogActions sx={{ 
+        px: { xs: 2, md: 3 }, 
+        py: 2, 
+        borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+        background: 'rgba(255, 255, 255, 0.02)',
+      }}>
         <Button
           onClick={handleDelete}
-          color="error"
           startIcon={<DeleteIcon />}
           disabled={loading}
+          sx={{
+            color: '#ef4444',
+            borderColor: 'rgba(239, 68, 68, 0.3)',
+            '&:hover': {
+              borderColor: '#ef4444',
+              background: 'rgba(239, 68, 68, 0.1)',
+            },
+          }}
+          variant="outlined"
         >
           Supprimer
         </Button>
         <Box sx={{ flex: 1 }} />
-        <Button onClick={handleClose} disabled={loading}>
+        <Button 
+          onClick={handleClose} 
+          disabled={loading}
+          sx={{
+            color: 'rgba(255, 255, 255, 0.8)',
+            borderColor: 'rgba(255, 255, 255, 0.2)',
+            '&:hover': {
+              borderColor: 'rgba(255, 255, 255, 0.4)',
+              background: 'rgba(255, 255, 255, 0.05)',
+            },
+          }}
+          variant="outlined"
+        >
           Fermer
         </Button>
       </DialogActions>

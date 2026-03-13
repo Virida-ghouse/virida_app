@@ -108,7 +108,7 @@ export const AddPlantDialog: React.FC<AddPlantDialogProps> = ({
       setLoadingCatalog(true);
       setCatalogError(null);
       const token = localStorage.getItem('virida_token');
-      const response = await fetch(`${apiUrl}/api/plants/catalog`, {
+      const response = await fetch(`${apiUrl}/api/plant-catalog`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },

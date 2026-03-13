@@ -6,7 +6,8 @@ import Sidebar from './layout/Sidebar';
 import BottomNavigationBar from './layout/BottomNavigation';
 //import PlantsPage from './plants/PlantsPage';
 import PlantsPage from './plants/PlantsLayout';
-import IrrigationSchedule from './schedules/IrrigationSchedule';
+import { SensorsNew } from './sensors/SensorsNew';
+import { IrrigationScheduleNew } from './schedules/IrrigationScheduleNew';
 import AutomationRules from './automation/AutomationRules';
 import EnergyManagement from './energy/EnergyManagement';
 import SettingsPanel from './settings/SettingsPanel';
@@ -37,8 +38,10 @@ const MainApp: React.FC = () => {
         return <Dashboard />;
       case 'plants':
         return <PlantsPage />;
+      case 'sensors':
+        return <SensorsNew />;
       case 'irrigation':
-        return <IrrigationSchedule />;
+        return <IrrigationScheduleNew />;
       case 'automation':
         return <AutomationRules />;
       case 'energy':

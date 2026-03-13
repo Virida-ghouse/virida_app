@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { PlantCardMinimal } from './ui';
-import { PlantLibraryDetailsDialog } from './ui/PlantLibraryDetailsDialog';
+import { PlantCardModern } from './ui/PlantCardModern';
+import { PlantLibraryDetailsDialogModern } from './ui/PlantLibraryDetailsDialogModern';
 import { useViridaStore } from '../../store/useViridaStore';
 
 interface PlantCatalog {
@@ -46,7 +46,7 @@ const PlantLibraryNew: React.FC = () => {
         setError(null);
         const token = localStorage.getItem('virida_token');
 
-        const response = await fetch(`${apiUrl}/api/plants/catalog`, {
+        const response = await fetch(`${apiUrl}/api/plant-catalog`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -211,14 +211,14 @@ const PlantLibraryNew: React.FC = () => {
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredPlants.map((plant) => (
             <div
               key={plant.id}
               onClick={() => handleOpenDetails(plant)}
               className="cursor-pointer"
             >
-              <PlantCardMinimal
+              <PlantCardModern
                 plant={{
                   id: plant.id,
                   name: plant.commonName,
@@ -238,10 +238,11 @@ const PlantLibraryNew: React.FC = () => {
 
       {/* Dialog de détails */}
       {selectedPlant && (
-        <PlantLibraryDetailsDialog
+        <PlantLibraryDetailsDialogModern
           open={detailsDialogOpen}
           onClose={handleCloseDetails}
-          plant={selectedPlant}
+          plantId={selectedPlant.id}
+          plantName={selectedPlant.commonName || selectedPlant.species || ''}
         />
       )}
     </div>

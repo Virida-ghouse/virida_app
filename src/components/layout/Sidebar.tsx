@@ -19,6 +19,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import AutomationIcon from '@mui/icons-material/SmartToy';
 import BoltIcon from '@mui/icons-material/Bolt';
 import AssessmentIcon from '@mui/icons-material/Assessment';
+import SensorsIcon from '@mui/icons-material/Sensors';
 import MenuIcon from '@mui/icons-material/Menu';
 import { VIRIDA_COLORS } from '../../theme/colors';
 
@@ -72,6 +73,7 @@ interface SidebarProps {
 const menuItems = [
   { id: 'dashboard', label: 'Dashboard', icon: <DashboardIcon /> },
   { id: 'plants', label: 'Plants', icon: <LocalFloristIcon /> },
+  { id: 'sensors', label: 'Sensors', icon: <SensorsIcon /> },
   { id: 'irrigation', label: 'Irrigation', icon: <WaterDropIcon /> },
   { id: 'automation', label: 'Automation', icon: <AutomationIcon /> },
   { id: 'energy', label: 'Energy', icon: <BoltIcon /> },

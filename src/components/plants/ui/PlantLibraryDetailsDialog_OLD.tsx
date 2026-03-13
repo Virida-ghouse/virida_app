@@ -176,15 +176,8 @@ export const PlantLibraryDetailsDialog: React.FC<PlantLibraryDetailsDialogProps>
     try {
       const token = localStorage.getItem('virida_token');
 
-      // Appel à l'endpoint RAG pour obtenir les détails enrichis (optionnel)
-      const response = await fetch(
-        `${apiUrl}/api/plants/plant-info?plantName=${encodeURIComponent(plantName)}`,
-        {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
-        }
-      );
+      // Les détails sont déjà récupérés via /api/plant-catalog/:id
+      // Pas besoin d'un appel supplémentaire
 
       if (response.ok) {
         const data = await response.json();

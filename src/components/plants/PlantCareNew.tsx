@@ -1,17 +1,233 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useViridaStore } from '../../store/useViridaStore';
+
+interface CareTask {
+  id: string;
+  plantId: string;
+  type: 'WATERING' | 'FERTILIZING' | 'PRUNING' | 'PEST_CONTROL';
+  description: string;
+  dueDate: string;
+  completed: boolean;
+  priority: 'LOW' | 'MEDIUM' | 'HIGH';
+  plant: {
+    id: string;
+    name: string;
+    species: string;
+    imageUrl?: string;
+    iconEmoji?: string;
+  };
+}
 
 const PlantCareNew: React.FC = () => {
+  const apiUrl = useViridaStore((state) => state.apiUrl);
+  const [currentTab, setCurrentTab] = useState<'today' | 'upcoming'>('today');
+  const [tasks, setTasks] = useState<CareTask[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const token = localStorage.getItem('virida_token');
+        const response = await fetch(`${apiUrl}/api/plant-tasks?completed=false`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('Erreur lors du chargement des tâches');
+        }
+
+        const data = await response.json();
+        setTasks(data.data || []);
+      } catch (err) {
+        console.error('Erreur chargement tâches:', err);
+        setError(err instanceof Error ? err.message : 'Erreur inconnue');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTasks();
+  }, [apiUrl]);
+
+  const todayTasks = tasks.filter((task) => {
+    const taskDate = new Date(task.dueDate);
+    taskDate.setHours(0, 0, 0, 0);
+    return taskDate.getTime() === today.getTime();
+  });
+
+  const upcomingTasks = tasks.filter((task) => {
+    const taskDate = new Date(task.dueDate);
+    taskDate.setHours(0, 0, 0, 0);
+    return taskDate.getTime() > today.getTime();
+  });
+
+  const displayedTasks = currentTab === 'today' ? todayTasks : upcomingTasks;
+
+  const handleToggleTask = async (taskId: string, currentCompleted: boolean) => {
+    try {
+      const token = localStorage.getItem('virida_token');
+      const endpoint = currentCompleted ? 'uncomplete' : 'complete';
+
+      const response = await fetch(`${apiUrl}/api/plant-tasks/${taskId}/${endpoint}`, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Erreur lors de la mise à jour de la tâche');
+      }
+
+      setTasks((prev) =>
+        prev.map((task) =>
+          task.id === taskId ? { ...task, completed: !currentCompleted } : task
+        )
+      );
+    } catch (err) {
+      console.error('Erreur toggle tâche:', err);
+      setError(err instanceof Error ? err.message : 'Erreur inconnue');
+    }
+  };
+
+  const getTaskIcon = (type: string) => {
+    switch (type) {
+      case 'WATERING': return 'water_drop';
+      case 'FERTILIZING': return 'grass';
+      case 'PRUNING': return 'content_cut';
+      case 'PEST_CONTROL': return 'bug_report';
+      default: return 'task_alt';
+    }
+  };
+
+  const getTaskColor = (type: string) => {
+    switch (type) {
+      case 'WATERING': return 'text-blue-400';
+      case 'FERTILIZING': return 'text-[#CBED62]';
+      case 'PRUNING': return 'text-orange-400';
+      case 'PEST_CONTROL': return 'text-red-400';
+      default: return 'text-gray-400';
+    }
+  };
+
   return (
-    <div>
+    <div className="overflow-x-hidden">
       {/* Header */}
       <div className="mb-6">
+        <h2 className="text-2xl font-bold text-white mb-2">Soins & Rappels</h2>
         <p className="text-gray-400">
-          Conseils et guides pour prendre soin de vos plantes
+          {todayTasks.length} tâche{todayTasks.length > 1 ? 's' : ''} pour aujourd'hui
         </p>
       </div>
 
-      {/* Sections de soins */}
-      <div className="grid grid-cols-2 gap-6">
+      {/* Tabs */}
+      <div className="flex gap-2 mb-6">
+        <button
+          onClick={() => setCurrentTab('today')}
+          className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${
+            currentTab === 'today'
+              ? 'bg-[#2AD368] text-[#121A21]'
+              : 'glass-card backdrop-blur-xl text-gray-400 hover:text-white border border-white/10'
+          }`}
+        >
+          Aujourd'hui
+        </button>
+        <button
+          onClick={() => setCurrentTab('upcoming')}
+          className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${
+            currentTab === 'upcoming'
+              ? 'bg-[#2AD368] text-[#121A21]'
+              : 'glass-card backdrop-blur-xl text-gray-400 hover:text-white border border-white/10'
+          }`}
+        >
+          À venir
+        </button>
+      </div>
+
+      {/* Loading */}
+      {loading && (
+        <div className="flex justify-center py-12">
+          <div className="size-12 border-4 border-[#2AD368] border-t-transparent rounded-full animate-spin" />
+        </div>
+      )}
+
+      {/* Error */}
+      {error && (
+        <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-red-500/20 bg-red-500/10 mb-6">
+          <p className="text-red-400">{error}</p>
+        </div>
+      )}
+
+      {/* Tasks List */}
+      {!loading && !error && (
+        <div className="space-y-3">
+          {displayedTasks.length === 0 ? (
+            <div className="glass-card backdrop-blur-xl rounded-2xl p-8 border border-white/10 text-center">
+              <span className="material-symbols-outlined text-gray-500 text-5xl mb-3">check_circle</span>
+              <p className="text-gray-400">
+                {currentTab === 'today' ? 'Aucune tâche pour aujourd\'hui !' : 'Aucune tâche à venir'}
+              </p>
+            </div>
+          ) : (
+            displayedTasks.map((task) => (
+              <div
+                key={task.id}
+                className="glass-card backdrop-blur-xl rounded-2xl p-3 md:p-4 border border-white/10 hover:border-[#2AD368]/30 transition-all"
+              >
+                <div className="flex items-center gap-2 md:gap-4">
+                  {/* Checkbox */}
+                  <button
+                    onClick={() => handleToggleTask(task.id, task.completed)}
+                    className="size-5 md:size-6 rounded-lg border-2 border-white/30 flex items-center justify-center hover:border-[#2AD368] transition-all flex-shrink-0"
+                  >
+                    {task.completed && (
+                      <span className="material-symbols-outlined text-[#2AD368] text-base md:text-lg">check</span>
+                    )}
+                  </button>
+
+                  {/* Plant Image */}
+                  <div className="size-10 md:size-12 rounded-xl overflow-hidden bg-[#1a1f26] flex items-center justify-center flex-shrink-0">
+                    {task.plant.imageUrl ? (
+                      <img src={task.plant.imageUrl} alt={task.plant.name} className="w-full h-full object-cover" />
+                    ) : (
+                      <span className="text-xl md:text-2xl">{task.plant.iconEmoji || '🌱'}</span>
+                    )}
+                  </div>
+
+                  {/* Task Info */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-1.5 md:gap-2 mb-0.5 md:mb-1">
+                      <span className={`material-symbols-outlined text-base md:text-lg ${getTaskColor(task.type)}`}>
+                        {getTaskIcon(task.type)}
+                      </span>
+                      <h4 className="text-sm md:text-base text-white font-semibold truncate">{task.plant.name}</h4>
+                    </div>
+                    <p className="text-xs md:text-sm text-gray-400 truncate">{task.description}</p>
+                  </div>
+
+                  {/* Date */}
+                  <div className="text-right flex-shrink-0 hidden sm:block">
+                    <p className="text-xs text-gray-500">
+                      {new Date(task.dueDate).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      )}
+
+      {/* Sections de conseils (en bas) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
         {/* Arrosage */}
         <div className="glass-card backdrop-blur-xl rounded-3xl p-6 border border-white/10">
           <div className="flex items-center gap-3 mb-4">

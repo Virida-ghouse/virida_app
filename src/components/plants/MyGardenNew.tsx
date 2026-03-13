@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { PlantCardMinimal, ConfirmDialog, AddPlantDialog, PlantDetailsDialog } from './ui';
+import { PlantCardModern } from './ui/PlantCardModern';
+import { PlantDetailsDialogModern } from './ui/PlantDetailsDialogModern';
+import { ConfirmDialog, AddPlantDialog } from './ui';
 import { useViridaStore } from '../../store/useViridaStore';
 
 interface UserPlant {
@@ -238,23 +240,23 @@ const MyGardenNew: React.FC = () => {
   return (
     <div>
       {/* Stats */}
-      <div className="grid grid-cols-3 gap-4 mb-6">
-        <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-white/10">
-          <p className="text-gray-400 text-xs font-semibold uppercase mb-1">Total</p>
-          <p className="text-3xl font-black text-white">{totalPlants}</p>
+      <div className="grid grid-cols-3 gap-3 md:gap-4 mb-6">
+        <div className="glass-card backdrop-blur-xl rounded-2xl p-3 md:p-4 border border-white/10">
+          <p className="text-gray-400 text-[10px] md:text-xs font-semibold uppercase mb-1">Total</p>
+          <p className="text-2xl md:text-3xl font-black text-white">{totalPlants}</p>
         </div>
-        <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-white/10">
-          <p className="text-gray-400 text-xs font-semibold uppercase mb-1">En croissance</p>
-          <p className="text-3xl font-black text-[#2AD368]">{activePlants}</p>
+        <div className="glass-card backdrop-blur-xl rounded-2xl p-3 md:p-4 border border-white/10">
+          <p className="text-gray-400 text-[10px] md:text-xs font-semibold uppercase mb-1 truncate">Croissance</p>
+          <p className="text-2xl md:text-3xl font-black text-[#2AD368]">{activePlants}</p>
         </div>
-        <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-white/10">
-          <p className="text-gray-400 text-xs font-semibold uppercase mb-1">Prêtes</p>
-          <p className="text-3xl font-black text-[#CBED62]">{readyToHarvest}</p>
+        <div className="glass-card backdrop-blur-xl rounded-2xl p-3 md:p-4 border border-white/10">
+          <p className="text-gray-400 text-[10px] md:text-xs font-semibold uppercase mb-1">Prêtes</p>
+          <p className="text-2xl md:text-3xl font-black text-[#CBED62]">{readyToHarvest}</p>
         </div>
       </div>
 
       {/* Filtres */}
-      <div className="flex gap-2 mb-6">
+      <div className="flex flex-wrap gap-2 mb-6">
         <button
           onClick={() => setCurrentFilter('all')}
           className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
@@ -288,9 +290,9 @@ const MyGardenNew: React.FC = () => {
       </div>
 
       {/* Grille de plantes */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredPlants.map((plant) => (
-          <PlantCardMinimal
+          <PlantCardModern
             key={plant.id}
             plant={plant}
             onDelete={handleDeletePlant}
@@ -315,7 +317,7 @@ const MyGardenNew: React.FC = () => {
       />
 
       {selectedPlantId && (
-        <PlantDetailsDialog
+        <PlantDetailsDialogModern
           open={detailsDialogOpen}
           onClose={handleClosePlantDetails}
           plantId={selectedPlantId}

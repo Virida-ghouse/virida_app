@@ -21,7 +21,7 @@ const SidebarNew: React.FC<SidebarProps> = ({
   onViewChange,
 }) => {
   return (
-    <aside className="w-64 border-r border-glass-border bg-background-dark/50 flex flex-col justify-between p-6 fixed h-screen">
+    <aside className="hidden lg:flex w-64 border-r border-glass-border bg-background-dark/50 flex-col justify-between p-6 fixed h-screen">
       {/* Top Section */}
       <div className="space-y-8">
         {/* Logo */}

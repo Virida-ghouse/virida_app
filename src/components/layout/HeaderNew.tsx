@@ -26,20 +26,20 @@ const HeaderNew: React.FC<HeaderNewProps> = ({ currentView = 'dashboard' }) => {
   };
 
   return (
-    <header className="h-20 px-8 border-b border-glass-border flex items-center justify-between bg-background-dark/20 backdrop-blur-md relative z-40">
+    <header className="h-16 md:h-20 px-4 md:px-8 border-b border-glass-border flex items-center justify-between bg-background-dark/20 backdrop-blur-md relative z-40">
       {/* Breadcrumb Dynamique */}
-      <div className="flex items-center gap-4">
-        <div className="flex items-center gap-2 text-sm text-gray-400">
-          <span>Organisation</span>
-          <span className="material-symbols-outlined text-xs">chevron_right</span>
-          <span className="text-white font-medium">Serre Alpha-1</span>
-          <span className="material-symbols-outlined text-xs">chevron_right</span>
+      <div className="flex items-center gap-2 md:gap-4">
+        <div className="flex items-center gap-1 md:gap-2 text-xs md:text-sm text-gray-400">
+          <span className="hidden md:inline">Organisation</span>
+          <span className="material-symbols-outlined text-xs hidden md:inline">chevron_right</span>
+          <span className="text-white font-medium hidden sm:inline">Serre Alpha-1</span>
+          <span className="material-symbols-outlined text-xs hidden sm:inline">chevron_right</span>
           <span className="text-[#2AD368] font-medium">{viewTitles[currentView] || 'Dashboard'}</span>
         </div>
       </div>
 
       {/* Right Section */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 md:gap-3">
         {/* Notifications */}
         <NotificationMenu />
 
@@ -49,7 +49,7 @@ const HeaderNew: React.FC<HeaderNewProps> = ({ currentView = 'dashboard' }) => {
         {/* User Profile */}
         {user && (
           <div className="flex items-center gap-3 pl-2 relative">
-            <div className="text-right">
+            <div className="text-right hidden md:block">
               <p className="text-sm font-bold text-white">
                 {user.firstName} {user.lastName}
               </p>
