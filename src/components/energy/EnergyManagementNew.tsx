@@ -196,36 +196,83 @@ export default function EnergyManagementNew() {
 
           {/* Historical Chart */}
           <div className="glass-card backdrop-blur-xl rounded-2xl p-6 border border-white/10">
-            <h2 className="text-xl font-bold text-white mb-4">Historique de consommation</h2>
-            <div className="h-64 flex items-end justify-between gap-1">
-              {historicalData.map((data, index) => (
-                <div key={index} className="flex-1 flex flex-col items-center gap-1">
-                  <div className="w-full flex flex-col gap-0.5">
-                    <div
-                      className="w-full bg-[#2AD368]/60 rounded-t"
-                      style={{ height: `${(data.solar / 60) * 100}%`, minHeight: '2px' }}
-                      title={`Solar: ${data.solar.toFixed(1)}kW`}
-                    />
-                    <div
-                      className="w-full bg-[#e74c3c]/60 rounded-b"
-                      style={{ height: `${(data.consumption / 60) * 100}%`, minHeight: '2px' }}
-                      title={`Consumption: ${data.consumption.toFixed(1)}kW`}
-                    />
-                  </div>
-                  {index % 4 === 0 && (
-                    <span className="text-[9px] text-gray-500">{data.time}</span>
-                  )}
-                </div>
-              ))}
+            <h2 className="text-xl font-bold text-white mb-6">Historique de consommation</h2>
+            
+            {/* Chart */}
+            <div className="relative h-80 mb-6">
+              {/* Y-axis labels */}
+              <div className="absolute left-0 top-0 bottom-0 flex flex-col justify-between text-xs text-gray-500 pr-2">
+                <span>60kW</span>
+                <span>45kW</span>
+                <span>30kW</span>
+                <span>15kW</span>
+                <span>0kW</span>
+              </div>
+              
+              {/* Grid lines */}
+              <div className="absolute left-12 right-0 top-0 bottom-0 flex flex-col justify-between">
+                {[0, 1, 2, 3, 4].map((i) => (
+                  <div key={i} className="w-full border-t border-white/5" />
+                ))}
+              </div>
+              
+              {/* Bars */}
+              <div className="absolute left-12 right-0 top-0 bottom-0 flex items-end justify-between gap-1">
+                {historicalData.map((data, index) => {
+                  const maxValue = 60;
+                  const solarHeight = (data.solar / maxValue) * 100;
+                  const consumptionHeight = (data.consumption / maxValue) * 100;
+                  
+                  return (
+                    <div key={index} className="flex-1 flex flex-col items-center gap-2 group">
+                      {/* Bars container */}
+                      <div className="w-full h-full flex items-end justify-center gap-0.5">
+                        {/* Solar bar */}
+                        <div className="relative flex-1 flex items-end">
+                          <div
+                            className="w-full bg-gradient-to-t from-[#2AD368] to-[#2AD368]/60 rounded-t transition-all hover:from-[#2AD368] hover:to-[#2AD368]/80"
+                            style={{ height: `${solarHeight}%`, minHeight: solarHeight > 0 ? '4px' : '0' }}
+                          >
+                            {/* Tooltip on hover */}
+                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-[#121A21] rounded text-[10px] text-white whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                              {data.solar.toFixed(1)}kW
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {/* Consumption bar */}
+                        <div className="relative flex-1 flex items-end">
+                          <div
+                            className="w-full bg-gradient-to-t from-[#e74c3c] to-[#e74c3c]/60 rounded-t transition-all hover:from-[#e74c3c] hover:to-[#e74c3c]/80"
+                            style={{ height: `${consumptionHeight}%`, minHeight: consumptionHeight > 0 ? '4px' : '0' }}
+                          >
+                            {/* Tooltip on hover */}
+                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-[#121A21] rounded text-[10px] text-white whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                              {data.consumption.toFixed(1)}kW
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* Time label */}
+                      {index % 3 === 0 && (
+                        <span className="text-[10px] text-gray-500 font-medium">{data.time}</span>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-            <div className="flex items-center justify-center gap-4 mt-4">
+            
+            {/* Legend */}
+            <div className="flex items-center justify-center gap-6">
               <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded bg-[#2AD368]" />
-                <span className="text-xs text-gray-400">Solaire</span>
+                <div className="w-4 h-4 rounded bg-gradient-to-t from-[#2AD368] to-[#2AD368]/60" />
+                <span className="text-sm text-gray-300 font-medium">Production Solaire</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded bg-[#e74c3c]" />
-                <span className="text-xs text-gray-400">Consommation</span>
+                <div className="w-4 h-4 rounded bg-gradient-to-t from-[#e74c3c] to-[#e74c3c]/60" />
+                <span className="text-sm text-gray-300 font-medium">Consommation Totale</span>
               </div>
             </div>
           </div>
