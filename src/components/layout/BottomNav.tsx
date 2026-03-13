@@ -8,8 +8,8 @@ interface BottomNavProps {
 const menuItems = [
   { id: 'dashboard', label: 'Home', icon: 'grid_view' },
   { id: 'plants', label: 'Crops', icon: 'potted_plant' },
-  { id: 'irrigation', label: 'Sensors', icon: 'sensors' },
-  { id: 'automation', label: 'Auto', icon: 'bolt' },
+  { id: 'energy', label: 'Energy', icon: 'bolt' },
+  { id: 'automation', label: 'Auto', icon: 'smart_toy' },
   { id: 'settings', label: 'Plus', icon: 'more_horiz' },
 ];
 
