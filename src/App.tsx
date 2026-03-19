@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { CircularProgress } from '@mui/material';
 import MainAppNew from './components/MainAppNew';
 import AuthContainerNew from './components/auth/AuthContainerNew';
+import LandingPage from './components/landing/LandingPage';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { RGPDProvider } from './contexts/RGPDContext';
@@ -12,9 +13,10 @@ import CookieConsentBanner from './components/rgpd/CookieConsentBanner';
 import CookiePreferencesModal from './components/rgpd/CookiePreferencesModal';
 import theme from './theme';
 
-// Composant pour gérer l'état d'authentification
+// Composant pour gérer l'état d'authentification et le routing
 const AppContent: React.FC = () => {
   const { isAuthenticated, isLoading } = useAuth();
+  const [showLanding, setShowLanding] = useState(true);
 
   if (isLoading) {
     return (
@@ -24,11 +26,17 @@ const AppContent: React.FC = () => {
     );
   }
 
-  if (!isAuthenticated) {
-    return <AuthContainerNew />;
+  // Si authentifié, afficher l'app
+  if (isAuthenticated) {
+    return <MainAppNew />;
   }
 
-  return <MainAppNew />;
+  // Si non authentifié, afficher landing ou login selon l'état
+  if (showLanding) {
+    return <LandingPage onNavigateToLogin={() => setShowLanding(false)} />;
+  }
+
+  return <AuthContainerNew onBackToLanding={() => setShowLanding(true)} />;
 };
 
 function App() {

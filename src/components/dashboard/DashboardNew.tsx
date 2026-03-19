@@ -97,7 +97,7 @@ const DashboardNew: React.FC = () => {
           </div>
 
           {/* 3D Visualization / Hero Area */}
-          <GlassCard className="rounded-3xl overflow-hidden relative group border-glass-border">
+          <GlassCard className="rounded-3xl overflow-hidden relative group border-2 border-[var(--border-color)] shadow-xl hover:shadow-2xl transition-shadow">
             <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-primary)] via-[var(--bg-primary)]/60 to-transparent z-[5]"></div>
             <div className="w-full h-[300px] md:h-[400px] relative z-[1]">
               <GreenhouseModel />

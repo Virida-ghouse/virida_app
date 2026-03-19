@@ -23,10 +23,10 @@ const StatCard: React.FC<StatCardProps> = ({
   trendColor = 'text-accent-glow'
 }) => {
   return (
-    <GlassCard className="p-5 group cursor-pointer" hover>
+    <GlassCard className="p-5 group cursor-pointer border border-[var(--border-color)] shadow-md hover:shadow-xl transition-shadow" hover>
       <div className="flex justify-between items-start mb-4">
         <span 
-          className={`material-symbols-outlined ${iconColor} ${iconBg} p-2 rounded-lg transition-all group-hover:scale-110 group-hover:rotate-3`}
+          className={`material-symbols-outlined ${iconColor} ${iconBg} p-2 rounded-lg transition-all group-hover:scale-110 group-hover:rotate-3 shadow-sm`}
           style={{ fontSize: '24px' }}
         >
           {icon}
