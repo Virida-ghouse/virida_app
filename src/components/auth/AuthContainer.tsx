@@ -4,7 +4,11 @@ import { Settings } from 'lucide-react';
 import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
 
-const AuthContainer: React.FC = () => {
+interface AuthContainerProps {
+  onBackToLanding?: () => void;
+}
+
+const AuthContainer: React.FC<AuthContainerProps> = ({ onBackToLanding }) => {
   const [isLogin, setIsLogin] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
