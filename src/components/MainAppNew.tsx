@@ -38,7 +38,7 @@ const MainAppNew: React.FC = () => {
         return <SettingsPanelNew />;
       case 'reports':
         return (
-          <div className="p-8 text-white">
+          <div className="p-8 text-[var(--text-primary)]">
             Cette fonctionnalité sera bientôt disponible
           </div>
         );
@@ -48,7 +48,7 @@ const MainAppNew: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen overflow-hidden bg-background-dark text-white">
+    <div className="flex h-screen overflow-hidden bg-[var(--bg-primary)] text-[var(--text-primary)]">
       {/* Sidebar Navigation */}
       <SidebarNew
         open={sidebarOpen}

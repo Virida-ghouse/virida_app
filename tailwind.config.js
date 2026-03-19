@@ -5,11 +5,11 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Couleurs du design Stitch - Virida
-        primary: '#1fc75c',
+        // Couleurs du design - Virida
+        primary: '#2AD368',
         'accent-glow': '#2AD368',
         highlight: '#CBED62',
-        'background-light': '#f6f8f7',
+        'background-light': '#f8fafc',
         'background-dark': '#121A21',
         glass: 'rgba(255, 255, 255, 0.03)',
         'glass-border': 'rgba(255, 255, 255, 0.1)',

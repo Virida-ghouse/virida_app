@@ -133,10 +133,10 @@ export const PlantLibraryDetailsDialogModern: React.FC<PlantLibraryDetailsDialog
   ];
 
   return (
-    <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-      <div className="glass-card backdrop-blur-xl rounded-3xl w-full max-w-4xl max-h-[90vh] overflow-hidden border-2 border-[#2AD368]/20 shadow-2xl flex flex-col">
+    <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-black/60 dark:bg-black/60 backdrop-blur-sm">
+      <div className="bg-[var(--bg-secondary)] backdrop-blur-xl rounded-3xl w-full max-w-4xl max-h-[90vh] overflow-hidden border-2 border-[#2AD368]/20 shadow-2xl flex flex-col">
         {/* Header */}
-        <div className="border-b border-white/10 p-4 md:p-6 bg-gradient-to-r from-[#052E1C] to-[#121A21]">
+        <div className="border-b border-[var(--border-color)] p-4 md:p-6 bg-gradient-to-r from-[var(--modal-gradient-start)] to-[var(--modal-gradient-end)]">
           <div className="flex items-center gap-4">
             {/* Image */}
             <div className="w-20 h-20 md:w-24 md:h-24 rounded-2xl overflow-hidden flex-shrink-0 border-2 border-[#2AD368]/30">
@@ -151,11 +151,11 @@ export const PlantLibraryDetailsDialogModern: React.FC<PlantLibraryDetailsDialog
 
             {/* Info */}
             <div className="flex-1 min-w-0">
-              <h2 className="text-xl md:text-2xl font-bold text-white mb-1">
+              <h2 className="text-xl md:text-2xl font-bold text-[var(--text-primary)] mb-1">
                 {catalogData?.commonName || plantName}
               </h2>
               {catalogData?.scientificName && (
-                <p className="text-sm text-gray-400 italic mb-2">{catalogData.scientificName}</p>
+                <p className="text-sm text-[var(--text-secondary)] italic mb-2">{catalogData.scientificName}</p>
               )}
               <div className="flex flex-wrap gap-2 items-center text-xs md:text-sm">
                 {catalogData?.category && (
@@ -179,7 +179,7 @@ export const PlantLibraryDetailsDialogModern: React.FC<PlantLibraryDetailsDialog
             {/* Close button */}
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-white transition-colors flex-shrink-0"
+              className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors flex-shrink-0"
             >
               <span className="material-symbols-outlined">close</span>
             </button>
@@ -187,7 +187,7 @@ export const PlantLibraryDetailsDialogModern: React.FC<PlantLibraryDetailsDialog
         </div>
 
         {/* Tabs */}
-        <div className="border-b border-white/10 bg-[#121A21]/50">
+        <div className="border-b border-[var(--border-color)] bg-[var(--bg-primary)]">
           <div className="flex overflow-x-auto scrollbar-hide">
             {tabs.map((tab) => (
               <button
@@ -196,7 +196,7 @@ export const PlantLibraryDetailsDialogModern: React.FC<PlantLibraryDetailsDialog
                 className={`flex-1 min-w-[100px] px-4 py-3 md:py-4 flex items-center justify-center gap-2 transition-all border-b-2 ${
                   currentTab === tab.id
                     ? 'border-[#2AD368] text-[#2AD368]'
-                    : 'border-transparent text-gray-400 hover:text-gray-300'
+                    : 'border-transparent text-[var(--text-secondary)] hover:text-gray-300'
                 }`}
               >
                 <span className="material-symbols-outlined text-lg">{tab.icon}</span>
@@ -227,7 +227,7 @@ export const PlantLibraryDetailsDialogModern: React.FC<PlantLibraryDetailsDialog
                     <div>
                       <div className="flex items-center gap-2 mb-3">
                         <span className="material-symbols-outlined text-[#2AD368]">menu_book</span>
-                        <h3 className="text-lg font-bold text-white">Description</h3>
+                        <h3 className="text-lg font-bold text-[var(--text-primary)]">Description</h3>
                       </div>
                       <p className="text-gray-300 leading-relaxed">{catalogData.description}</p>
                     </div>
@@ -238,7 +238,7 @@ export const PlantLibraryDetailsDialogModern: React.FC<PlantLibraryDetailsDialog
                     <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-[#2AD368]/20 bg-[#2AD368]/5">
                       <div className="flex items-center gap-2 mb-3">
                         <span className="material-symbols-outlined text-[#2AD368]">history_edu</span>
-                        <h3 className="text-lg font-bold text-white">Histoire</h3>
+                        <h3 className="text-lg font-bold text-[var(--text-primary)]">Histoire</h3>
                       </div>
                       <p className="text-gray-300 leading-relaxed italic">{catalogData.history}</p>
                     </div>
@@ -248,32 +248,32 @@ export const PlantLibraryDetailsDialogModern: React.FC<PlantLibraryDetailsDialog
                   <div>
                     <div className="flex items-center gap-2 mb-4">
                       <span className="material-symbols-outlined text-[#2AD368]">settings</span>
-                      <h3 className="text-lg font-bold text-white">Paramètres de culture</h3>
+                      <h3 className="text-lg font-bold text-[var(--text-primary)]">Paramètres de culture</h3>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       {/* Arrosage */}
                       {(catalogData.wateringFrequency || catalogData.wateringAmount) && (
-                        <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-white/10 hover:border-[#2AD368]/30 transition-all">
+                        <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-[var(--border-color)] hover:border-[#2AD368]/30 transition-all">
                           <div className="flex items-center gap-2 mb-2">
                             <span className="material-symbols-outlined text-[#2AD368]">water_drop</span>
-                            <h4 className="font-bold text-white">Arrosage</h4>
+                            <h4 className="font-bold text-[var(--text-primary)]">Arrosage</h4>
                           </div>
                           {catalogData.wateringFrequency && (
                             <p className="text-sm text-gray-300 mb-1">{catalogData.wateringFrequency}</p>
                           )}
                           {catalogData.wateringAmount && (
-                            <p className="text-xs text-gray-400">{catalogData.wateringAmount}</p>
+                            <p className="text-xs text-[var(--text-secondary)]">{catalogData.wateringAmount}</p>
                           )}
                         </div>
                       )}
 
                       {/* Lumière */}
                       {catalogData.sunlightHours && (
-                        <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-white/10 hover:border-[#2AD368]/30 transition-all">
+                        <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-[var(--border-color)] hover:border-[#2AD368]/30 transition-all">
                           <div className="flex items-center gap-2 mb-2">
                             <span className="material-symbols-outlined text-[#2AD368]">wb_sunny</span>
-                            <h4 className="font-bold text-white">Luminosité</h4>
+                            <h4 className="font-bold text-[var(--text-primary)]">Luminosité</h4>
                           </div>
                           <p className="text-sm text-gray-300">{catalogData.sunlightHours}</p>
                         </div>
@@ -281,14 +281,14 @@ export const PlantLibraryDetailsDialogModern: React.FC<PlantLibraryDetailsDialog
 
                       {/* Température */}
                       {tempDisplay && (
-                        <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-white/10 hover:border-[#2AD368]/30 transition-all">
+                        <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-[var(--border-color)] hover:border-[#2AD368]/30 transition-all">
                           <div className="flex items-center gap-2 mb-2">
                             <span className="material-symbols-outlined text-[#2AD368]">thermostat</span>
-                            <h4 className="font-bold text-white">Température</h4>
+                            <h4 className="font-bold text-[var(--text-primary)]">Température</h4>
                           </div>
                           <p className="text-sm text-gray-300">{tempDisplay}</p>
                           {(catalogData.optimalHumidityMin || catalogData.optimalHumidityMax) && (
-                            <p className="text-xs text-gray-400 mt-1">
+                            <p className="text-xs text-[var(--text-secondary)] mt-1">
                               Humidité: {catalogData.optimalHumidityMin}-{catalogData.optimalHumidityMax}%
                             </p>
                           )}
@@ -297,10 +297,10 @@ export const PlantLibraryDetailsDialogModern: React.FC<PlantLibraryDetailsDialog
 
                       {/* Espace */}
                       {(catalogData.spaceRequiredWidth || catalogData.spaceRequiredHeight) && (
-                        <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-white/10 hover:border-[#2AD368]/30 transition-all">
+                        <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-[var(--border-color)] hover:border-[#2AD368]/30 transition-all">
                           <div className="flex items-center gap-2 mb-2">
                             <span className="material-symbols-outlined text-[#2AD368]">straighten</span>
-                            <h4 className="font-bold text-white">Espace requis</h4>
+                            <h4 className="font-bold text-[var(--text-primary)]">Espace requis</h4>
                           </div>
                           <p className="text-sm text-gray-300">
                             {catalogData.spaceRequiredWidth} × {catalogData.spaceRequiredHeight} cm
@@ -313,7 +313,7 @@ export const PlantLibraryDetailsDialogModern: React.FC<PlantLibraryDetailsDialog
                   {/* Plantes compagnes */}
                   {companions.length > 0 && (
                     <div>
-                      <h4 className="font-bold text-white mb-3">Plantes compagnes</h4>
+                      <h4 className="font-bold text-[var(--text-primary)] mb-3">Plantes compagnes</h4>
                       <div className="flex flex-wrap gap-2">
                         {companions.map((companion, index) => (
                           <span
@@ -336,12 +336,12 @@ export const PlantLibraryDetailsDialogModern: React.FC<PlantLibraryDetailsDialog
                     <>
                       <div className="flex items-center gap-2 mb-4">
                         <span className="material-symbols-outlined text-[#2AD368]">spa</span>
-                        <h3 className="text-lg font-bold text-white">Instructions de soin</h3>
+                        <h3 className="text-lg font-bold text-[var(--text-primary)]">Instructions de soin</h3>
                       </div>
                       {careInstructions.map((instruction, index) => (
                         <div
                           key={index}
-                          className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-white/10 border-l-4 border-l-[#2AD368]"
+                          className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-[var(--border-color)] border-l-4 border-l-[#2AD368]"
                         >
                           <div className="flex gap-3">
                             <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[#2AD368]/20 text-[#2AD368] flex items-center justify-center text-sm font-bold">
@@ -355,7 +355,7 @@ export const PlantLibraryDetailsDialogModern: React.FC<PlantLibraryDetailsDialog
                   ) : (
                     <div className="text-center py-12">
                       <span className="material-symbols-outlined text-gray-500 text-6xl mb-4">spa</span>
-                      <p className="text-gray-400">Aucune instruction de soin disponible</p>
+                      <p className="text-[var(--text-secondary)]">Aucune instruction de soin disponible</p>
                     </div>
                   )}
                 </div>
@@ -371,13 +371,13 @@ export const PlantLibraryDetailsDialogModern: React.FC<PlantLibraryDetailsDialog
                         <div>
                           <div className="flex items-center gap-2 mb-4">
                             <span className="material-symbols-outlined text-[#2AD368]">bug_report</span>
-                            <h3 className="text-lg font-bold text-white">Problèmes courants</h3>
+                            <h3 className="text-lg font-bold text-[var(--text-primary)]">Problèmes courants</h3>
                           </div>
                           <div className="space-y-3">
                             {commonProblems.map((problem, index) => (
                               <div
                                 key={index}
-                                className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-white/10"
+                                className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-[var(--border-color)]"
                               >
                                 <p className="text-gray-300 leading-relaxed">• {problem}</p>
                               </div>
@@ -389,12 +389,12 @@ export const PlantLibraryDetailsDialogModern: React.FC<PlantLibraryDetailsDialog
                       {/* Parasites */}
                       {pests.length > 0 && (
                         <div>
-                          <h4 className="font-bold text-white mb-3">Parasites à surveiller</h4>
+                          <h4 className="font-bold text-[var(--text-primary)] mb-3">Parasites à surveiller</h4>
                           <div className="flex flex-wrap gap-2">
                             {pests.map((pest, index) => (
                               <span
                                 key={index}
-                                className="px-3 py-1.5 rounded-xl glass-card backdrop-blur-xl border border-white/10 text-gray-300 text-sm"
+                                className="px-3 py-1.5 rounded-xl glass-card backdrop-blur-xl border border-[var(--border-color)] text-gray-300 text-sm"
                               >
                                 {pest}
                               </span>
@@ -406,7 +406,7 @@ export const PlantLibraryDetailsDialogModern: React.FC<PlantLibraryDetailsDialog
                   ) : (
                     <div className="text-center py-12">
                       <span className="material-symbols-outlined text-gray-500 text-6xl mb-4">bug_report</span>
-                      <p className="text-gray-400">Aucune information sur les problèmes disponible</p>
+                      <p className="text-[var(--text-secondary)]">Aucune information sur les problèmes disponible</p>
                     </div>
                   )}
                 </div>
@@ -417,22 +417,22 @@ export const PlantLibraryDetailsDialogModern: React.FC<PlantLibraryDetailsDialog
                 <div className="space-y-4">
                   <div className="flex items-center gap-2 mb-4">
                     <span className="material-symbols-outlined text-[#2AD368]">agriculture</span>
-                    <h3 className="text-lg font-bold text-white">Informations de récolte</h3>
+                    <h3 className="text-lg font-bold text-[var(--text-primary)]">Informations de récolte</h3>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {/* Durée de croissance */}
                     {catalogData.totalGrowthDays && (
-                      <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-white/10">
-                        <p className="text-xs text-gray-400 uppercase tracking-wider mb-2">Durée de croissance</p>
+                      <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-[var(--border-color)]">
+                        <p className="text-xs text-[var(--text-secondary)] uppercase tracking-wider mb-2">Durée de croissance</p>
                         <p className="text-2xl font-bold text-[#2AD368]">{catalogData.totalGrowthDays} jours</p>
                       </div>
                     )}
 
                     {/* Rendement */}
                     {yieldDisplay && (
-                      <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-white/10">
-                        <p className="text-xs text-gray-400 uppercase tracking-wider mb-2">Rendement attendu</p>
+                      <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-[var(--border-color)]">
+                        <p className="text-xs text-[var(--text-secondary)] uppercase tracking-wider mb-2">Rendement attendu</p>
                         <p className="text-2xl font-bold text-[#2AD368]">{yieldDisplay}</p>
                       </div>
                     )}
@@ -440,8 +440,8 @@ export const PlantLibraryDetailsDialogModern: React.FC<PlantLibraryDetailsDialog
 
                   {/* Saisons optimales */}
                   {catalogData.optimalSeasons && parseArrayField(catalogData.optimalSeasons).length > 0 && (
-                    <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-white/10">
-                      <p className="text-xs text-gray-400 uppercase tracking-wider mb-3">Saisons optimales</p>
+                    <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-[var(--border-color)]">
+                      <p className="text-xs text-[var(--text-secondary)] uppercase tracking-wider mb-3">Saisons optimales</p>
                       <div className="flex flex-wrap gap-2">
                         {parseArrayField(catalogData.optimalSeasons).map((season, index) => (
                           <span

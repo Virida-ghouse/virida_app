@@ -100,7 +100,7 @@ const RegisterFormNew: React.FC<RegisterFormNewProps> = ({
   return (
     <div>
       {/* Header */}
-      <div className="text-center mb-8">
+      <div className="text-[var(--text-primary)] mb-8">
         <div className="flex items-center justify-center gap-2 mb-3">
           <img 
             src="/src/virida_logo.PNG" 
@@ -108,12 +108,12 @@ const RegisterFormNew: React.FC<RegisterFormNewProps> = ({
             className="size-12 rounded-xl object-contain"
           />
           <h1 className="text-4xl font-black">
-            <span className="text-white">Vir</span>
+            <span className="text-[var(--text-primary)]">Vir</span>
             <span className="text-[#2AD368]">ida</span>
             <span className="text-[#2AD368]">.</span>
           </h1>
         </div>
-        <p className="text-gray-400 text-sm">
+        <p className="text-[var(--text-secondary)] text-sm">
           Créez votre compte pour accéder à votre serre
         </p>
       </div>
@@ -123,11 +123,11 @@ const RegisterFormNew: React.FC<RegisterFormNewProps> = ({
         {/* First Name & Last Name */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-semibold text-gray-300 mb-2">
+            <label className="block text-sm font-semibold text-[var(--text-secondary)] mb-2">
               Prénom
             </label>
             <div className="relative">
-              <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xl">
+              <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-secondary)] text-xl">
                 person
               </span>
               <input
@@ -136,8 +136,8 @@ const RegisterFormNew: React.FC<RegisterFormNewProps> = ({
                 onChange={handleChange('firstName')}
                 disabled={isLoading}
                 className={`w-full pl-12 pr-4 py-3 bg-white/5 border ${
-                  validationErrors.firstName ? 'border-red-500' : 'border-white/10'
-                } rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-[#2AD368] focus:ring-2 focus:ring-[#2AD368]/20 transition-all disabled:opacity-50`}
+                  validationErrors.firstName ? 'border-red-500' : 'border-[var(--border-color)]'
+                } rounded-xl text-[var(--text-primary)] placeholder-gray-500 focus:outline-none focus:border-[#2AD368] focus:ring-2 focus:ring-[#2AD368]/20 transition-all disabled:opacity-50`}
                 placeholder="John"
               />
             </div>
@@ -147,11 +147,11 @@ const RegisterFormNew: React.FC<RegisterFormNewProps> = ({
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-300 mb-2">
+            <label className="block text-sm font-semibold text-[var(--text-secondary)] mb-2">
               Nom
             </label>
             <div className="relative">
-              <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xl">
+              <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-secondary)] text-xl">
                 badge
               </span>
               <input
@@ -160,8 +160,8 @@ const RegisterFormNew: React.FC<RegisterFormNewProps> = ({
                 onChange={handleChange('lastName')}
                 disabled={isLoading}
                 className={`w-full pl-12 pr-4 py-3 bg-white/5 border ${
-                  validationErrors.lastName ? 'border-red-500' : 'border-white/10'
-                } rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-[#2AD368] focus:ring-2 focus:ring-[#2AD368]/20 transition-all disabled:opacity-50`}
+                  validationErrors.lastName ? 'border-red-500' : 'border-[var(--border-color)]'
+                } rounded-xl text-[var(--text-primary)] placeholder-gray-500 focus:outline-none focus:border-[#2AD368] focus:ring-2 focus:ring-[#2AD368]/20 transition-all disabled:opacity-50`}
                 placeholder="Doe"
               />
             </div>
@@ -173,11 +173,11 @@ const RegisterFormNew: React.FC<RegisterFormNewProps> = ({
 
         {/* Email */}
         <div>
-          <label className="block text-sm font-semibold text-gray-300 mb-2">
+          <label className="block text-sm font-semibold text-[var(--text-secondary)] mb-2">
             Email
           </label>
           <div className="relative">
-            <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xl">
+            <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-secondary)] text-xl">
               mail
             </span>
             <input
@@ -186,8 +186,8 @@ const RegisterFormNew: React.FC<RegisterFormNewProps> = ({
               onChange={handleChange('email')}
               disabled={isLoading}
               className={`w-full pl-12 pr-4 py-3 bg-white/5 border ${
-                validationErrors.email ? 'border-red-500' : 'border-white/10'
-              } rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-[#2AD368] focus:ring-2 focus:ring-[#2AD368]/20 transition-all disabled:opacity-50`}
+                validationErrors.email ? 'border-red-500' : 'border-[var(--border-color)]'
+              } rounded-xl text-[var(--text-primary)] placeholder-gray-500 focus:outline-none focus:border-[#2AD368] focus:ring-2 focus:ring-[#2AD368]/20 transition-all disabled:opacity-50`}
               placeholder="john.doe@example.com"
             />
           </div>
@@ -198,11 +198,11 @@ const RegisterFormNew: React.FC<RegisterFormNewProps> = ({
 
         {/* Password */}
         <div>
-          <label className="block text-sm font-semibold text-gray-300 mb-2">
+          <label className="block text-sm font-semibold text-[var(--text-secondary)] mb-2">
             Mot de passe
           </label>
           <div className="relative">
-            <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xl">
+            <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-secondary)] text-xl">
               lock
             </span>
             <input
@@ -211,15 +211,15 @@ const RegisterFormNew: React.FC<RegisterFormNewProps> = ({
               onChange={handleChange('password')}
               disabled={isLoading}
               className={`w-full pl-12 pr-12 py-3 bg-white/5 border ${
-                validationErrors.password ? 'border-red-500' : 'border-white/10'
-              } rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-[#2AD368] focus:ring-2 focus:ring-[#2AD368]/20 transition-all disabled:opacity-50`}
+                validationErrors.password ? 'border-red-500' : 'border-[var(--border-color)]'
+              } rounded-xl text-[var(--text-primary)] placeholder-gray-500 focus:outline-none focus:border-[#2AD368] focus:ring-2 focus:ring-[#2AD368]/20 transition-all disabled:opacity-50`}
               placeholder="••••••••"
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
               disabled={isLoading}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
             >
               <span className="material-symbols-outlined text-xl">
                 {showPassword ? 'visibility_off' : 'visibility'}
@@ -233,11 +233,11 @@ const RegisterFormNew: React.FC<RegisterFormNewProps> = ({
 
         {/* Confirm Password */}
         <div>
-          <label className="block text-sm font-semibold text-gray-300 mb-2">
+          <label className="block text-sm font-semibold text-[var(--text-secondary)] mb-2">
             Confirmer le mot de passe
           </label>
           <div className="relative">
-            <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xl">
+            <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-secondary)] text-xl">
               lock
             </span>
             <input
@@ -246,15 +246,15 @@ const RegisterFormNew: React.FC<RegisterFormNewProps> = ({
               onChange={handleChange('confirmPassword')}
               disabled={isLoading}
               className={`w-full pl-12 pr-12 py-3 bg-white/5 border ${
-                validationErrors.confirmPassword ? 'border-red-500' : 'border-white/10'
-              } rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-[#2AD368] focus:ring-2 focus:ring-[#2AD368]/20 transition-all disabled:opacity-50`}
+                validationErrors.confirmPassword ? 'border-red-500' : 'border-[var(--border-color)]'
+              } rounded-xl text-[var(--text-primary)] placeholder-gray-500 focus:outline-none focus:border-[#2AD368] focus:ring-2 focus:ring-[#2AD368]/20 transition-all disabled:opacity-50`}
               placeholder="••••••••"
             />
             <button
               type="button"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               disabled={isLoading}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
             >
               <span className="material-symbols-outlined text-xl">
                 {showConfirmPassword ? 'visibility_off' : 'visibility'}
@@ -279,9 +279,9 @@ const RegisterFormNew: React.FC<RegisterFormNewProps> = ({
                 }
               }}
               disabled={isLoading}
-              className="mt-1 size-4 rounded border-white/20 bg-white/5 text-[#2AD368] focus:ring-2 focus:ring-[#2AD368]/20 disabled:opacity-50"
+              className="mt-1 size-4 rounded border-[var(--border-color)] bg-[var(--glass-bg)] text-[#2AD368] focus:ring-2 focus:ring-[#2AD368]/20 disabled:opacity-50 accent-[#2AD368]"
             />
-            <span className="text-sm text-gray-400 group-hover:text-gray-300 transition-colors">
+            <span className="text-sm text-[var(--text-secondary)] group-hover:text-[var(--text-secondary)] transition-colors">
               J'accepte les{' '}
               <a href="#" className="text-[#2AD368] hover:underline">
                 conditions d'utilisation
@@ -317,8 +317,8 @@ const RegisterFormNew: React.FC<RegisterFormNewProps> = ({
         </button>
 
         {/* Toggle to Login */}
-        <div className="text-center pt-4">
-          <p className="text-gray-400 text-sm">
+        <div className="text-[var(--text-primary)] pt-4">
+          <p className="text-[var(--text-secondary)] text-sm">
             Déjà un compte ?{' '}
             <button
               type="button"

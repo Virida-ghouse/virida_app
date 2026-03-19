@@ -310,7 +310,7 @@ export const TaskDialogModern: React.FC<TaskDialogModernProps> = ({
           <button
             onClick={handleSave}
             disabled={loading || !title.trim()}
-            className="px-6 py-2.5 rounded-xl bg-[#2AD368] text-[#121A21] font-semibold hover:bg-[#1fc75c] transition-all disabled:opacity-50 flex items-center gap-2"
+            className="px-6 py-2.5 rounded-xl bg-[#2AD368] text-[var(--btn-primary-text)] font-semibold shadow-[0_8px_20px_rgba(42,211,104,0.5)] hover:shadow-[0_12px_30px_rgba(42,211,104,0.8)] hover:scale-105 transition-all disabled:opacity-50 flex items-center gap-2"
           >
             <span className="material-symbols-outlined text-lg">
               {loading ? 'progress_activity' : 'check'}

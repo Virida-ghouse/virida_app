@@ -52,7 +52,7 @@ export const PlantCardModern: React.FC<PlantCardModernProps> = ({
       onClick={() => onClick(plant.id)}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="glass-card backdrop-blur-xl rounded-3xl overflow-hidden border border-white/10 hover:border-[#2AD368]/30 transition-all duration-300 cursor-pointer hover:-translate-y-1 group"
+      className="glass-card backdrop-blur-xl rounded-3xl overflow-hidden border border-[var(--border-color)] hover:border-[#2AD368]/30 transition-all duration-300 cursor-pointer hover:-translate-y-1 group"
     >
       {/* Image */}
       <div className="relative h-48 bg-gradient-to-br from-[#1a1f26] to-[#0a0f14] overflow-hidden">
@@ -126,13 +126,13 @@ export const PlantCardModern: React.FC<PlantCardModernProps> = ({
       {/* Content */}
       <div className="p-4">
         {/* Name */}
-        <h3 className="text-lg font-bold text-white mb-2 truncate group-hover:text-[#2AD368] transition-colors">
+        <h3 className="text-lg font-bold text-[var(--text-primary)] mb-2 truncate group-hover:text-[#2AD368] transition-colors">
           {plant.name}
         </h3>
 
         {/* Species */}
         {plant.species && (
-          <p className="text-xs text-gray-400 italic mb-3 truncate">{plant.species}</p>
+          <p className="text-xs text-[var(--text-secondary)] italic mb-3 truncate">{plant.species}</p>
         )}
 
         {/* Difficulty & Days */}
@@ -157,7 +157,7 @@ export const PlantCardModern: React.FC<PlantCardModernProps> = ({
         {/* Health bar */}
         <div className="space-y-1">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-gray-400">Santé</span>
+            <span className="text-xs text-[var(--text-secondary)]">Santé</span>
             <span className="text-xs font-bold" style={{ color: healthColor }}>
               {plant.health}%
             </span>

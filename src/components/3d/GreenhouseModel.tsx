@@ -529,8 +529,8 @@ const GreenhouseWithPot = () => {
 const SceneContent = () => {
   return (
     <>
-      {/* Background sombre stylé - gris très foncé au lieu de noir pur */}
-      <color attach="background" args={['#1a1f26']} />
+      {/* Background adapté au thème - vert clair en light mode, sombre en dark mode */}
+      <color attach="background" args={[document.documentElement.classList.contains('dark') ? '#1a1f26' : '#f9fffa']} />
       
       {/* Lumière ambiante très faible pour le fond sombre */}
       <ambientLight intensity={0.4} />

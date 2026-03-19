@@ -187,7 +187,7 @@ const MyGardenNew: React.FC = () => {
   if (loading) {
     return (
       <div className="flex justify-center py-20">
-        <div className="w-16 h-16 border-4 border-[#2AD368]/30 border-t-[#2AD368] rounded-full animate-spin"></div>
+        <div className="w-16 h-16 border-4 border-[var(--border-color)] border-t-[#2AD368] rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -195,10 +195,10 @@ const MyGardenNew: React.FC = () => {
   // Erreur
   if (error) {
     return (
-      <div className="p-4 glass-card backdrop-blur-xl rounded-2xl border border-red-500/30 bg-red-500/10">
+      <div className="p-4 glass-card backdrop-blur-xl rounded-2xl border border-red-500/30 bg-black/5 dark:bg-white/5d-500/10">
         <div className="flex items-center gap-3">
-          <span className="material-symbols-outlined text-red-400">error</span>
-          <p className="text-red-400 font-medium">{error}</p>
+          <span className="material-symbols-outlined text-[var(--text-secondary)]">error</span>
+          <p className="text-[var(--text-secondary)] font-medium">{error}</p>
         </div>
       </div>
     );
@@ -208,19 +208,19 @@ const MyGardenNew: React.FC = () => {
   if (userPlants.length === 0) {
     return (
       <div>
-        <div className="glass-card backdrop-blur-xl rounded-3xl p-12 text-center border border-white/10">
+        <div className="glass-card backdrop-blur-xl rounded-3xl p-12 text-center border border-[var(--border-color)]">
           <div className="mb-6">
             <span className="text-8xl">🌱</span>
           </div>
-          <h3 className="text-2xl font-bold text-white mb-3">
+          <h3 className="text-2xl font-bold text-[var(--text-primary)] mb-3">
             Votre jardin est vide
           </h3>
-          <p className="text-gray-400 mb-8 max-w-md mx-auto">
+          <p className="text-[var(--text-secondary)] mb-8 max-w-md mx-auto">
             Commencez votre culture en ajoutant une plante depuis la bibliothèque. Suivez sa croissance et recevez des conseils personnalisés.
           </p>
           <button
             onClick={handleAddPlant}
-            className="px-6 py-3 bg-[#2AD368] hover:bg-[#1fc75c] text-[#121A21] font-bold rounded-xl transition-all shadow-[0_8px_30px_rgba(42,211,104,0.4)] hover:shadow-[0_12px_40px_rgba(42,211,104,0.6)] hover:scale-105 flex items-center gap-2 mx-auto"
+            className="px-6 py-3 bg-[#2AD368] hover:bg-black/5 dark:hover:bg-white/10fc75c] text-[#121A21] fontbg-[var(--bg-primary)] dark:bg-background-dark-xl transition-all shadow-[0_8px_30px_rgba(42,211,104,0.4)] hover:shadow-[0_12px_40px_rgba(42,211,104,0.6)] hover:scale-105 flex items-center gap-2 mx-auto"
           >
             <span className="material-symbols-outlined">add</span>
             Ajouter ma première plante
@@ -241,16 +241,16 @@ const MyGardenNew: React.FC = () => {
     <div>
       {/* Stats */}
       <div className="grid grid-cols-3 gap-3 md:gap-4 mb-6">
-        <div className="glass-card backdrop-blur-xl rounded-2xl p-3 md:p-4 border border-white/10">
-          <p className="text-gray-400 text-[10px] md:text-xs font-semibold uppercase mb-1">Total</p>
-          <p className="text-2xl md:text-3xl font-black text-white">{totalPlants}</p>
+        <div className="glass-card backdrop-blur-xl rounded-2xl p-3 md:p-4 border border-[var(--border-color)]">
+          <p className="text-[var(--text-secondary)] text-[10px] md:text-xs font-semibold uppercase mb-1">Total</p>
+          <p className="text-2xl md:text-3xl font-black text-[var(--text-primary)]">{totalPlants}</p>
         </div>
-        <div className="glass-card backdrop-blur-xl rounded-2xl p-3 md:p-4 border border-white/10">
-          <p className="text-gray-400 text-[10px] md:text-xs font-semibold uppercase mb-1 truncate">Croissance</p>
+        <div className="glass-card backdrop-blur-xl rounded-2xl p-3 md:p-4 border border-[var(--border-color)]">
+          <p className="text-[var(--text-secondary)] text-[10px] md:text-xs font-semibold uppercase mb-1 truncate">Croissance</p>
           <p className="text-2xl md:text-3xl font-black text-[#2AD368]">{activePlants}</p>
         </div>
-        <div className="glass-card backdrop-blur-xl rounded-2xl p-3 md:p-4 border border-white/10">
-          <p className="text-gray-400 text-[10px] md:text-xs font-semibold uppercase mb-1">Prêtes</p>
+        <div className="glass-card backdrop-blur-xl rounded-2xl p-3 md:p-4 border border-[var(--border-color)]">
+          <p className="text-[var(--text-secondary)] text-[10px] md:text-xs font-semibold uppercase mb-1">Prêtes</p>
           <p className="text-2xl md:text-3xl font-black text-[#CBED62]">{readyToHarvest}</p>
         </div>
       </div>
@@ -262,7 +262,7 @@ const MyGardenNew: React.FC = () => {
           className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
             currentFilter === 'all'
               ? 'bg-[#2AD368] text-[#121A21]'
-              : 'glass-card backdrop-blur-xl text-gray-400 hover:text-white border border-white/10'
+              : 'glass-card backdrop-blur-xl text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-[var(--border-color)]'
           }`}
         >
           Toutes ({totalPlants})
@@ -272,7 +272,7 @@ const MyGardenNew: React.FC = () => {
           className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
             currentFilter === 'active'
               ? 'bg-[#2AD368] text-[#121A21]'
-              : 'glass-card backdrop-blur-xl text-gray-400 hover:text-white border border-white/10'
+              : 'glass-card backdrop-blur-xl text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-[var(--border-color)]'
           }`}
         >
           En croissance ({activePlants})
@@ -282,7 +282,7 @@ const MyGardenNew: React.FC = () => {
           className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
             currentFilter === 'ready'
               ? 'bg-[#2AD368] text-[#121A21]'
-              : 'glass-card backdrop-blur-xl text-gray-400 hover:text-white border border-white/10'
+              : 'glass-card backdrop-blur-xl text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-[var(--border-color)]'
           }`}
         >
           Prêtes ({readyToHarvest})

@@ -69,7 +69,7 @@ const LoginFormNew: React.FC<LoginFormNewProps> = ({ onToggleMode, onError }) =>
   return (
     <div className="w-full max-w-md">
       {/* Logo et Titre */}
-      <div className="text-center mb-10">
+      <div className="text-[var(--text-primary)] text-white mb-10">
         <div className="flex items-center justify-center gap-3 mb-6">
           <img 
             src="/src/virida_logo.PNG" 
@@ -77,15 +77,15 @@ const LoginFormNew: React.FC<LoginFormNewProps> = ({ onToggleMode, onError }) =>
             className="size-12 object-contain"
           />
           <h1 className="text-4xl font-black">
-            <span className="text-white">Vir</span>
+            <span className="text-[var(--text-primary)]">Vir</span>
             <span className="text-[#2AD368]">ida</span>
             <span className="text-[#2AD368]">.</span>
           </h1>
         </div>
-        <h2 className="text-2xl font-bold text-white mb-2">
+        <h2 className="text-2xl font-bold text-[var(--text-primary)] mb-2">
           Bienvenue !
         </h2>
-        <p className="text-gray-400">
+        <p className="text-[var(--text-secondary)]">
           Connectez-vous pour gérer votre serre intelligente
         </p>
       </div>
@@ -94,11 +94,11 @@ const LoginFormNew: React.FC<LoginFormNewProps> = ({ onToggleMode, onError }) =>
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Email */}
         <div>
-          <label className="block text-sm font-semibold text-gray-300 mb-2">
+          <label className="block text-sm font-semibold text-[var(--text-secondary)] mb-2">
             Email
           </label>
           <div className="relative">
-            <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">
+            <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-secondary)]">
               mail
             </span>
             <input
@@ -107,10 +107,10 @@ const LoginFormNew: React.FC<LoginFormNewProps> = ({ onToggleMode, onError }) =>
               value={formData.email}
               onChange={handleChange}
               placeholder="votre@email.com"
-              className={`w-full pl-12 pr-4 py-3 glass-card backdrop-blur-xl rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 transition-all ${
+              className={`w-full pl-12 pr-4 py-3 glass-card backdrop-blur-xl rounded-xl text-[var(--text-primary)] placeholder-gray-500 focus:outline-none focus:ring-2 transition-all ${
                 errors.email 
                   ? 'border-red-500 focus:ring-red-500/50' 
-                  : 'border-white/20 focus:ring-[#2AD368]/50'
+                  : 'border-[var(--border-color)] focus:ring-[#2AD368]/50'
               }`}
             />
           </div>
@@ -121,11 +121,11 @@ const LoginFormNew: React.FC<LoginFormNewProps> = ({ onToggleMode, onError }) =>
 
         {/* Mot de passe */}
         <div>
-          <label className="block text-sm font-semibold text-gray-300 mb-2">
+          <label className="block text-sm font-semibold text-[var(--text-secondary)] mb-2">
             Mot de passe
           </label>
           <div className="relative">
-            <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">
+            <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-secondary)]">
               lock
             </span>
             <input
@@ -134,16 +134,16 @@ const LoginFormNew: React.FC<LoginFormNewProps> = ({ onToggleMode, onError }) =>
               value={formData.password}
               onChange={handleChange}
               placeholder="••••••••"
-              className={`w-full pl-12 pr-12 py-3 glass-card backdrop-blur-xl rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 transition-all ${
+              className={`w-full pl-12 pr-12 py-3 glass-card backdrop-blur-xl rounded-xl text-[var(--text-primary)] placeholder-gray-500 focus:outline-none focus:ring-2 transition-all ${
                 errors.password 
                   ? 'border-red-500 focus:ring-red-500/50' 
-                  : 'border-white/20 focus:ring-[#2AD368]/50'
+                  : 'border-[var(--border-color)] focus:ring-[#2AD368]/50'
               }`}
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white transition-colors"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[var(--text-primary)] transition-colors"
             >
               <span className="material-symbols-outlined">
                 {showPassword ? 'visibility_off' : 'visibility'}
@@ -172,8 +172,8 @@ const LoginFormNew: React.FC<LoginFormNewProps> = ({ onToggleMode, onError }) =>
         </button>
 
         {/* Lien inscription */}
-        <div className="text-center">
-          <p className="text-gray-400 text-sm">
+        <div className="text-[var(--text-primary)] text-white">
+          <p className="text-[var(--text-secondary)] text-sm">
             Pas encore de compte ?{' '}
             <button
               type="button"
@@ -188,7 +188,7 @@ const LoginFormNew: React.FC<LoginFormNewProps> = ({ onToggleMode, onError }) =>
 
       {/* Démo rapide */}
       <div className="mt-8 p-4 glass-card backdrop-blur-xl rounded-xl border border-[#2AD368]/30">
-        <p className="text-xs text-gray-400 text-center mb-2">
+        <p className="text-xs text-[var(--text-primary)] mb-2">
           <span className="text-[#2AD368] font-semibold">Démo rapide :</span> admin@virida.com / admin123
         </p>
       </div>

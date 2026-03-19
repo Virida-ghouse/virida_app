@@ -117,7 +117,7 @@ export const SensorsNew: React.FC = () => {
       case 'active': return 'text-green-400 bg-green-400/20';
       case 'warning': return 'text-yellow-400 bg-yellow-400/20';
       case 'error': return 'text-red-400 bg-red-400/20';
-      default: return 'text-gray-400 bg-gray-400/20';
+      default: return 'text-[var(--text-secondary)] bg-gray-400/20';
     }
   };
 
@@ -226,12 +226,12 @@ export const SensorsNew: React.FC = () => {
         <div className="mb-6 md:mb-8">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">Gestion des Capteurs</h1>
-              <p className="text-gray-400">Surveillez et gérez vos capteurs IoT</p>
+              <h1 className="text-2xl md:text-3xl font-bold text-[var(--text-primary)] mb-2">Gestion des Capteurs</h1>
+              <p className="text-[var(--text-secondary)]">Surveillez et gérez vos capteurs IoT</p>
             </div>
             <button
               onClick={handleAddSensor}
-              className="px-4 md:px-6 py-2.5 md:py-3 rounded-xl bg-[#2AD368] hover:bg-[#1fc75c] text-white font-semibold transition-all flex items-center justify-center gap-2 shadow-lg shadow-[#2AD368]/20"
+              className="px-4 md:px-6 py-2.5 md:py-3 rounded-xl bg-[#2AD368] hover:bg-[#1fc75c] text-[var(--text-primary)] font-semibold transition-all flex items-center justify-center gap-2 shadow-lg shadow-[#2AD368]/20"
             >
               <span className="material-symbols-outlined">add</span>
               <span>Ajouter un capteur</span>
@@ -241,54 +241,54 @@ export const SensorsNew: React.FC = () => {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-white/10">
+          <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-[var(--border-color)]">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-xl bg-green-400/20 flex items-center justify-center">
                 <span className="material-symbols-outlined text-green-400 text-2xl">sensors</span>
               </div>
               <div>
-                <p className="text-gray-400 text-sm">Total Capteurs</p>
-                <p className="text-2xl font-bold text-white">{sensors.length}</p>
+                <p className="text-[var(--text-secondary)] text-sm">Total Capteurs</p>
+                <p className="text-2xl font-bold text-[var(--text-primary)]">{sensors.length}</p>
               </div>
             </div>
           </div>
 
-          <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-white/10">
+          <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-[var(--border-color)]">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-xl bg-green-400/20 flex items-center justify-center">
                 <span className="material-symbols-outlined text-green-400 text-2xl">check_circle</span>
               </div>
               <div>
-                <p className="text-gray-400 text-sm">Actifs</p>
-                <p className="text-2xl font-bold text-white">
+                <p className="text-[var(--text-secondary)] text-sm">Actifs</p>
+                <p className="text-2xl font-bold text-[var(--text-primary)]">
                   {sensors.filter((s) => s.status === 'active').length}
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-white/10">
+          <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-[var(--border-color)]">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-xl bg-yellow-400/20 flex items-center justify-center">
                 <span className="material-symbols-outlined text-yellow-400 text-2xl">warning</span>
               </div>
               <div>
-                <p className="text-gray-400 text-sm">Alertes</p>
-                <p className="text-2xl font-bold text-white">
+                <p className="text-[var(--text-secondary)] text-sm">Alertes</p>
+                <p className="text-2xl font-bold text-[var(--text-primary)]">
                   {sensors.filter((s) => s.status === 'warning').length}
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-white/10">
+          <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-[var(--border-color)]">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-xl bg-blue-400/20 flex items-center justify-center">
                 <span className="material-symbols-outlined text-blue-400 text-2xl">battery_charging_full</span>
               </div>
               <div>
-                <p className="text-gray-400 text-sm">Batterie Moy.</p>
-                <p className="text-2xl font-bold text-white">
+                <p className="text-[var(--text-secondary)] text-sm">Batterie Moy.</p>
+                <p className="text-2xl font-bold text-[var(--text-primary)]">
                   {sensors.length > 0
                     ? Math.round(sensors.reduce((acc, s) => acc + s.batteryLevel, 0) / sensors.length)
                     : 0}%
@@ -299,18 +299,18 @@ export const SensorsNew: React.FC = () => {
         </div>
 
         {/* Sensors Table */}
-        <div className="glass-card backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden">
+        <div className="glass-card backdrop-blur-xl rounded-2xl border border-[var(--border-color)] overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-white/10">
-                  <th className="text-left p-4 text-gray-400 font-semibold">Capteur</th>
-                  <th className="text-left p-4 text-gray-400 font-semibold hidden md:table-cell">Localisation</th>
-                  <th className="text-left p-4 text-gray-400 font-semibold">Valeur</th>
-                  <th className="text-left p-4 text-gray-400 font-semibold hidden lg:table-cell">Batterie</th>
-                  <th className="text-left p-4 text-gray-400 font-semibold hidden lg:table-cell">Signal</th>
-                  <th className="text-left p-4 text-gray-400 font-semibold hidden sm:table-cell">Statut</th>
-                  <th className="text-left p-4 text-gray-400 font-semibold">Actions</th>
+                <tr className="border-b border-[var(--border-color)]">
+                  <th className="text-left p-4 text-[var(--text-secondary)] font-semibold">Capteur</th>
+                  <th className="text-left p-4 text-[var(--text-secondary)] font-semibold hidden md:table-cell">Localisation</th>
+                  <th className="text-left p-4 text-[var(--text-secondary)] font-semibold">Valeur</th>
+                  <th className="text-left p-4 text-[var(--text-secondary)] font-semibold hidden lg:table-cell">Batterie</th>
+                  <th className="text-left p-4 text-[var(--text-secondary)] font-semibold hidden lg:table-cell">Signal</th>
+                  <th className="text-left p-4 text-[var(--text-secondary)] font-semibold hidden sm:table-cell">Statut</th>
+                  <th className="text-left p-4 text-[var(--text-secondary)] font-semibold">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -324,7 +324,7 @@ export const SensorsNew: React.FC = () => {
                   </tr>
                 ) : sensors.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="p-8 text-center text-gray-400">
+                    <td colSpan={7} className="p-8 text-center text-[var(--text-secondary)]">
                       Aucun capteur configuré
                     </td>
                   </tr>
@@ -345,15 +345,15 @@ export const SensorsNew: React.FC = () => {
                             </span>
                           </div>
                           <div>
-                            <p className="text-white font-semibold">{sensor.name}</p>
-                            <p className="text-xs text-gray-400">{sensorTypes[sensor.type].label}</p>
+                            <p className="text-[var(--text-primary)] font-semibold">{sensor.name}</p>
+                            <p className="text-xs text-[var(--text-secondary)]">{sensorTypes[sensor.type].label}</p>
                           </div>
                         </div>
                       </td>
-                      <td className="p-4 text-gray-300 hidden md:table-cell">{sensor.location}</td>
+                      <td className="p-4 text-[var(--text-secondary)] hidden md:table-cell">{sensor.location}</td>
                       <td className="p-4">
                         <div>
-                          <p className="text-white font-semibold">
+                          <p className="text-[var(--text-primary)] font-semibold">
                             {sensor.value} {sensor.unit}
                           </p>
                           <div className="w-full bg-white/10 rounded-full h-1 mt-1">
@@ -369,7 +369,7 @@ export const SensorsNew: React.FC = () => {
                           <span className={`material-symbols-outlined ${getBatteryColor(sensor.batteryLevel)}`}>
                             battery_charging_full
                           </span>
-                          <span className="text-gray-300">{sensor.batteryLevel}%</span>
+                          <span className="text-[var(--text-secondary)]">{sensor.batteryLevel}%</span>
                         </div>
                       </td>
                       <td className="p-4 hidden lg:table-cell">
@@ -377,7 +377,7 @@ export const SensorsNew: React.FC = () => {
                           <span className={`material-symbols-outlined ${getSignalColor(sensor.signalStrength)}`}>
                             signal_cellular_alt
                           </span>
-                          <span className="text-gray-300">{sensor.signalStrength}%</span>
+                          <span className="text-[var(--text-secondary)]">{sensor.signalStrength}%</span>
                         </div>
                       </td>
                       <td className="p-4 hidden sm:table-cell">
@@ -389,21 +389,21 @@ export const SensorsNew: React.FC = () => {
                         <div className="flex items-center gap-1">
                           <button
                             onClick={() => handleCalibrateSensor(sensor.id)}
-                            className="p-2 hover:bg-white/10 rounded-lg transition-colors text-blue-400"
+                            className="p-2 hover:bg-black/5 dark:hover:bg-white/10 rounded-lg transition-colors text-blue-400"
                             title="Calibrer"
                           >
                             <span className="material-symbols-outlined text-lg">refresh</span>
                           </button>
                           <button
                             onClick={() => handleEditSensor(sensor)}
-                            className="p-2 hover:bg-white/10 rounded-lg transition-colors text-gray-400"
+                            className="p-2 hover:bg-black/5 dark:hover:bg-white/10 rounded-lg transition-colors text-[var(--text-secondary)]"
                             title="Modifier"
                           >
                             <span className="material-symbols-outlined text-lg">edit</span>
                           </button>
                           <button
                             onClick={() => handleDeleteSensor(sensor.id)}
-                            className="p-2 hover:bg-white/10 rounded-lg transition-colors text-red-400"
+                            className="p-2 hover:bg-black/5 dark:hover:bg-white/10 rounded-lg transition-colors text-red-400"
                             title="Supprimer"
                           >
                             <span className="material-symbols-outlined text-lg">delete</span>
@@ -424,8 +424,8 @@ export const SensorsNew: React.FC = () => {
         <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
           <div className="glass-card backdrop-blur-xl rounded-3xl w-full max-w-md border-2 border-[#2AD368]/20 shadow-2xl">
             {/* Header */}
-            <div className="border-b border-white/10 p-6 bg-gradient-to-r from-[#052E1C] to-[#121A21]">
-              <h2 className="text-xl font-bold text-white">
+            <div className="border-b border-[var(--border-color)] p-6 bg-gradient-to-r from-[#052E1C] to-[#121A21]">
+              <h2 className="text-xl font-bold text-[var(--text-primary)]">
                 {editingSensor ? 'Modifier le capteur' : 'Ajouter un capteur'}
               </h2>
             </div>
@@ -433,18 +433,18 @@ export const SensorsNew: React.FC = () => {
             {/* Content */}
             <div className="p-6 space-y-4">
               <div>
-                <label className="block text-sm font-semibold text-gray-300 mb-2">Nom du capteur</label>
+                <label className="block text-sm font-semibold text-[var(--text-secondary)] mb-2">Nom du capteur</label>
                 <input
                   type="text"
                   value={formData.name || ''}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl glass-card backdrop-blur-xl border border-white/10 text-white placeholder-gray-500 focus:border-[#2AD368] focus:outline-none transition-all"
+                  className="w-full px-4 py-2.5 rounded-xl glass-card backdrop-blur-xl border border-[var(--border-color)] text-[var(--text-primary)] placeholder-gray-500 focus:border-[#2AD368] focus:outline-none transition-all"
                   placeholder="Ex: Temp-01"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-300 mb-2">Type</label>
+                <label className="block text-sm font-semibold text-[var(--text-secondary)] mb-2">Type</label>
                 <select
                   value={formData.type || 'temperature'}
                   onChange={(e) =>
@@ -454,7 +454,7 @@ export const SensorsNew: React.FC = () => {
                       unit: sensorTypes[e.target.value as keyof typeof sensorTypes].units[0],
                     })
                   }
-                  className="w-full px-4 py-2.5 rounded-xl glass-card backdrop-blur-xl border border-white/10 text-white focus:border-[#2AD368] focus:outline-none transition-all"
+                  className="w-full px-4 py-2.5 rounded-xl glass-card backdrop-blur-xl border border-[var(--border-color)] text-[var(--text-primary)] focus:border-[#2AD368] focus:outline-none transition-all"
                 >
                   {Object.entries(sensorTypes).map(([type, data]) => (
                     <option key={type} value={type}>
@@ -465,11 +465,11 @@ export const SensorsNew: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-300 mb-2">Localisation</label>
+                <label className="block text-sm font-semibold text-[var(--text-secondary)] mb-2">Localisation</label>
                 <select
                   value={formData.location || ''}
                   onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl glass-card backdrop-blur-xl border border-white/10 text-white focus:border-[#2AD368] focus:outline-none transition-all"
+                  className="w-full px-4 py-2.5 rounded-xl glass-card backdrop-blur-xl border border-[var(--border-color)] text-[var(--text-primary)] focus:border-[#2AD368] focus:outline-none transition-all"
                 >
                   <option value="">Sélectionner...</option>
                   {locations.map((location) => (
@@ -481,11 +481,11 @@ export const SensorsNew: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-300 mb-2">Unité</label>
+                <label className="block text-sm font-semibold text-[var(--text-secondary)] mb-2">Unité</label>
                 <select
                   value={formData.unit || ''}
                   onChange={(e) => setFormData({ ...formData, unit: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl glass-card backdrop-blur-xl border border-white/10 text-white focus:border-[#2AD368] focus:outline-none transition-all"
+                  className="w-full px-4 py-2.5 rounded-xl glass-card backdrop-blur-xl border border-[var(--border-color)] text-[var(--text-primary)] focus:border-[#2AD368] focus:outline-none transition-all"
                 >
                   {formData.type &&
                     sensorTypes[formData.type].units.map((unit) => (
@@ -498,16 +498,16 @@ export const SensorsNew: React.FC = () => {
             </div>
 
             {/* Footer */}
-            <div className="border-t border-white/10 p-6 flex gap-3">
+            <div className="border-t border-[var(--border-color)] p-6 flex gap-3">
               <button
                 onClick={() => setOpenDialog(false)}
-                className="flex-1 px-4 py-2.5 rounded-xl glass-card backdrop-blur-xl border border-white/10 text-gray-300 font-semibold hover:text-white transition-all"
+                className="flex-1 px-4 py-2.5 rounded-xl glass-card backdrop-blur-xl border border-[var(--border-color)] text-[var(--text-secondary)] font-semibold hover:text-[var(--text-primary)] transition-all"
               >
                 Annuler
               </button>
               <button
                 onClick={handleSaveSensor}
-                className="flex-1 px-4 py-2.5 rounded-xl bg-[#2AD368] hover:bg-[#1fc75c] text-white font-semibold transition-all shadow-lg shadow-[#2AD368]/20"
+                className="flex-1 px-4 py-2.5 rounded-xl bg-[#2AD368] hover:bg-[#1fc75c] text-[var(--text-primary)] font-semibold transition-all shadow-lg shadow-[#2AD368]/20"
               >
                 {editingSensor ? 'Modifier' : 'Ajouter'}
               </button>

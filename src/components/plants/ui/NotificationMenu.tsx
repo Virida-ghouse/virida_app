@@ -201,8 +201,12 @@ export const NotificationMenu: React.FC = () => {
       <IconButton
         onClick={handleClick}
         sx={{
-          color: '#FFFFFF',
-          '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.1)' },
+          color: 'var(--text-primary)',
+          '&:hover': { bgcolor: 'rgba(0, 0, 0, 0.05)' },
+          '.dark &': {
+            color: '#FFFFFF',
+            '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.1)' },
+          },
         }}
       >
         <Badge badgeContent={urgentNotificationsCount} color="error">

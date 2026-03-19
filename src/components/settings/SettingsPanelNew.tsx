@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
+import { useTheme } from '../../contexts/ThemeContext';
 
 export default function SettingsPanelNew() {
   const { user, logout } = useAuth();
+  const { theme: currentTheme, setTheme } = useTheme();
   const [activeTab, setActiveTab] = useState('general');
   const [showSavedAlert, setShowSavedAlert] = useState(false);
 
@@ -68,7 +70,7 @@ export default function SettingsPanelNew() {
   };
 
   return (
-    <div className="flex-1 overflow-y-auto overflow-x-hidden bg-background-dark p-4 md:p-6 lg:p-8 pb-20 lg:pb-8">
+    <div className="flex-1 overflow-y-auto overflow-x-hidden bg-[var(--bg-primary)] dark:bg-background-dark p-4 md:p-6 lg:p-8 pb-20 lg:pb-8">
       {/* Header */}
       <div className="mb-6 md:mb-8">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4 md:mb-6">
@@ -79,10 +81,10 @@ export default function SettingsPanelNew() {
               </span>
             </div>
             <div className="min-w-0">
-              <h1 className="text-2xl md:text-3xl font-black text-white mb-1">
+              <h1 className="text-2xl md:text-3xl font-black text-[var(--text-primary)] mb-1">
                 Paramètres <span className="text-[#CBED62]">& Configuration</span>
               </h1>
-              <p className="text-gray-400 text-sm md:text-base">
+              <p className="text-[var(--text-secondary)] text-sm md:text-base">
                 Personnalisez votre expérience Virida
               </p>
             </div>
@@ -115,8 +117,8 @@ export default function SettingsPanelNew() {
             onClick={() => setActiveTab(tab.id)}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm whitespace-nowrap transition-all ${
               activeTab === tab.id
-                ? 'bg-[#2AD368] text-[#121A21]'
-                : 'glass-card backdrop-blur-xl text-gray-400 hover:text-white border border-white/10'
+                ? 'bg-[#2AD368] text-[var(--btn-primary-text)]'
+                : 'glass-card backdrop-blur-xl text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-[var(--border-color)]'
             }`}
           >
             <span className="material-symbols-outlined text-lg">{tab.icon}</span>
@@ -126,18 +128,18 @@ export default function SettingsPanelNew() {
       </div>
 
       {/* Tab Content */}
-      <div className="glass-card backdrop-blur-xl rounded-2xl border border-white/10">
+      <div className="glass-card backdrop-blur-xl rounded-2xl border border-[var(--border-color)]">
         {/* General Settings */}
         {activeTab === 'general' && (
           <div className="p-6 space-y-6">
-            <h2 className="text-xl font-bold text-white mb-4">Paramètres généraux</h2>
+            <h2 className="text-xl font-bold text-[var(--text-primary)] mb-4">Paramètres généraux</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-semibold text-gray-300 mb-2">Langue</label>
+                <label className="block text-sm font-semibold text-[var(--text-secondary)] mb-2">Langue</label>
                 <select
                   value={settings.general.language}
                   onChange={(e) => setSettings({ ...settings, general: { ...settings.general, language: e.target.value } })}
-                  className="w-full px-4 py-2.5 rounded-xl glass-card backdrop-blur-xl border border-white/10 text-white focus:border-[#2AD368] focus:outline-none transition-all"
+                  className="w-full px-4 py-2.5 rounded-xl glass-card backdrop-blur-xl border border-[var(--border-color)] text-[var(--text-primary)] focus:border-[#2AD368] focus:outline-none transition-all"
                 >
                   <option value="fr">Français</option>
                   <option value="en">English</option>
@@ -146,11 +148,11 @@ export default function SettingsPanelNew() {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-300 mb-2">Fuseau horaire</label>
+                <label className="block text-sm font-semibold text-[var(--text-secondary)] mb-2">Fuseau horaire</label>
                 <select
                   value={settings.general.timezone}
                   onChange={(e) => setSettings({ ...settings, general: { ...settings.general, timezone: e.target.value } })}
-                  className="w-full px-4 py-2.5 rounded-xl glass-card backdrop-blur-xl border border-white/10 text-white focus:border-[#2AD368] focus:outline-none transition-all"
+                  className="w-full px-4 py-2.5 rounded-xl glass-card backdrop-blur-xl border border-[var(--border-color)] text-[var(--text-primary)] focus:border-[#2AD368] focus:outline-none transition-all"
                 >
                   <option value="UTC+0">UTC+0</option>
                   <option value="UTC+1">UTC+1 (Paris)</option>
@@ -159,11 +161,11 @@ export default function SettingsPanelNew() {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-300 mb-2">Format de date</label>
+                <label className="block text-sm font-semibold text-[var(--text-secondary)] mb-2">Format de date</label>
                 <select
                   value={settings.general.dateFormat}
                   onChange={(e) => setSettings({ ...settings, general: { ...settings.general, dateFormat: e.target.value } })}
-                  className="w-full px-4 py-2.5 rounded-xl glass-card backdrop-blur-xl border border-white/10 text-white focus:border-[#2AD368] focus:outline-none transition-all"
+                  className="w-full px-4 py-2.5 rounded-xl glass-card backdrop-blur-xl border border-[var(--border-color)] text-[var(--text-primary)] focus:border-[#2AD368] focus:outline-none transition-all"
                 >
                   <option value="DD/MM/YYYY">DD/MM/YYYY</option>
                   <option value="MM/DD/YYYY">MM/DD/YYYY</option>
@@ -172,11 +174,11 @@ export default function SettingsPanelNew() {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-300 mb-2">Unité de température</label>
+                <label className="block text-sm font-semibold text-[var(--text-secondary)] mb-2">Unité de température</label>
                 <select
                   value={settings.general.temperatureUnit}
                   onChange={(e) => setSettings({ ...settings, general: { ...settings.general, temperatureUnit: e.target.value } })}
-                  className="w-full px-4 py-2.5 rounded-xl glass-card backdrop-blur-xl border border-white/10 text-white focus:border-[#2AD368] focus:outline-none transition-all"
+                  className="w-full px-4 py-2.5 rounded-xl glass-card backdrop-blur-xl border border-[var(--border-color)] text-[var(--text-primary)] focus:border-[#2AD368] focus:outline-none transition-all"
                 >
                   <option value="celsius">Celsius (°C)</option>
                   <option value="fahrenheit">Fahrenheit (°F)</option>
@@ -189,7 +191,7 @@ export default function SettingsPanelNew() {
         {/* Notifications Settings */}
         {activeTab === 'notifications' && (
           <div className="p-6 space-y-4">
-            <h2 className="text-xl font-bold text-white mb-4">Notifications</h2>
+            <h2 className="text-xl font-bold text-[var(--text-primary)] mb-4">Notifications</h2>
             
             {[
               { key: 'emailAlerts', label: 'Alertes par email', desc: 'Recevoir les alertes importantes par email' },
@@ -197,10 +199,10 @@ export default function SettingsPanelNew() {
               { key: 'dailyReports', label: 'Rapports quotidiens', desc: 'Recevoir un résumé quotidien' },
               { key: 'maintenanceAlerts', label: 'Alertes de maintenance', desc: 'Être notifié des maintenances' },
             ].map((item) => (
-              <div key={item.key} className="flex items-center justify-between p-4 glass-card backdrop-blur-xl rounded-xl border border-white/10">
+              <div key={item.key} className="flex items-center justify-between p-4 glass-card backdrop-blur-xl rounded-xl border border-[var(--border-color)]">
                 <div>
-                  <p className="text-sm font-semibold text-white">{item.label}</p>
-                  <p className="text-xs text-gray-500">{item.desc}</p>
+                  <p className="text-sm font-semibold text-[var(--text-primary)]">{item.label}</p>
+                  <p className="text-xs text-[var(--text-tertiary)]">{item.desc}</p>
                 </div>
                 <button
                   onClick={() => setSettings({
@@ -220,12 +222,12 @@ export default function SettingsPanelNew() {
               </div>
             ))}
 
-            <div className="p-4 glass-card backdrop-blur-xl rounded-xl border border-white/10">
-              <label className="block text-sm font-semibold text-white mb-3">Seuil d'alerte</label>
+            <div className="p-4 glass-card backdrop-blur-xl rounded-xl border border-[var(--border-color)]">
+              <label className="block text-sm font-semibold text-[var(--text-primary)] mb-3">Seuil d'alerte</label>
               <select
                 value={settings.notifications.alertThreshold}
                 onChange={(e) => setSettings({ ...settings, notifications: { ...settings.notifications, alertThreshold: e.target.value } })}
-                className="w-full px-4 py-2.5 rounded-xl glass-card backdrop-blur-xl border border-white/10 text-white focus:border-[#2AD368] focus:outline-none transition-all"
+                className="w-full px-4 py-2.5 rounded-xl glass-card backdrop-blur-xl border border-[var(--border-color)] text-[var(--text-primary)] focus:border-[#2AD368] focus:outline-none transition-all"
               >
                 <option value="low">Faible</option>
                 <option value="medium">Moyen</option>
@@ -238,12 +240,12 @@ export default function SettingsPanelNew() {
         {/* Security Settings */}
         {activeTab === 'security' && (
           <div className="p-6 space-y-4">
-            <h2 className="text-xl font-bold text-white mb-4">Sécurité</h2>
+            <h2 className="text-xl font-bold text-[var(--text-primary)] mb-4">Sécurité</h2>
             
-            <div className="flex items-center justify-between p-4 glass-card backdrop-blur-xl rounded-xl border border-white/10">
+            <div className="flex items-center justify-between p-4 glass-card backdrop-blur-xl rounded-xl border border-[var(--border-color)]">
               <div>
-                <p className="text-sm font-semibold text-white">Authentification à deux facteurs</p>
-                <p className="text-xs text-gray-500">Sécurité renforcée avec 2FA</p>
+                <p className="text-sm font-semibold text-[var(--text-primary)]">Authentification à deux facteurs</p>
+                <p className="text-xs text-[var(--text-tertiary)]">Sécurité renforcée avec 2FA</p>
               </div>
               <button
                 onClick={() => setSettings({ ...settings, security: { ...settings.security, twoFactorAuth: !settings.security.twoFactorAuth } })}
@@ -259,33 +261,33 @@ export default function SettingsPanelNew() {
               </button>
             </div>
 
-            <div className="p-4 glass-card backdrop-blur-xl rounded-xl border border-white/10">
-              <label className="block text-sm font-semibold text-white mb-2">Délai d'expiration de session (minutes)</label>
+            <div className="p-4 glass-card backdrop-blur-xl rounded-xl border border-[var(--border-color)]">
+              <label className="block text-sm font-semibold text-[var(--text-primary)] mb-2">Délai d'expiration de session (minutes)</label>
               <input
                 type="number"
                 value={settings.security.sessionTimeout}
                 onChange={(e) => setSettings({ ...settings, security: { ...settings.security, sessionTimeout: Number(e.target.value) } })}
-                className="w-full px-4 py-2.5 rounded-xl glass-card backdrop-blur-xl border border-white/10 text-white focus:border-[#2AD368] focus:outline-none transition-all"
+                className="w-full px-4 py-2.5 rounded-xl glass-card backdrop-blur-xl border border-[var(--border-color)] text-[var(--text-primary)] focus:border-[#2AD368] focus:outline-none transition-all"
               />
             </div>
 
-            <div className="p-4 glass-card backdrop-blur-xl rounded-xl border border-white/10">
-              <label className="block text-sm font-semibold text-white mb-2">Expiration du mot de passe (jours)</label>
+            <div className="p-4 glass-card backdrop-blur-xl rounded-xl border border-[var(--border-color)]">
+              <label className="block text-sm font-semibold text-[var(--text-primary)] mb-2">Expiration du mot de passe (jours)</label>
               <input
                 type="number"
                 value={settings.security.passwordExpiration}
                 onChange={(e) => setSettings({ ...settings, security: { ...settings.security, passwordExpiration: Number(e.target.value) } })}
-                className="w-full px-4 py-2.5 rounded-xl glass-card backdrop-blur-xl border border-white/10 text-white focus:border-[#2AD368] focus:outline-none transition-all"
+                className="w-full px-4 py-2.5 rounded-xl glass-card backdrop-blur-xl border border-[var(--border-color)] text-[var(--text-primary)] focus:border-[#2AD368] focus:outline-none transition-all"
               />
             </div>
 
-            <div className="p-4 glass-card backdrop-blur-xl rounded-xl border border-white/10">
+            <div className="p-4 glass-card backdrop-blur-xl rounded-xl border border-[var(--border-color)]">
               <div className="flex items-center justify-between mb-3">
                 <div>
-                  <label className="block text-sm font-semibold text-white">Liste blanche IP</label>
-                  <p className="text-xs text-gray-500">Restreindre l'accès à des adresses IP spécifiques</p>
+                  <label className="block text-sm font-semibold text-[var(--text-primary)]">Liste blanche IP</label>
+                  <p className="text-xs text-[var(--text-tertiary)]">Restreindre l'accès à des adresses IP spécifiques</p>
                 </div>
-                <button className="p-2 hover:bg-white/10 rounded-lg transition-colors text-gray-400 hover:text-white">
+                <button className="p-2 hover:text-[var(--text-primary)] rounded-lg transition-colors text-[var(--text-secondary)] hover:text-[var(--text-primary)]">
                   <span className="material-symbols-outlined">edit</span>
                 </button>
               </div>
@@ -303,27 +305,26 @@ export default function SettingsPanelNew() {
         {/* Display Settings */}
         {activeTab === 'display' && (
           <div className="p-6 space-y-6">
-            <h2 className="text-xl font-bold text-white mb-4">Affichage</h2>
+            <h2 className="text-xl font-bold text-[var(--text-primary)] mb-4">Affichage</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-semibold text-gray-300 mb-2">Thème</label>
+                <label className="block text-sm font-semibold text-[var(--text-secondary)] mb-2">Thème</label>
                 <select
-                  value={settings.display.theme}
-                  onChange={(e) => setSettings({ ...settings, display: { ...settings.display, theme: e.target.value } })}
-                  className="w-full px-4 py-2.5 rounded-xl glass-card backdrop-blur-xl border border-white/10 text-white focus:border-[#2AD368] focus:outline-none transition-all"
+                  value={currentTheme}
+                  onChange={(e) => setTheme(e.target.value as 'light' | 'dark')}
+                  className="w-full px-4 py-2.5 rounded-xl glass-card backdrop-blur-xl border border-[var(--border-color)] text-[var(--text-primary)] focus:border-[#2AD368] focus:outline-none transition-all"
                 >
                   <option value="dark">Sombre</option>
                   <option value="light">Clair</option>
-                  <option value="system">Système</option>
                 </select>
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-300 mb-2">Disposition du tableau de bord</label>
+                <label className="block text-sm font-semibold text-[var(--text-secondary)] mb-2">Disposition du tableau de bord</label>
                 <select
                   value={settings.display.dashboardLayout}
                   onChange={(e) => setSettings({ ...settings, display: { ...settings.display, dashboardLayout: e.target.value } })}
-                  className="w-full px-4 py-2.5 rounded-xl glass-card backdrop-blur-xl border border-white/10 text-white focus:border-[#2AD368] focus:outline-none transition-all"
+                  className="w-full px-4 py-2.5 rounded-xl glass-card backdrop-blur-xl border border-[var(--border-color)] text-[var(--text-primary)] focus:border-[#2AD368] focus:outline-none transition-all"
                 >
                   <option value="compact">Compact</option>
                   <option value="comfortable">Confortable</option>
@@ -332,11 +333,11 @@ export default function SettingsPanelNew() {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-300 mb-2">Taux de rafraîchissement (secondes)</label>
+                <label className="block text-sm font-semibold text-[var(--text-secondary)] mb-2">Taux de rafraîchissement (secondes)</label>
                 <select
                   value={settings.display.refreshRate}
                   onChange={(e) => setSettings({ ...settings, display: { ...settings.display, refreshRate: Number(e.target.value) } })}
-                  className="w-full px-4 py-2.5 rounded-xl glass-card backdrop-blur-xl border border-white/10 text-white focus:border-[#2AD368] focus:outline-none transition-all"
+                  className="w-full px-4 py-2.5 rounded-xl glass-card backdrop-blur-xl border border-[var(--border-color)] text-[var(--text-primary)] focus:border-[#2AD368] focus:outline-none transition-all"
                 >
                   <option value={5}>5 secondes</option>
                   <option value={10}>10 secondes</option>
@@ -345,10 +346,10 @@ export default function SettingsPanelNew() {
               </div>
             </div>
 
-            <div className="flex items-center justify-between p-4 glass-card backdrop-blur-xl rounded-xl border border-white/10 mt-6">
+            <div className="flex items-center justify-between p-4 glass-card backdrop-blur-xl rounded-xl border border-[var(--border-color)] mt-6">
               <div>
-                <p className="text-sm font-semibold text-white">Afficher les lignes de grille</p>
-                <p className="text-xs text-gray-500">Afficher les lignes de grille sur les graphiques</p>
+                <p className="text-sm font-semibold text-[var(--text-primary)]">Afficher les lignes de grille</p>
+                <p className="text-xs text-[var(--text-tertiary)]">Afficher les lignes de grille sur les graphiques</p>
               </div>
               <button
                 onClick={() => setSettings({ ...settings, display: { ...settings.display, showGridLines: !settings.display.showGridLines } })}
@@ -369,12 +370,12 @@ export default function SettingsPanelNew() {
         {/* Backup Settings */}
         {activeTab === 'backup' && (
           <div className="p-6 space-y-4">
-            <h2 className="text-xl font-bold text-white mb-4">Sauvegarde</h2>
+            <h2 className="text-xl font-bold text-[var(--text-primary)] mb-4">Sauvegarde</h2>
             
-            <div className="flex items-center justify-between p-4 glass-card backdrop-blur-xl rounded-xl border border-white/10">
+            <div className="flex items-center justify-between p-4 glass-card backdrop-blur-xl rounded-xl border border-[var(--border-color)]">
               <div>
-                <p className="text-sm font-semibold text-white">Sauvegarde automatique</p>
-                <p className="text-xs text-gray-500">Sauvegardes programmées</p>
+                <p className="text-sm font-semibold text-[var(--text-primary)]">Sauvegarde automatique</p>
+                <p className="text-xs text-[var(--text-tertiary)]">Sauvegardes programmées</p>
               </div>
               <button
                 onClick={() => setSettings({ ...settings, backup: { ...settings.backup, autoBackup: !settings.backup.autoBackup } })}
@@ -390,12 +391,12 @@ export default function SettingsPanelNew() {
               </button>
             </div>
 
-            <div className="p-4 glass-card backdrop-blur-xl rounded-xl border border-white/10">
-              <label className="block text-sm font-semibold text-white mb-2">Fréquence de sauvegarde</label>
+            <div className="p-4 glass-card backdrop-blur-xl rounded-xl border border-[var(--border-color)]">
+              <label className="block text-sm font-semibold text-[var(--text-primary)] mb-2">Fréquence de sauvegarde</label>
               <select
                 value={settings.backup.backupFrequency}
                 onChange={(e) => setSettings({ ...settings, backup: { ...settings.backup, backupFrequency: e.target.value } })}
-                className="w-full px-4 py-2.5 rounded-xl glass-card backdrop-blur-xl border border-white/10 text-white focus:border-[#2AD368] focus:outline-none transition-all"
+                className="w-full px-4 py-2.5 rounded-xl glass-card backdrop-blur-xl border border-[var(--border-color)] text-[var(--text-primary)] focus:border-[#2AD368] focus:outline-none transition-all"
               >
                 <option value="hourly">Toutes les heures</option>
                 <option value="daily">Quotidienne</option>
@@ -403,20 +404,20 @@ export default function SettingsPanelNew() {
               </select>
             </div>
 
-            <div className="p-4 glass-card backdrop-blur-xl rounded-xl border border-white/10">
-              <label className="block text-sm font-semibold text-white mb-2">Période de rétention (jours)</label>
+            <div className="p-4 glass-card backdrop-blur-xl rounded-xl border border-[var(--border-color)]">
+              <label className="block text-sm font-semibold text-[var(--text-primary)] mb-2">Période de rétention (jours)</label>
               <input
                 type="number"
                 value={settings.backup.retentionPeriod}
                 onChange={(e) => setSettings({ ...settings, backup: { ...settings.backup, retentionPeriod: Number(e.target.value) } })}
-                className="w-full px-4 py-2.5 rounded-xl glass-card backdrop-blur-xl border border-white/10 text-white focus:border-[#2AD368] focus:outline-none transition-all"
+                className="w-full px-4 py-2.5 rounded-xl glass-card backdrop-blur-xl border border-[var(--border-color)] text-[var(--text-primary)] focus:border-[#2AD368] focus:outline-none transition-all"
               />
             </div>
 
-            <div className="p-4 glass-card backdrop-blur-xl rounded-xl border border-white/10">
+            <div className="p-4 glass-card backdrop-blur-xl rounded-xl border border-[var(--border-color)]">
               <div className="flex items-center justify-between mb-3">
-                <p className="text-sm font-semibold text-white">Dernière sauvegarde</p>
-                <p className="text-xs text-gray-500">{new Date(settings.backup.lastBackup).toLocaleString('fr-FR')}</p>
+                <p className="text-sm font-semibold text-[var(--text-primary)]">Dernière sauvegarde</p>
+                <p className="text-xs text-[var(--text-tertiary)]">{new Date(settings.backup.lastBackup).toLocaleString('fr-FR')}</p>
               </div>
               <button className="w-full px-4 py-2.5 rounded-xl bg-[#2AD368] hover:bg-[#1fc75c] text-[#121A21] font-semibold transition-all flex items-center justify-center gap-2">
                 <span className="material-symbols-outlined">backup</span>
@@ -429,23 +430,23 @@ export default function SettingsPanelNew() {
         {/* Storage Settings */}
         {activeTab === 'storage' && (
           <div className="p-6 space-y-4">
-            <h2 className="text-xl font-bold text-white mb-4">Stockage</h2>
+            <h2 className="text-xl font-bold text-[var(--text-primary)] mb-4">Stockage</h2>
             
-            <div className="p-4 glass-card backdrop-blur-xl rounded-xl border border-white/10">
-              <label className="block text-sm font-semibold text-white mb-2">Rétention des données (jours)</label>
-              <p className="text-xs text-gray-500 mb-3">Durée de conservation des données historiques</p>
+            <div className="p-4 glass-card backdrop-blur-xl rounded-xl border border-[var(--border-color)]">
+              <label className="block text-sm font-semibold text-[var(--text-primary)] mb-2">Rétention des données (jours)</label>
+              <p className="text-xs text-[var(--text-tertiary)] mb-3">Durée de conservation des données historiques</p>
               <input
                 type="number"
                 value={settings.storage.dataRetention}
                 onChange={(e) => setSettings({ ...settings, storage: { ...settings.storage, dataRetention: Number(e.target.value) } })}
-                className="w-full px-4 py-2.5 rounded-xl glass-card backdrop-blur-xl border border-white/10 text-white focus:border-[#2AD368] focus:outline-none transition-all"
+                className="w-full px-4 py-2.5 rounded-xl glass-card backdrop-blur-xl border border-[var(--border-color)] text-[var(--text-primary)] focus:border-[#2AD368] focus:outline-none transition-all"
               />
             </div>
 
-            <div className="flex items-center justify-between p-4 glass-card backdrop-blur-xl rounded-xl border border-white/10">
+            <div className="flex items-center justify-between p-4 glass-card backdrop-blur-xl rounded-xl border border-[var(--border-color)]">
               <div>
-                <p className="text-sm font-semibold text-white">Compression des données</p>
-                <p className="text-xs text-gray-500">Activer la compression pour économiser de l'espace</p>
+                <p className="text-sm font-semibold text-[var(--text-primary)]">Compression des données</p>
+                <p className="text-xs text-[var(--text-tertiary)]">Activer la compression pour économiser de l'espace</p>
               </div>
               <button
                 onClick={() => setSettings({ ...settings, storage: { ...settings.storage, compressionEnabled: !settings.storage.compressionEnabled } })}
@@ -461,10 +462,10 @@ export default function SettingsPanelNew() {
               </button>
             </div>
 
-            <div className="flex items-center justify-between p-4 glass-card backdrop-blur-xl rounded-xl border border-white/10">
+            <div className="flex items-center justify-between p-4 glass-card backdrop-blur-xl rounded-xl border border-[var(--border-color)]">
               <div>
-                <p className="text-sm font-semibold text-white">Archiver les anciennes données</p>
-                <p className="text-xs text-gray-500">Archiver automatiquement les données anciennes</p>
+                <p className="text-sm font-semibold text-[var(--text-primary)]">Archiver les anciennes données</p>
+                <p className="text-xs text-[var(--text-tertiary)]">Archiver automatiquement les données anciennes</p>
               </div>
               <button
                 onClick={() => setSettings({ ...settings, storage: { ...settings.storage, archiveOldData: !settings.storage.archiveOldData } })}
@@ -480,13 +481,13 @@ export default function SettingsPanelNew() {
               </button>
             </div>
 
-            <div className="p-4 glass-card backdrop-blur-xl rounded-xl border border-white/10">
-              <label className="block text-sm font-semibold text-white mb-2">Emplacement de stockage</label>
-              <p className="text-xs text-gray-500 mb-3">Où stocker les données et sauvegardes</p>
+            <div className="p-4 glass-card backdrop-blur-xl rounded-xl border border-[var(--border-color)]">
+              <label className="block text-sm font-semibold text-[var(--text-primary)] mb-2">Emplacement de stockage</label>
+              <p className="text-xs text-[var(--text-tertiary)] mb-3">Où stocker les données et sauvegardes</p>
               <select
                 value={settings.storage.storageLocation}
                 onChange={(e) => setSettings({ ...settings, storage: { ...settings.storage, storageLocation: e.target.value } })}
-                className="w-full px-4 py-2.5 rounded-xl glass-card backdrop-blur-xl border border-white/10 text-white focus:border-[#2AD368] focus:outline-none transition-all"
+                className="w-full px-4 py-2.5 rounded-xl glass-card backdrop-blur-xl border border-[var(--border-color)] text-[var(--text-primary)] focus:border-[#2AD368] focus:outline-none transition-all"
               >
                 <option value="local">Local</option>
                 <option value="cloud">Cloud</option>
@@ -500,21 +501,21 @@ export default function SettingsPanelNew() {
         {activeTab === 'privacy' && (
           <div className="p-6 space-y-6">
             <div>
-              <h2 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
+              <h2 className="text-xl font-bold text-[var(--text-primary)] mb-2 flex items-center gap-2">
                 <span className="material-symbols-outlined text-[#2AD368]">shield</span>
                 Confidentialité & RGPD
               </h2>
-              <p className="text-gray-400 text-sm">
+              <p className="text-[var(--text-secondary)] text-sm">
                 Gérez vos données personnelles et vos préférences de confidentialité
               </p>
             </div>
 
             {/* Statut des cookies */}
-            <div className="glass-card backdrop-blur-xl rounded-xl p-6 border border-white/10 bg-gradient-to-br from-[#2AD368]/5 to-transparent">
+            <div className="glass-card backdrop-blur-xl rounded-xl p-6 border border-[var(--border-color)] bg-gradient-to-br from-[#2AD368]/5 to-transparent">
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <h3 className="text-base font-semibold text-white mb-1">Statut des cookies</h3>
-                  <p className="text-xs text-gray-500">2 catégories activées sur 3</p>
+                  <h3 className="text-base font-semibold text-[var(--text-primary)] mb-1">Statut des cookies</h3>
+                  <p className="text-xs text-[var(--text-tertiary)]">2 catégories activées sur 3</p>
                 </div>
                 <span className="px-3 py-1 rounded-full bg-[#2AD368]/20 border border-[#2AD368]/30 text-[#2AD368] text-xs font-semibold flex items-center gap-1">
                   <span className="material-symbols-outlined text-sm">check_circle</span>
@@ -522,7 +523,7 @@ export default function SettingsPanelNew() {
                 </span>
               </div>
               <div className="flex flex-wrap gap-2">
-                <span className="px-3 py-1 rounded-lg bg-[#2AD368] text-white text-xs font-semibold">
+                <span className="px-3 py-1 rounded-lg bg-[#2AD368] text-[var(--text-primary)] text-xs font-semibold">
                   Essentiels
                 </span>
                 <span className="px-3 py-1 rounded-lg bg-[#CBED62] text-[#121A21] text-xs font-semibold">
@@ -537,47 +538,47 @@ export default function SettingsPanelNew() {
             {/* Actions principales */}
             <div className="space-y-3">
               {/* Gérer les cookies */}
-              <button className="w-full p-4 glass-card backdrop-blur-xl rounded-xl border border-white/10 hover:border-[#2AD368]/30 transition-all flex items-center justify-between group">
+              <button className="w-full p-4 glass-card backdrop-blur-xl rounded-xl border border-[var(--border-color)] hover:border-[#2AD368]/30 transition-all flex items-center justify-between group">
                 <div className="flex items-center gap-3">
                   <div className="size-10 bg-[#2AD368]/20 rounded-lg flex items-center justify-center">
                     <span className="material-symbols-outlined text-[#2AD368]">cookie</span>
                   </div>
                   <div className="text-left">
-                    <p className="text-sm font-semibold text-white">Gérer les cookies</p>
-                    <p className="text-xs text-gray-500">Modifier vos préférences de cookies et traceurs</p>
+                    <p className="text-sm font-semibold text-[var(--text-primary)]">Gérer les cookies</p>
+                    <p className="text-xs text-[var(--text-tertiary)]">Modifier vos préférences de cookies et traceurs</p>
                   </div>
                 </div>
-                <span className="material-symbols-outlined text-gray-400 group-hover:text-white transition-colors">chevron_right</span>
+                <span className="material-symbols-outlined text-[var(--text-secondary)] group-hover:text-[var(--text-primary)] transition-colors">chevron_right</span>
               </button>
 
               {/* Politique de confidentialité */}
-              <button className="w-full p-4 glass-card backdrop-blur-xl rounded-xl border border-white/10 hover:border-[#2AD368]/30 transition-all flex items-center justify-between group">
+              <button className="w-full p-4 glass-card backdrop-blur-xl rounded-xl border border-[var(--border-color)] hover:border-[#2AD368]/30 transition-all flex items-center justify-between group">
                 <div className="flex items-center gap-3">
                   <div className="size-10 bg-[#2AD368]/20 rounded-lg flex items-center justify-center">
                     <span className="material-symbols-outlined text-[#2AD368]">description</span>
                   </div>
                   <div className="text-left">
-                    <p className="text-sm font-semibold text-white">Politique de confidentialité</p>
-                    <p className="text-xs text-gray-500">Consulter notre politique RGPD complète</p>
+                    <p className="text-sm font-semibold text-[var(--text-primary)]">Politique de confidentialité</p>
+                    <p className="text-xs text-[var(--text-tertiary)]">Consulter notre politique RGPD complète</p>
                   </div>
                 </div>
-                <span className="material-symbols-outlined text-gray-400 group-hover:text-white transition-colors">chevron_right</span>
+                <span className="material-symbols-outlined text-[var(--text-secondary)] group-hover:text-[var(--text-primary)] transition-colors">chevron_right</span>
               </button>
 
-              <div className="border-t border-white/10 my-4"></div>
+              <div className="border-t border-[var(--border-color)] my-4"></div>
 
               {/* Exporter conversations avec Eve */}
-              <button className="w-full p-4 glass-card backdrop-blur-xl rounded-xl border border-white/10 hover:border-[#2AD368]/30 transition-all flex items-center justify-between group">
+              <button className="w-full p-4 glass-card backdrop-blur-xl rounded-xl border border-[var(--border-color)] hover:border-[#2AD368]/30 transition-all flex items-center justify-between group">
                 <div className="flex items-center gap-3">
                   <div className="size-10 bg-[#2AD368]/20 rounded-lg flex items-center justify-center">
                     <span className="material-symbols-outlined text-[#2AD368]">chat</span>
                   </div>
                   <div className="text-left">
-                    <p className="text-sm font-semibold text-white">Exporter mes conversations avec Eve</p>
-                    <p className="text-xs text-gray-500">3 messages dans 1 conversation(s)</p>
+                    <p className="text-sm font-semibold text-[var(--text-primary)]">Exporter mes conversations avec Eve</p>
+                    <p className="text-xs text-[var(--text-tertiary)]">3 messages dans 1 conversation(s)</p>
                   </div>
                 </div>
-                <span className="material-symbols-outlined text-gray-400 group-hover:text-white transition-colors">chevron_right</span>
+                <span className="material-symbols-outlined text-[var(--text-secondary)] group-hover:text-[var(--text-primary)] transition-colors">chevron_right</span>
               </button>
 
               {/* Supprimer conversations avec Eve */}
@@ -588,26 +589,26 @@ export default function SettingsPanelNew() {
                   </div>
                   <div className="text-left">
                     <p className="text-sm font-semibold text-red-400">Supprimer mes conversations avec Eve</p>
-                    <p className="text-xs text-gray-500">Effacer tout l'historique de chat (Art. 17 RGPD)</p>
+                    <p className="text-xs text-[var(--text-tertiary)]">Effacer tout l'historique de chat (Art. 17 RGPD)</p>
                   </div>
                 </div>
                 <span className="material-symbols-outlined text-red-400">chevron_right</span>
               </button>
 
-              <div className="border-t border-white/10 my-4"></div>
+              <div className="border-t border-[var(--border-color)] my-4"></div>
 
               {/* Exporter données RGPD */}
-              <button className="w-full p-4 glass-card backdrop-blur-xl rounded-xl border border-white/10 hover:border-[#2AD368]/30 transition-all flex items-center justify-between group">
+              <button className="w-full p-4 glass-card backdrop-blur-xl rounded-xl border border-[var(--border-color)] hover:border-[#2AD368]/30 transition-all flex items-center justify-between group">
                 <div className="flex items-center gap-3">
                   <div className="size-10 bg-[#2AD368]/20 rounded-lg flex items-center justify-center">
                     <span className="material-symbols-outlined text-[#2AD368]">download</span>
                   </div>
                   <div className="text-left">
-                    <p className="text-sm font-semibold text-white">Exporter mes données RGPD</p>
-                    <p className="text-xs text-gray-500">Télécharger vos données de consentement (Art. 20 RGPD)</p>
+                    <p className="text-sm font-semibold text-[var(--text-primary)]">Exporter mes données RGPD</p>
+                    <p className="text-xs text-[var(--text-tertiary)]">Télécharger vos données de consentement (Art. 20 RGPD)</p>
                   </div>
                 </div>
-                <span className="material-symbols-outlined text-gray-400 group-hover:text-white transition-colors">chevron_right</span>
+                <span className="material-symbols-outlined text-[var(--text-secondary)] group-hover:text-[var(--text-primary)] transition-colors">chevron_right</span>
               </button>
 
               {/* Supprimer données RGPD */}
@@ -618,7 +619,7 @@ export default function SettingsPanelNew() {
                   </div>
                   <div className="text-left">
                     <p className="text-sm font-semibold text-red-400">Supprimer mes données RGPD</p>
-                    <p className="text-xs text-gray-500">Effacer toutes les données de consentement (Art. 17 RGPD)</p>
+                    <p className="text-xs text-[var(--text-tertiary)]">Effacer toutes les données de consentement (Art. 17 RGPD)</p>
                   </div>
                 </div>
                 <span className="material-symbols-outlined text-red-400">chevron_right</span>
@@ -627,8 +628,8 @@ export default function SettingsPanelNew() {
 
             {/* Informations protection données */}
             <div className="glass-card backdrop-blur-xl rounded-xl p-4 border-l-4 border-[#2AD368] bg-[#2AD368]/5">
-              <p className="text-xs text-gray-300 leading-relaxed">
-                <strong className="text-white">🇫🇷 Protection de vos données :</strong> Toutes vos données sont hébergées en France (Scaleway/OVH) et chiffrées AES-256. Vous pouvez exercer vos droits RGPD à tout moment via privacy@virida.fr
+              <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
+                <strong className="text-[var(--text-primary)]">🇫🇷 Protection de vos données :</strong> Toutes vos données sont hébergées en France (Scaleway/OVH) et chiffrées AES-256. Vous pouvez exercer vos droits RGPD à tout moment via privacy@virida.fr
               </p>
             </div>
           </div>
@@ -637,27 +638,27 @@ export default function SettingsPanelNew() {
         {/* Account Settings */}
         {activeTab === 'account' && (
           <div className="p-6 space-y-6">
-            <h2 className="text-xl font-bold text-white mb-4">Mon compte</h2>
+            <h2 className="text-xl font-bold text-[var(--text-primary)] mb-4">Mon compte</h2>
             
             {user && (
-              <div className="glass-card backdrop-blur-xl rounded-xl p-6 border border-white/10">
+              <div className="glass-card backdrop-blur-xl rounded-xl p-6 border border-[var(--border-color)]">
                 <div className="flex items-center gap-4 mb-6">
                   <div className="size-16 bg-[#2AD368]/20 rounded-full flex items-center justify-center">
                     <span className="material-symbols-outlined text-[#2AD368] text-3xl">person</span>
                   </div>
                   <div>
-                    <p className="text-lg font-bold text-white">{user.firstName} {user.lastName}</p>
-                    <p className="text-sm text-gray-400">{user.email}</p>
+                    <p className="text-lg font-bold text-[var(--text-primary)]">{user.firstName} {user.lastName}</p>
+                    <p className="text-sm text-[var(--text-secondary)]">{user.email}</p>
                   </div>
                 </div>
                 
                 <div className="space-y-3">
-                  <button className="w-full px-4 py-2.5 rounded-xl glass-card backdrop-blur-xl border border-white/10 text-white hover:border-[#2AD368]/30 transition-all flex items-center justify-center gap-2">
+                  <button className="w-full px-4 py-2.5 rounded-xl glass-card backdrop-blur-xl border border-[var(--border-color)] text-[var(--text-primary)] hover:border-[#2AD368]/30 transition-all flex items-center justify-center gap-2">
                     <span className="material-symbols-outlined">edit</span>
                     <span>Modifier le profil</span>
                   </button>
                   
-                  <button className="w-full px-4 py-2.5 rounded-xl glass-card backdrop-blur-xl border border-white/10 text-white hover:border-[#2AD368]/30 transition-all flex items-center justify-center gap-2">
+                  <button className="w-full px-4 py-2.5 rounded-xl glass-card backdrop-blur-xl border border-[var(--border-color)] text-[var(--text-primary)] hover:border-[#2AD368]/30 transition-all flex items-center justify-center gap-2">
                     <span className="material-symbols-outlined">lock</span>
                     <span>Changer le mot de passe</span>
                   </button>

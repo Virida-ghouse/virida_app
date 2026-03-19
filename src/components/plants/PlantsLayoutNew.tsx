@@ -30,7 +30,7 @@ const PlantsLayoutNew: React.FC = () => {
   ];
 
   return (
-    <div className="flex-1 overflow-y-auto overflow-x-hidden bg-background-dark p-4 md:p-6 lg:p-8 pb-20 lg:pb-8">
+    <div className="flex-1 overflow-y-auto overflow-x-hidden bg-[var(--bg-primary)] dark:bg-background-dark text-[var(--text-primary)] p-4 md:p-6 lg:p-8 pb-20 lg:pb-8">
       {/* Header */}
       <div className="mb-6 md:mb-8">
         <div className="flex items-center gap-3 md:gap-4 mb-4 md:mb-6">
@@ -40,10 +40,10 @@ const PlantsLayoutNew: React.FC = () => {
             </span>
           </div>
           <div className="min-w-0">
-            <h1 className="text-2xl md:text-3xl font-black text-white mb-1">
+            <h1 className="text-3xl md:text-4xl font-black mb-2 text-[var(--text-primary)]">
               Mes <span className="text-[#CBED62]">Plantes</span>
             </h1>
-            <p className="text-gray-400 text-sm md:text-base">
+            <p className="text-[var(--text-secondary)] text-sm md:text-base">
               Gérez et surveillez vos cultures en temps réel
             </p>
           </div>
@@ -58,8 +58,8 @@ const PlantsLayoutNew: React.FC = () => {
               onClick={() => setCurrentTab(tab.id)}
               className={`flex items-center gap-2 px-4 md:px-5 py-2.5 md:py-3 rounded-xl transition-all font-semibold whitespace-nowrap flex-shrink-0 ${
                 currentTab === tab.id
-                  ? 'bg-[#2AD368] text-[#121A21] shadow-lg'
-                  : 'text-gray-400 hover:text-white hover:bg-white/5'
+                  ? 'bg-[#2AD368] text-[var(--btn-primary-text)] shadow-lg'
+                  : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/5'
               }`}
             >
               <span className="material-symbols-outlined text-[18px] md:text-[20px]">

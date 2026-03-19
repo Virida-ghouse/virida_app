@@ -114,7 +114,7 @@ const PlantCareNew: React.FC = () => {
       case 'FERTILIZING': return 'text-[#CBED62]';
       case 'PRUNING': return 'text-orange-400';
       case 'PEST_CONTROL': return 'text-red-400';
-      default: return 'text-gray-400';
+      default: return 'text-[var(--text-secondary)]';
     }
   };
 
@@ -122,8 +122,8 @@ const PlantCareNew: React.FC = () => {
     <div className="overflow-x-hidden">
       {/* Header */}
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-white mb-2">Soins & Rappels</h2>
-        <p className="text-gray-400">
+        <h2 className="text-2xl font-bold text-[var(--text-primary)] mb-2">Soins & Rappels</h2>
+        <p className="text-[var(--text-secondary)]">
           {todayTasks.length} tâche{todayTasks.length > 1 ? 's' : ''} pour aujourd'hui
         </p>
       </div>
@@ -135,7 +135,7 @@ const PlantCareNew: React.FC = () => {
           className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${
             currentTab === 'today'
               ? 'bg-[#2AD368] text-[#121A21]'
-              : 'glass-card backdrop-blur-xl text-gray-400 hover:text-white border border-white/10'
+              : 'glass-card backdrop-blur-xl text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-[var(--border-color)]'
           }`}
         >
           Aujourd'hui
@@ -145,7 +145,7 @@ const PlantCareNew: React.FC = () => {
           className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${
             currentTab === 'upcoming'
               ? 'bg-[#2AD368] text-[#121A21]'
-              : 'glass-card backdrop-blur-xl text-gray-400 hover:text-white border border-white/10'
+              : 'glass-card backdrop-blur-xl text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-[var(--border-color)]'
           }`}
         >
           À venir
@@ -170,9 +170,9 @@ const PlantCareNew: React.FC = () => {
       {!loading && !error && (
         <div className="space-y-3">
           {displayedTasks.length === 0 ? (
-            <div className="glass-card backdrop-blur-xl rounded-2xl p-8 border border-white/10 text-center">
-              <span className="material-symbols-outlined text-gray-500 text-5xl mb-3">check_circle</span>
-              <p className="text-gray-400">
+            <div className="glass-card backdrop-blur-xl rounded-2xl p-8 border border-[var(--border-color)] text-center">
+              <span className="material-symbols-outlined text-[var(--text-tertiary)] text-5xl mb-3">check_circle</span>
+              <p className="text-[var(--text-secondary)]">
                 {currentTab === 'today' ? 'Aucune tâche pour aujourd\'hui !' : 'Aucune tâche à venir'}
               </p>
             </div>
@@ -180,13 +180,13 @@ const PlantCareNew: React.FC = () => {
             displayedTasks.map((task) => (
               <div
                 key={task.id}
-                className="glass-card backdrop-blur-xl rounded-2xl p-3 md:p-4 border border-white/10 hover:border-[#2AD368]/30 transition-all"
+                className="glass-card backdrop-blur-xl rounded-2xl p-3 md:p-4 border border-[var(--border-color)] hover:border-[#2AD368]/30 transition-all"
               >
                 <div className="flex items-center gap-2 md:gap-4">
                   {/* Checkbox */}
                   <button
                     onClick={() => handleToggleTask(task.id, task.completed)}
-                    className="size-5 md:size-6 rounded-lg border-2 border-white/30 flex items-center justify-center hover:border-[#2AD368] transition-all flex-shrink-0"
+                    className="size-5 md:size-6 rounded-lg border-2 hover:bg-black/5 dark:hover:bg-white/10 flex items-center justify-center hover:border-[#2AD368] transition-all flex-shrink-0"
                   >
                     {task.completed && (
                       <span className="material-symbols-outlined text-[#2AD368] text-base md:text-lg">check</span>
@@ -208,14 +208,14 @@ const PlantCareNew: React.FC = () => {
                       <span className={`material-symbols-outlined text-base md:text-lg ${getTaskColor(task.type)}`}>
                         {getTaskIcon(task.type)}
                       </span>
-                      <h4 className="text-sm md:text-base text-white font-semibold truncate">{task.plant.name}</h4>
+                      <h4 className="text-sm md:text-base text-[var(--text-primary)] font-semibold truncate">{task.plant.name}</h4>
                     </div>
-                    <p className="text-xs md:text-sm text-gray-400 truncate">{task.description}</p>
+                    <p className="text-xs md:text-sm text-[var(--text-secondary)] truncate">{task.description}</p>
                   </div>
 
                   {/* Date */}
                   <div className="text-right flex-shrink-0 hidden sm:block">
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-[var(--text-tertiary)]">
                       {new Date(task.dueDate).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}
                     </p>
                   </div>
@@ -229,26 +229,26 @@ const PlantCareNew: React.FC = () => {
       {/* Sections de conseils (en bas) */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
         {/* Arrosage */}
-        <div className="glass-card backdrop-blur-xl rounded-3xl p-6 border border-white/10">
+        <div className="glass-card backdrop-blur-xl rounded-3xl p-6 border border-[var(--border-color)]">
           <div className="flex items-center gap-3 mb-4">
             <div className="size-12 bg-blue-500/10 rounded-2xl flex items-center justify-center">
               <span className="material-symbols-outlined text-blue-400 text-2xl">water_drop</span>
             </div>
-            <h3 className="text-xl font-bold text-white">Arrosage</h3>
+            <h3 className="text-xl font-bold text-[var(--text-primary)]">Arrosage</h3>
           </div>
-          <p className="text-gray-400 mb-4">
+          <p className="text-[var(--text-secondary)] mb-4">
             Maintenez un niveau d'humidité optimal pour chaque type de plante.
           </p>
           <ul className="space-y-2">
-            <li className="flex items-start gap-2 text-sm text-gray-300">
+            <li className="flex items-start gap-2 text-sm text-[var(--text-secondary)]">
               <span className="material-symbols-outlined text-[#2AD368] text-lg">check_circle</span>
               <span>Vérifiez l'humidité du sol avant d'arroser</span>
             </li>
-            <li className="flex items-start gap-2 text-sm text-gray-300">
+            <li className="flex items-start gap-2 text-sm text-[var(--text-secondary)]">
               <span className="material-symbols-outlined text-[#2AD368] text-lg">check_circle</span>
               <span>Arrosez tôt le matin ou en fin de journée</span>
             </li>
-            <li className="flex items-start gap-2 text-sm text-gray-300">
+            <li className="flex items-start gap-2 text-sm text-[var(--text-secondary)]">
               <span className="material-symbols-outlined text-[#2AD368] text-lg">check_circle</span>
               <span>Évitez l'eau stagnante dans les soucoupes</span>
             </li>
@@ -256,26 +256,26 @@ const PlantCareNew: React.FC = () => {
         </div>
 
         {/* Lumière */}
-        <div className="glass-card backdrop-blur-xl rounded-3xl p-6 border border-white/10">
+        <div className="glass-card backdrop-blur-xl rounded-3xl p-6 border border-[var(--border-color)]">
           <div className="flex items-center gap-3 mb-4">
             <div className="size-12 bg-orange-500/10 rounded-2xl flex items-center justify-center">
               <span className="material-symbols-outlined text-orange-400 text-2xl">light_mode</span>
             </div>
-            <h3 className="text-xl font-bold text-white">Lumière</h3>
+            <h3 className="text-xl font-bold text-[var(--text-primary)]">Lumière</h3>
           </div>
-          <p className="text-gray-400 mb-4">
+          <p className="text-[var(--text-secondary)] mb-4">
             Assurez un éclairage adapté aux besoins de vos cultures.
           </p>
           <ul className="space-y-2">
-            <li className="flex items-start gap-2 text-sm text-gray-300">
+            <li className="flex items-start gap-2 text-sm text-[var(--text-secondary)]">
               <span className="material-symbols-outlined text-[#2AD368] text-lg">check_circle</span>
               <span>6-8h de lumière directe pour la plupart des légumes</span>
             </li>
-            <li className="flex items-start gap-2 text-sm text-gray-300">
+            <li className="flex items-start gap-2 text-sm text-[var(--text-secondary)]">
               <span className="material-symbols-outlined text-[#2AD368] text-lg">check_circle</span>
               <span>Utilisez des lampes LED pour compléter</span>
             </li>
-            <li className="flex items-start gap-2 text-sm text-gray-300">
+            <li className="flex items-start gap-2 text-sm text-[var(--text-secondary)]">
               <span className="material-symbols-outlined text-[#2AD368] text-lg">check_circle</span>
               <span>Tournez les plantes pour une croissance uniforme</span>
             </li>
@@ -283,26 +283,26 @@ const PlantCareNew: React.FC = () => {
         </div>
 
         {/* Température */}
-        <div className="glass-card backdrop-blur-xl rounded-3xl p-6 border border-white/10">
+        <div className="glass-card backdrop-blur-xl rounded-3xl p-6 border border-[var(--border-color)]">
           <div className="flex items-center gap-3 mb-4">
             <div className="size-12 bg-[#2AD368]/10 rounded-2xl flex items-center justify-center">
               <span className="material-symbols-outlined text-[#2AD368] text-2xl">thermostat</span>
             </div>
-            <h3 className="text-xl font-bold text-white">Température</h3>
+            <h3 className="text-xl font-bold text-[var(--text-primary)]">Température</h3>
           </div>
-          <p className="text-gray-400 mb-4">
+          <p className="text-[var(--text-secondary)] mb-4">
             Maintenez une température stable pour une croissance optimale.
           </p>
           <ul className="space-y-2">
-            <li className="flex items-start gap-2 text-sm text-gray-300">
+            <li className="flex items-start gap-2 text-sm text-[var(--text-secondary)]">
               <span className="material-symbols-outlined text-[#2AD368] text-lg">check_circle</span>
               <span>18-24°C pour la plupart des légumes</span>
             </li>
-            <li className="flex items-start gap-2 text-sm text-gray-300">
+            <li className="flex items-start gap-2 text-sm text-[var(--text-secondary)]">
               <span className="material-symbols-outlined text-[#2AD368] text-lg">check_circle</span>
               <span>Évitez les variations brusques</span>
             </li>
-            <li className="flex items-start gap-2 text-sm text-gray-300">
+            <li className="flex items-start gap-2 text-sm text-[var(--text-secondary)]">
               <span className="material-symbols-outlined text-[#2AD368] text-lg">check_circle</span>
               <span>Ventilez régulièrement la serre</span>
             </li>
@@ -310,26 +310,26 @@ const PlantCareNew: React.FC = () => {
         </div>
 
         {/* Nutriments */}
-        <div className="glass-card backdrop-blur-xl rounded-3xl p-6 border border-white/10">
+        <div className="glass-card backdrop-blur-xl rounded-3xl p-6 border border-[var(--border-color)]">
           <div className="flex items-center gap-3 mb-4">
             <div className="size-12 bg-purple-500/10 rounded-2xl flex items-center justify-center">
               <span className="material-symbols-outlined text-purple-400 text-2xl">science</span>
             </div>
-            <h3 className="text-xl font-bold text-white">Nutriments</h3>
+            <h3 className="text-xl font-bold text-[var(--text-primary)]">Nutriments</h3>
           </div>
-          <p className="text-gray-400 mb-4">
+          <p className="text-[var(--text-secondary)] mb-4">
             Fournissez les nutriments essentiels pour une croissance saine.
           </p>
           <ul className="space-y-2">
-            <li className="flex items-start gap-2 text-sm text-gray-300">
+            <li className="flex items-start gap-2 text-sm text-[var(--text-secondary)]">
               <span className="material-symbols-outlined text-[#2AD368] text-lg">check_circle</span>
               <span>NPK équilibré pour la croissance végétative</span>
             </li>
-            <li className="flex items-start gap-2 text-sm text-gray-300">
+            <li className="flex items-start gap-2 text-sm text-[var(--text-secondary)]">
               <span className="material-symbols-outlined text-[#2AD368] text-lg">check_circle</span>
               <span>Augmentez le phosphore pour la floraison</span>
             </li>
-            <li className="flex items-start gap-2 text-sm text-gray-300">
+            <li className="flex items-start gap-2 text-sm text-[var(--text-secondary)]">
               <span className="material-symbols-outlined text-[#2AD368] text-lg">check_circle</span>
               <span>Surveillez le pH du sol (6.0-7.0)</span>
             </li>
@@ -338,31 +338,31 @@ const PlantCareNew: React.FC = () => {
       </div>
 
       {/* Section tâches */}
-      <div className="mt-6 glass-card backdrop-blur-xl rounded-3xl p-6 border border-white/10">
-        <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+      <div className="mt-6 glass-card backdrop-blur-xl rounded-3xl p-6 border border-[var(--border-color)]">
+        <h3 className="text-xl font-bold text-[var(--text-primary)] mb-4 flex items-center gap-2">
           <span className="material-symbols-outlined text-[#CBED62]">checklist</span>
           Tâches de maintenance
         </h3>
         <div className="grid grid-cols-3 gap-4">
-          <div className="p-4 bg-white/5 rounded-xl border border-white/5">
-            <p className="text-xs text-gray-500 uppercase font-bold mb-2">Quotidien</p>
-            <ul className="space-y-1 text-sm text-gray-300">
+          <div className="p-4 bg-[var(--bg-primary)] dark:bg-background-dark:bg-white/5 rounded-xl border border-white/5">
+            <p className="text-xs text-[var(--text-tertiary)] uppercase font-bold mb-2">Quotidien</p>
+            <ul className="space-y-1 text-sm text-[var(--text-secondary)]">
               <li>• Vérifier l'humidité</li>
               <li>• Observer les plantes</li>
               <li>• Aérer la serre</li>
             </ul>
           </div>
-          <div className="p-4 bg-white/5 rounded-xl border border-white/5">
-            <p className="text-xs text-gray-500 uppercase font-bold mb-2">Hebdomadaire</p>
-            <ul className="space-y-1 text-sm text-gray-300">
+          <div className="p-4 bg-[var(--bg-primary)] dark:bg-background-dark:bg-white/5 rounded-xl border border-white/5">
+            <p className="text-xs text-[var(--text-tertiary)] uppercase font-bold mb-2">Hebdomadaire</p>
+            <ul className="space-y-1 text-sm text-[var(--text-secondary)]">
               <li>• Fertiliser les plantes</li>
               <li>• Tailler si nécessaire</li>
               <li>• Nettoyer les feuilles</li>
             </ul>
           </div>
-          <div className="p-4 bg-white/5 rounded-xl border border-white/5">
-            <p className="text-xs text-gray-500 uppercase font-bold mb-2">Mensuel</p>
-            <ul className="space-y-1 text-sm text-gray-300">
+          <div className="p-4 bg-[var(--bg-primary)] dark:bg-background-dark:bg-white/5 rounded-xl border border-white/5">
+            <p className="text-xs text-[var(--text-tertiary)] uppercase font-bold mb-2">Mensuel</p>
+            <ul className="space-y-1 text-sm text-[var(--text-secondary)]">
               <li>• Vérifier le système</li>
               <li>• Rempoter si besoin</li>
               <li>• Nettoyer la serre</li>

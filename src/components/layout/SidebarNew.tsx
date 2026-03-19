@@ -21,7 +21,7 @@ const SidebarNew: React.FC<SidebarProps> = ({
   onViewChange,
 }) => {
   return (
-    <aside className="hidden lg:flex w-64 border-r border-glass-border bg-background-dark/50 flex-col justify-between p-6 fixed h-screen">
+    <aside className="hidden lg:flex w-64 border-r border-[var(--border-color)] bg-[var(--bg-secondary)] dark:bg-background-dark/50 flex-col justify-between p-6 fixed h-screen">
       {/* Top Section */}
       <div className="space-y-8">
         {/* Logo */}
@@ -33,7 +33,7 @@ const SidebarNew: React.FC<SidebarProps> = ({
           />
           <div>
             <h1 className="text-2xl font-bold tracking-tight">
-              <span className="text-white">Vir</span><span className="text-[#CBED62] text-2xl">ida</span><span className="text-primary">.</span>
+              <span className="text-[var(--text-primary)]">Vir</span><span className="text-[#CBED62] text-2xl">ida</span><span className="text-primary">.</span>
             </h1>
           </div>
         </div>
@@ -51,7 +51,7 @@ const SidebarNew: React.FC<SidebarProps> = ({
                   ${
                     isActive
                       ? 'glass-card backdrop-blur-xl text-[#2AD368] border border-[#2AD368]/30 bg-[#2AD368]/10 shadow-[0_0_15px_rgba(42,211,104,0.2)]'
-                      : 'text-gray-400 hover:glass-card hover:backdrop-blur-xl hover:bg-[#2AD368]/5 hover:text-[#2AD368] hover:border hover:border-[#2AD368]/20'
+                      : 'text-[var(--text-secondary)] hover:glass-card hover:backdrop-blur-xl hover:bg-[#2AD368]/5 hover:text-[#2AD368] hover:border hover:border-[#2AD368]/20'
                   }
                 `}
               >
@@ -70,7 +70,7 @@ const SidebarNew: React.FC<SidebarProps> = ({
         {/* Settings */}
         <div
           onClick={() => onViewChange('settings')}
-          className="flex items-center gap-3 px-3 py-2 rounded-xl text-gray-400 hover:glass-card hover:backdrop-blur-xl hover:bg-[#2AD368]/5 hover:text-[#2AD368] hover:border hover:border-[#2AD368]/20 cursor-pointer transition-all"
+          className="flex items-center gap-3 px-3 py-2 rounded-xl text-[var(--text-secondary)] hover:glass-card hover:backdrop-blur-xl hover:bg-[#2AD368]/5 hover:text-[#2AD368] hover:border hover:border-[#2AD368]/20 cursor-pointer transition-all"
         >
           <span className="material-symbols-outlined text-[22px]">settings</span>
           <span className="text-sm font-medium">Paramètres</span>

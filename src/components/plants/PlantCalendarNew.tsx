@@ -129,8 +129,8 @@ const PlantCalendarNew: React.FC = () => {
     <div className="overflow-x-hidden">
       {/* Header */}
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-white mb-2">Calendrier</h2>
-        <p className="text-gray-400">
+        <h2 className="text-2xl font-bold text-[var(--text-primary)] mb-2">Calendrier</h2>
+        <p className="text-[var(--text-secondary)]">
           {tasks.length} tâche{tasks.length > 1 ? 's' : ''} ce mois-ci
         </p>
       </div>
@@ -139,47 +139,47 @@ const PlantCalendarNew: React.FC = () => {
       <div className="flex flex-wrap gap-2 mb-6">
         <div className="flex items-center gap-2 px-3 py-1.5 glass-card backdrop-blur-xl rounded-full border border-blue-400/30">
           <span className="material-symbols-outlined text-blue-400 text-sm">water_drop</span>
-          <span className="text-xs text-gray-300">Arrosage</span>
+          <span className="text-xs text-[var(--text-secondary)]">Arrosage</span>
         </div>
         <div className="flex items-center gap-2 px-3 py-1.5 glass-card backdrop-blur-xl rounded-full border border-[#CBED62]/30">
           <span className="material-symbols-outlined text-[#CBED62] text-sm">grass</span>
-          <span className="text-xs text-gray-300">Fertilisation</span>
+          <span className="text-xs text-[var(--text-secondary)]">Fertilisation</span>
         </div>
         <div className="flex items-center gap-2 px-3 py-1.5 glass-card backdrop-blur-xl rounded-full border border-orange-400/30">
           <span className="material-symbols-outlined text-orange-400 text-sm">content_cut</span>
-          <span className="text-xs text-gray-300">Taille</span>
+          <span className="text-xs text-[var(--text-secondary)]">Taille</span>
         </div>
         <div className="flex items-center gap-2 px-3 py-1.5 glass-card backdrop-blur-xl rounded-full border border-red-400/30">
           <span className="material-symbols-outlined text-red-400 text-sm">bug_report</span>
-          <span className="text-xs text-gray-300">Parasites</span>
+          <span className="text-xs text-[var(--text-secondary)]">Parasites</span>
         </div>
         <div className="flex items-center gap-2 px-3 py-1.5 glass-card backdrop-blur-xl rounded-full border border-purple-400/30">
           <span className="material-symbols-outlined text-purple-400 text-sm">science</span>
-          <span className="text-xs text-gray-300">pH</span>
+          <span className="text-xs text-[var(--text-secondary)]">pH</span>
         </div>
         <div className="flex items-center gap-2 px-3 py-1.5 glass-card backdrop-blur-xl rounded-full border border-[#2AD368]/30">
           <span className="material-symbols-outlined text-[#2AD368] text-sm">agriculture</span>
-          <span className="text-xs text-gray-300">Récolte</span>
+          <span className="text-xs text-[var(--text-secondary)]">Récolte</span>
         </div>
       </div>
 
       {/* Calendrier mensuel */}
-      <div className="glass-card backdrop-blur-xl rounded-3xl p-4 md:p-6 border border-white/10 mb-6">
+      <div className="glass-card backdrop-blur-xl rounded-3xl p-4 md:p-6 border border-[var(--border-color)] mb-6">
         <div className="flex items-center justify-between mb-4 md:mb-6">
-          <h3 className="text-lg md:text-2xl font-bold text-white flex items-center gap-2">
+          <h3 className="text-lg md:text-2xl font-bold text-[var(--text-primary)] flex items-center gap-2">
             <span className="material-symbols-outlined text-[#2AD368] text-xl md:text-2xl">calendar_month</span>
             <span className="truncate">{months[selectedMonth]} {selectedYear}</span>
           </h3>
           <div className="flex gap-1 md:gap-2 flex-shrink-0">
             <button
               onClick={() => setSelectedMonth((prev) => (prev === 0 ? 11 : prev - 1))}
-              className="size-8 md:size-10 glass-card backdrop-blur-xl rounded-xl flex items-center justify-center text-white hover:bg-white/10 transition-all border border-white/10"
+              className="size-8 md:size-10 glass-card backdrop-blur-xl rounded-xl flex items-center justify-center text-[var(--text-primary)] hover:bg-[var(--bg-primary)] dark:bg-background-dark:hover:bg-white/10 transition-all border border-[var(--border-color)]"
             >
               <span className="material-symbols-outlined text-lg md:text-xl">chevron_left</span>
             </button>
             <button
               onClick={() => setSelectedMonth((prev) => (prev === 11 ? 0 : prev + 1))}
-              className="size-8 md:size-10 glass-card backdrop-blur-xl rounded-xl flex items-center justify-center text-white hover:bg-white/10 transition-all border border-white/10"
+              className="size-8 md:size-10 glass-card backdrop-blur-xl rounded-xl flex items-center justify-center text-[var(--text-primary)] hover:bg-[var(--bg-primary)] dark:bg-background-dark:hover:bg-white/10 transition-all border border-[var(--border-color)]"
             >
               <span className="material-symbols-outlined">chevron_right</span>
             </button>
@@ -190,7 +190,7 @@ const PlantCalendarNew: React.FC = () => {
         <div className="grid grid-cols-7 gap-2 mb-2">
           {daysOfWeek.map((day) => (
             <div key={day} className="text-center py-2">
-              <p className="text-xs font-bold text-gray-500 uppercase">{day}</p>
+              <p className="text-xs font-bold text-[var(--text-tertiary)] uppercase">{day}</p>
             </div>
           ))}
         </div>
@@ -209,13 +209,13 @@ const PlantCalendarNew: React.FC = () => {
                     ? ''
                     : isToday
                     ? 'bg-[#2AD368]/20 border-2 border-[#2AD368]'
-                    : 'bg-white/5 hover:bg-white/10 cursor-pointer border border-white/10'
+                    : 'bg-[var(--bg-primary)] dark:bg-background-dark:bg-white/5 hover:bg-[var(--bg-primary)] dark:bg-background-dark:hover:bg-white/10 cursor-pointer border border-[var(--border-color)]'
                 }`}
               >
                 {day && (
                   <>
                     <div className={`text-xs md:text-sm font-bold mb-0.5 md:mb-1 ${
-                      isToday ? 'text-[#2AD368]' : 'text-white'
+                      isToday ? 'text-[#2AD368]' : 'text-[var(--text-primary)]'
                     }`}>
                       {day}
                     </div>
@@ -248,121 +248,121 @@ const PlantCalendarNew: React.FC = () => {
       {/* Saisons */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Printemps */}
-        <div className="glass-card backdrop-blur-xl rounded-3xl p-6 border border-white/10">
+        <div className="glass-card backdrop-blur-xl rounded-3xl p-6 border border-[var(--border-color)]">
           <div className="flex items-center gap-3 mb-4">
             <div className="size-12 bg-[#CBED62]/10 rounded-2xl flex items-center justify-center">
               <span className="text-3xl">🌸</span>
             </div>
             <div>
-              <h3 className="text-lg font-bold text-white">Printemps</h3>
-              <p className="text-xs text-gray-500">Mars - Mai</p>
+              <h3 className="text-lg font-bold text-[var(--text-primary)]">Printemps</h3>
+              <p className="text-xs text-[var(--text-tertiary)]">Mars - Mai</p>
             </div>
           </div>
-          <p className="text-sm text-gray-400 mb-3">
+          <p className="text-sm text-[var(--text-secondary)] mb-3">
             Période idéale pour démarrer la plupart des cultures
           </p>
           <div className="space-y-2">
-            <div className="p-3 bg-white/5 rounded-xl">
-              <p className="text-sm font-semibold text-white mb-1">🥬 Laitue</p>
-              <p className="text-xs text-gray-400">Semis direct • 45-60 jours</p>
+            <div className="p-3 bg-[var(--bg-primary)] dark:bg-background-dark:bg-white/5 rounded-xl">
+              <p className="text-sm font-semibold text-[var(--text-primary)] mb-1">🥬 Laitue</p>
+              <p className="text-xs text-[var(--text-secondary)]">Semis direct • 45-60 jours</p>
             </div>
-            <div className="p-3 bg-white/5 rounded-xl">
-              <p className="text-sm font-semibold text-white mb-1">🥕 Carotte</p>
-              <p className="text-xs text-gray-400">Semis direct • 70-80 jours</p>
+            <div className="p-3 bg-[var(--bg-primary)] dark:bg-background-dark:bg-white/5 rounded-xl">
+              <p className="text-sm font-semibold text-[var(--text-primary)] mb-1">🥕 Carotte</p>
+              <p className="text-xs text-[var(--text-secondary)]">Semis direct • 70-80 jours</p>
             </div>
-            <div className="p-3 bg-white/5 rounded-xl">
-              <p className="text-sm font-semibold text-white mb-1">🌿 Basilic</p>
-              <p className="text-xs text-gray-400">Semis intérieur • 60-90 jours</p>
+            <div className="p-3 bg-[var(--bg-primary)] dark:bg-background-dark:bg-white/5 rounded-xl">
+              <p className="text-sm font-semibold text-[var(--text-primary)] mb-1">🌿 Basilic</p>
+              <p className="text-xs text-[var(--text-secondary)]">Semis intérieur • 60-90 jours</p>
             </div>
           </div>
         </div>
 
         {/* Été */}
-        <div className="glass-card backdrop-blur-xl rounded-3xl p-6 border border-white/10">
+        <div className="glass-card backdrop-blur-xl rounded-3xl p-6 border border-[var(--border-color)]">
           <div className="flex items-center gap-3 mb-4">
             <div className="size-12 bg-orange-500/10 rounded-2xl flex items-center justify-center">
               <span className="text-3xl">☀️</span>
             </div>
             <div>
-              <h3 className="text-lg font-bold text-white">Été</h3>
-              <p className="text-xs text-gray-500">Juin - Août</p>
+              <h3 className="text-lg font-bold text-[var(--text-primary)]">Été</h3>
+              <p className="text-xs text-[var(--text-tertiary)]">Juin - Août</p>
             </div>
           </div>
-          <p className="text-sm text-gray-400 mb-3">
+          <p className="text-sm text-[var(--text-secondary)] mb-3">
             Récolte et entretien des cultures de printemps
           </p>
           <div className="space-y-2">
-            <div className="p-3 bg-white/5 rounded-xl">
-              <p className="text-sm font-semibold text-white mb-1">🍅 Tomate</p>
-              <p className="text-xs text-gray-400">Récolte • Arrosage régulier</p>
+            <div className="p-3 bg-[var(--bg-primary)] dark:bg-background-dark:bg-white/5 rounded-xl">
+              <p className="text-sm font-semibold text-[var(--text-primary)] mb-1">🍅 Tomate</p>
+              <p className="text-xs text-[var(--text-secondary)]">Récolte • Arrosage régulier</p>
             </div>
-            <div className="p-3 bg-white/5 rounded-xl">
-              <p className="text-sm font-semibold text-white mb-1">🥒 Concombre</p>
-              <p className="text-xs text-gray-400">Récolte • Tuteurage</p>
+            <div className="p-3 bg-[var(--bg-primary)] dark:bg-background-dark:bg-white/5 rounded-xl">
+              <p className="text-sm font-semibold text-[var(--text-primary)] mb-1">🥒 Concombre</p>
+              <p className="text-xs text-[var(--text-secondary)]">Récolte • Tuteurage</p>
             </div>
-            <div className="p-3 bg-white/5 rounded-xl">
-              <p className="text-sm font-semibold text-white mb-1">🌶️ Poivron</p>
-              <p className="text-xs text-gray-400">Récolte • Fertilisation</p>
+            <div className="p-3 bg-[var(--bg-primary)] dark:bg-background-dark:bg-white/5 rounded-xl">
+              <p className="text-sm font-semibold text-[var(--text-primary)] mb-1">🌶️ Poivron</p>
+              <p className="text-xs text-[var(--text-secondary)]">Récolte • Fertilisation</p>
             </div>
           </div>
         </div>
 
         {/* Automne */}
-        <div className="glass-card backdrop-blur-xl rounded-3xl p-6 border border-white/10">
+        <div className="glass-card backdrop-blur-xl rounded-3xl p-6 border border-[var(--border-color)]">
           <div className="flex items-center gap-3 mb-4">
             <div className="size-12 bg-orange-600/10 rounded-2xl flex items-center justify-center">
               <span className="text-3xl">🍂</span>
             </div>
             <div>
-              <h3 className="text-lg font-bold text-white">Automne</h3>
-              <p className="text-xs text-gray-500">Septembre - Novembre</p>
+              <h3 className="text-lg font-bold text-[var(--text-primary)]">Automne</h3>
+              <p className="text-xs text-[var(--text-tertiary)]">Septembre - Novembre</p>
             </div>
           </div>
-          <p className="text-sm text-gray-400 mb-3">
+          <p className="text-sm text-[var(--text-secondary)] mb-3">
             Cultures d'hiver et préparation de la serre
           </p>
           <div className="space-y-2">
-            <div className="p-3 bg-white/5 rounded-xl">
-              <p className="text-sm font-semibold text-white mb-1">🥬 Épinard</p>
-              <p className="text-xs text-gray-400">Semis • 40-50 jours</p>
+            <div className="p-3 bg-[var(--bg-primary)] dark:bg-background-dark:bg-white/5 rounded-xl">
+              <p className="text-sm font-semibold text-[var(--text-primary)] mb-1">🥬 Épinard</p>
+              <p className="text-xs text-[var(--text-secondary)]">Semis • 40-50 jours</p>
             </div>
-            <div className="p-3 bg-white/5 rounded-xl">
-              <p className="text-sm font-semibold text-white mb-1">🧅 Oignon</p>
-              <p className="text-xs text-gray-400">Plantation • 90-120 jours</p>
+            <div className="p-3 bg-[var(--bg-primary)] dark:bg-background-dark:bg-white/5 rounded-xl">
+              <p className="text-sm font-semibold text-[var(--text-primary)] mb-1">🧅 Oignon</p>
+              <p className="text-xs text-[var(--text-secondary)]">Plantation • 90-120 jours</p>
             </div>
-            <div className="p-3 bg-white/5 rounded-xl">
-              <p className="text-sm font-semibold text-white mb-1">🥦 Brocoli</p>
-              <p className="text-xs text-gray-400">Semis • 80-100 jours</p>
+            <div className="p-3 bg-[var(--bg-primary)] dark:bg-background-dark:bg-white/5 rounded-xl">
+              <p className="text-sm font-semibold text-[var(--text-primary)] mb-1">🥦 Brocoli</p>
+              <p className="text-xs text-[var(--text-secondary)]">Semis • 80-100 jours</p>
             </div>
           </div>
         </div>
 
         {/* Hiver */}
-        <div className="glass-card backdrop-blur-xl rounded-3xl p-6 border border-white/10">
+        <div className="glass-card backdrop-blur-xl rounded-3xl p-6 border border-[var(--border-color)]">
           <div className="flex items-center gap-3 mb-4">
             <div className="size-12 bg-blue-500/10 rounded-2xl flex items-center justify-center">
               <span className="text-3xl">❄️</span>
             </div>
             <div>
-              <h3 className="text-lg font-bold text-white">Hiver</h3>
-              <p className="text-xs text-gray-500">Décembre - Février</p>
+              <h3 className="text-lg font-bold text-[var(--text-primary)]">Hiver</h3>
+              <p className="text-xs text-[var(--text-tertiary)]">Décembre - Février</p>
             </div>
           </div>
-          <p className="text-sm text-gray-400 mb-3">
+          <p className="text-sm text-[var(--text-secondary)] mb-3">
             Cultures résistantes et planification
           </p>
           <div className="space-y-2">
-            <div className="p-3 bg-white/5 rounded-xl">
-              <p className="text-sm font-semibold text-white mb-1">🥬 Mâche</p>
-              <p className="text-xs text-gray-400">Récolte • Résistant au froid</p>
+            <div className="p-3 bg-[var(--bg-primary)] dark:bg-background-dark:bg-white/5 rounded-xl">
+              <p className="text-sm font-semibold text-[var(--text-primary)] mb-1">🥬 Mâche</p>
+              <p className="text-xs text-[var(--text-secondary)]">Récolte • Résistant au froid</p>
             </div>
-            <div className="p-3 bg-white/5 rounded-xl">
-              <p className="text-sm font-semibold text-white mb-1">🥕 Carotte d'hiver</p>
-              <p className="text-xs text-gray-400">Récolte • Conservation</p>
+            <div className="p-3 bg-[var(--bg-primary)] dark:bg-background-dark:bg-white/5 rounded-xl">
+              <p className="text-sm font-semibold text-[var(--text-primary)] mb-1">🥕 Carotte d'hiver</p>
+              <p className="text-xs text-[var(--text-secondary)]">Récolte • Conservation</p>
             </div>
-            <div className="p-3 bg-white/5 rounded-xl">
-              <p className="text-sm font-semibold text-white mb-1">🌿 Persil</p>
-              <p className="text-xs text-gray-400">Récolte • Aromatique</p>
+            <div className="p-3 bg-[var(--bg-primary)] dark:bg-background-dark:bg-white/5 rounded-xl">
+              <p className="text-sm font-semibold text-[var(--text-primary)] mb-1">🌿 Persil</p>
+              <p className="text-xs text-[var(--text-secondary)]">Récolte • Aromatique</p>
             </div>
           </div>
         </div>

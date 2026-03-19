@@ -37,10 +37,10 @@ const StatCard: React.FC<StatCardProps> = ({
           </span>
         )}
       </div>
-      <p className="text-gray-400 text-xs font-medium uppercase mb-1 tracking-wider">{label}</p>
-      <p className="text-2xl font-black group-hover:text-primary transition-colors">
+      <p className="text-[var(--text-secondary)] text-xs font-medium uppercase mb-1 tracking-wider">{label}</p>
+      <p className="text-2xl font-black text-[var(--text-primary)] group-hover:text-primary transition-colors">
         {value}
-        <span className="text-gray-500 text-lg">{unit}</span>
+        <span className="text-[var(--text-tertiary)] text-lg">{unit}</span>
       </p>
     </GlassCard>
   );

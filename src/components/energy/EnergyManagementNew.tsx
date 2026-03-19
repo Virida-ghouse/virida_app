@@ -73,7 +73,7 @@ export default function EnergyManagementNew() {
   };
 
   return (
-    <div className="flex-1 overflow-y-auto overflow-x-hidden bg-background-dark p-4 md:p-6 lg:p-8 pb-20 lg:pb-8">
+    <div className="flex-1 overflow-y-auto overflow-x-hidden bg-[var(--bg-primary)] dark:bg-background-dark text-[var(--text-primary)] p-4 md:p-6 lg:p-8 pb-20 lg:pb-8">
       {/* Header */}
       <div className="mb-6 md:mb-8">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4 md:mb-6">
@@ -84,10 +84,10 @@ export default function EnergyManagementNew() {
               </span>
             </div>
             <div className="min-w-0">
-              <h1 className="text-2xl md:text-3xl font-black text-white mb-1">
+              <h1 className="text-2xl md:text-3xl font-black text-[var(--text-primary)] mb-1">
                 Energy <span className="text-[#CBED62]">Management</span>
               </h1>
-              <p className="text-gray-400 text-sm md:text-base">
+              <p className="text-[var(--text-secondary)] text-sm md:text-base">
                 Surveillez et optimisez votre consommation énergétique
               </p>
             </div>
@@ -96,7 +96,7 @@ export default function EnergyManagementNew() {
             <select
               value={selectedTimeRange}
               onChange={(e) => setSelectedTimeRange(e.target.value)}
-              className="px-4 py-2 rounded-xl glass-card backdrop-blur-xl border border-white/10 text-white text-sm focus:border-[#2AD368] focus:outline-none transition-all"
+              className="px-4 py-2 rounded-xl glass-card backdrop-blur-xl border border-[var(--border-color)] text-[var(--text-primary)] text-sm focus:border-[#2AD368] focus:outline-none transition-all"
             >
               <option value="24h">24 heures</option>
               <option value="7d">7 jours</option>
@@ -104,14 +104,14 @@ export default function EnergyManagementNew() {
             </select>
             <button
               onClick={() => setLastUpdate(new Date())}
-              className="p-2 glass-card backdrop-blur-xl rounded-xl border border-white/10 text-gray-400 hover:text-white hover:border-[#2AD368]/30 transition-all"
+              className="p-2 glass-card backdrop-blur-xl rounded-xl border border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[#2AD368]/30 transition-all"
               title="Actualiser"
             >
               <span className="material-symbols-outlined">refresh</span>
             </button>
           </div>
         </div>
-        <p className="text-xs text-gray-500">
+        <p className="text-[var(--text-primary)] text-xs">
           Dernière mise à jour: {lastUpdate.toLocaleTimeString('fr-FR')}
         </p>
       </div>
@@ -120,47 +120,47 @@ export default function EnergyManagementNew() {
         {/* Main Content - Left Side */}
         <div className="lg:col-span-8 space-y-6">
           {/* Real-time Metrics */}
-          <div className="glass-card backdrop-blur-xl rounded-2xl p-6 border border-white/10">
-            <h2 className="text-xl font-bold text-white mb-4">Métriques en temps réel</h2>
+          <div className="glass-card backdrop-blur-xl rounded-2xl p-6 border border-[var(--border-color)]">
+            <h2 className="text-xl font-bold text-[var(--text-primary)] mb-4">Métriques en temps réel</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {/* Consumption */}
-              <div className="glass-card backdrop-blur-xl rounded-xl p-4 border border-white/10">
+              <div className="glass-card backdrop-blur-xl rounded-xl p-4 border border-[var(--border-color)]">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="material-symbols-outlined text-[#e74c3c]">bolt</span>
-                  <p className="text-xs text-gray-400">Consommation</p>
+                  <p className="text-[var(--text-primary)] text-xs">Consommation</p>
                 </div>
-                <p className="text-2xl font-black text-white">{energyData.currentConsumption.toFixed(1)}</p>
-                <p className="text-xs text-gray-500">kW</p>
+                <p className="text-2xl font-black text-[var(--text-primary)]">{energyData.currentConsumption.toFixed(1)}</p>
+                <p className="text-[var(--text-primary)] text-xs">kW</p>
               </div>
 
               {/* Solar */}
-              <div className="glass-card backdrop-blur-xl rounded-xl p-4 border border-white/10">
+              <div className="glass-card backdrop-blur-xl rounded-xl p-4 border border-[var(--border-color)]">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="material-symbols-outlined text-[#2AD368]">wb_sunny</span>
-                  <p className="text-xs text-gray-400">Solaire</p>
+                  <p className="text-[var(--text-primary)] text-xs">Solaire</p>
                 </div>
                 <p className="text-2xl font-black text-[#2AD368]">{energyData.solarProduction.toFixed(1)}</p>
-                <p className="text-xs text-gray-500">kW</p>
+                <p className="text-[var(--text-primary)] text-xs">kW</p>
               </div>
 
               {/* Grid */}
-              <div className="glass-card backdrop-blur-xl rounded-xl p-4 border border-white/10">
+              <div className="glass-card backdrop-blur-xl rounded-xl p-4 border border-[var(--border-color)]">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="material-symbols-outlined text-[#3498db]">power</span>
-                  <p className="text-xs text-gray-400">Réseau</p>
+                  <p className="text-[var(--text-primary)] text-xs">Réseau</p>
                 </div>
                 <p className="text-2xl font-black text-[#3498db]">{energyData.gridConsumption.toFixed(1)}</p>
-                <p className="text-xs text-gray-500">kW</p>
+                <p className="text-[var(--text-primary)] text-xs">kW</p>
               </div>
 
               {/* Battery */}
-              <div className="glass-card backdrop-blur-xl rounded-xl p-4 border border-white/10">
+              <div className="glass-card backdrop-blur-xl rounded-xl p-4 border border-[var(--border-color)]">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="material-symbols-outlined text-[#CBED62]">battery_charging_full</span>
-                  <p className="text-xs text-gray-400">Batterie</p>
+                  <p className="text-[var(--text-primary)] text-xs">Batterie</p>
                 </div>
-                <p className="text-2xl font-black text-white">{energyData.batteryLevel}</p>
-                <p className="text-xs text-gray-500">%</p>
+                <p className="text-2xl font-black text-[var(--text-primary)]">{energyData.batteryLevel}</p>
+                <p className="text-[var(--text-primary)] text-xs">%</p>
                 <span className={`inline-block mt-1 px-2 py-0.5 rounded-full text-[9px] font-bold ${
                   energyData.batteryCharging ? 'bg-[#2AD368]/20 text-[#2AD368]' : 'bg-orange-500/20 text-orange-400'
                 }`}>
@@ -171,14 +171,14 @@ export default function EnergyManagementNew() {
           </div>
 
           {/* Energy Distribution */}
-          <div className="glass-card backdrop-blur-xl rounded-2xl p-6 border border-white/10">
-            <h2 className="text-xl font-bold text-white mb-4">Distribution énergétique</h2>
+          <div className="glass-card backdrop-blur-xl rounded-2xl p-6 border border-[var(--border-color)]">
+            <h2 className="text-xl font-bold text-[var(--text-primary)] mb-4">Distribution énergétique</h2>
             <div className="space-y-3">
               {energyData.distribution.map((item, index) => (
                 <div key={index}>
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm text-gray-300">{item.name}</span>
-                    <span className="text-sm font-bold text-white">{item.value}%</span>
+                    <span className="text-sm text-[var(--text-secondary)]">{item.name}</span>
+                    <span className="text-sm font-bold text-[var(--text-primary)]">{item.value}%</span>
                   </div>
                   <div className="w-full bg-white/10 rounded-full h-2">
                     <div
@@ -195,13 +195,13 @@ export default function EnergyManagementNew() {
           </div>
 
           {/* Historical Chart */}
-          <div className="glass-card backdrop-blur-xl rounded-2xl p-6 border border-white/10">
-            <h2 className="text-xl font-bold text-white mb-6">Historique de consommation</h2>
+          <div className="glass-card backdrop-blur-xl rounded-2xl p-6 border border-[var(--border-color)]">
+            <h2 className="text-xl font-bold text-[var(--text-primary)] mb-6">Historique de consommation</h2>
             
             {/* Chart */}
             <div className="relative h-80 mb-6">
               {/* Y-axis labels */}
-              <div className="absolute left-0 top-0 bottom-0 flex flex-col justify-between text-xs text-gray-500 pr-2">
+              <div className="absolute left-0 top-0 bottom-0 flex flex-col justify-between text-xs text-[var(--text-tertiary)] pr-2">
                 <span>60kW</span>
                 <span>45kW</span>
                 <span>30kW</span>
@@ -234,7 +234,7 @@ export default function EnergyManagementNew() {
                             style={{ height: `${solarHeight}%`, minHeight: solarHeight > 0 ? '4px' : '0' }}
                           >
                             {/* Tooltip on hover */}
-                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-[#121A21] rounded text-[10px] text-white whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-[#121A21] rounded text-[10px] text-[var(--text-primary)] whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                               {data.solar.toFixed(1)}kW
                             </div>
                           </div>
@@ -247,7 +247,7 @@ export default function EnergyManagementNew() {
                             style={{ height: `${consumptionHeight}%`, minHeight: consumptionHeight > 0 ? '4px' : '0' }}
                           >
                             {/* Tooltip on hover */}
-                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-[#121A21] rounded text-[10px] text-white whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-[#121A21] rounded text-[10px] text-[var(--text-primary)] whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                               {data.consumption.toFixed(1)}kW
                             </div>
                           </div>
@@ -256,7 +256,7 @@ export default function EnergyManagementNew() {
                       
                       {/* Time label */}
                       {index % 3 === 0 && (
-                        <span className="text-[10px] text-gray-500 font-medium">{data.time}</span>
+                        <span className="text-[10px] text-[var(--text-tertiary)] font-medium">{data.time}</span>
                       )}
                     </div>
                   );
@@ -268,11 +268,11 @@ export default function EnergyManagementNew() {
             <div className="flex items-center justify-center gap-6">
               <div className="flex items-center gap-2">
                 <div className="w-4 h-4 rounded bg-gradient-to-t from-[#2AD368] to-[#2AD368]/60" />
-                <span className="text-sm text-gray-300 font-medium">Production Solaire</span>
+                <span className="text-sm text-[var(--text-secondary)] font-medium">Production Solaire</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-4 h-4 rounded bg-gradient-to-t from-[#e74c3c] to-[#e74c3c]/60" />
-                <span className="text-sm text-gray-300 font-medium">Consommation Totale</span>
+                <span className="text-sm text-[var(--text-secondary)] font-medium">Consommation Totale</span>
               </div>
             </div>
           </div>
@@ -281,14 +281,14 @@ export default function EnergyManagementNew() {
         {/* Controls - Right Side */}
         <div className="lg:col-span-4 space-y-6">
           {/* Energy Controls */}
-          <div className="glass-card backdrop-blur-xl rounded-2xl p-6 border border-white/10">
-            <h2 className="text-xl font-bold text-white mb-4">Contrôles énergétiques</h2>
+          <div className="glass-card backdrop-blur-xl rounded-2xl p-6 border border-[var(--border-color)]">
+            <h2 className="text-xl font-bold text-[var(--text-primary)] mb-4">Contrôles énergétiques</h2>
             
             {/* Auto Mode */}
-            <div className="flex items-center justify-between mb-6 pb-6 border-b border-white/10">
+            <div className="flex items-center justify-between mb-6 pb-6 border-b border-[var(--border-color)]">
               <div>
-                <p className="text-sm font-semibold text-white">Mode automatique</p>
-                <p className="text-xs text-gray-500">Optimisation IA</p>
+                <p className="text-sm font-semibold text-[var(--text-primary)]">Mode automatique</p>
+                <p className="text-[var(--text-primary)] text-xs">Optimisation IA</p>
               </div>
               <button
                 onClick={() => setAutoMode(!autoMode)}
@@ -307,8 +307,8 @@ export default function EnergyManagementNew() {
             {/* Lighting Intensity */}
             <div className="mb-6">
               <div className="flex items-center justify-between mb-2">
-                <label className="text-sm font-semibold text-gray-300">Intensité lumineuse</label>
-                <span className="text-sm font-bold text-white">{lightingIntensity}%</span>
+                <label className="text-sm font-semibold text-[var(--text-secondary)]">Intensité lumineuse</label>
+                <span className="text-sm font-bold text-[var(--text-primary)]">{lightingIntensity}%</span>
               </div>
               <input
                 type="range"
@@ -328,8 +328,8 @@ export default function EnergyManagementNew() {
             {/* Climate Control */}
             <div className="mb-6">
               <div className="flex items-center justify-between mb-2">
-                <label className="text-sm font-semibold text-gray-300">Climatisation</label>
-                <span className="text-sm font-bold text-white">{climateControl}%</span>
+                <label className="text-sm font-semibold text-[var(--text-secondary)]">Climatisation</label>
+                <span className="text-sm font-bold text-[var(--text-primary)]">{climateControl}%</span>
               </div>
               <input
                 type="range"
@@ -349,8 +349,8 @@ export default function EnergyManagementNew() {
             {/* Battery Usage */}
             <div className="mb-6">
               <div className="flex items-center justify-between mb-2">
-                <label className="text-sm font-semibold text-gray-300">Utilisation batterie</label>
-                <span className="text-sm font-bold text-white">{batteryUsage}%</span>
+                <label className="text-sm font-semibold text-[var(--text-secondary)]">Utilisation batterie</label>
+                <span className="text-sm font-bold text-[var(--text-primary)]">{batteryUsage}%</span>
               </div>
               <input
                 type="range"
@@ -378,17 +378,17 @@ export default function EnergyManagementNew() {
           </div>
 
           {/* Savings Card */}
-          <div className="glass-card backdrop-blur-xl rounded-2xl p-6 border border-white/10 bg-gradient-to-br from-[#2AD368]/10 to-transparent">
+          <div className="glass-card backdrop-blur-xl rounded-2xl p-6 border border-[var(--border-color)] bg-gradient-to-br from-[#2AD368]/10 to-transparent">
             <div className="flex items-center gap-3 mb-3">
               <div className="size-12 bg-[#2AD368]/20 rounded-xl flex items-center justify-center">
                 <span className="material-symbols-outlined text-[#2AD368] text-2xl">savings</span>
               </div>
               <div>
-                <p className="text-sm text-gray-400">Économies ce mois</p>
+                <p className="text-sm text-[var(--text-secondary)]">Économies ce mois</p>
                 <p className="text-3xl font-black text-[#2AD368]">{energyData.savings}%</p>
               </div>
             </div>
-            <p className="text-xs text-gray-500">
+            <p className="text-[var(--text-primary)] text-xs">
               Vous économisez grâce à l'énergie solaire et à l'optimisation automatique
             </p>
           </div>

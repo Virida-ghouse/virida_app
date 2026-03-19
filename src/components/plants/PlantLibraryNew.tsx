@@ -105,7 +105,7 @@ const PlantLibraryNew: React.FC = () => {
 
   if (error) {
     return (
-      <div className="p-4 glass-card backdrop-blur-xl rounded-2xl border border-red-500/30 bg-red-500/10">
+      <div className="p-4 glass-card bg-[var(--bg-primary)] dark:bg-background-darkblur-xl rounded-2xl border border-red-500/30 bg-black/5 dark:bg-white/5d-500/10">
         <div className="flex items-center gap-3">
           <span className="material-symbols-outlined text-red-400">error</span>
           <p className="text-red-400 font-medium">{error}</p>
@@ -118,14 +118,14 @@ const PlantLibraryNew: React.FC = () => {
     <div>
       {/* Header avec recherche */}
       <div className="mb-6">
-        <p className="text-gray-400 mb-4">
+        <p className="text-[var(--text-secondary)] mb-4">
           Explorez notre catalogue de {plants.length} plantes pour votre serre
         </p>
 
         <div className="flex gap-3">
           {/* Barre de recherche */}
           <div className="flex-1 relative">
-            <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">
+            <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)]">
               search
             </span>
             <input
@@ -133,7 +133,7 @@ const PlantLibraryNew: React.FC = () => {
               placeholder="Rechercher par nom ou espèce..."
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 glass-card backdrop-blur-xl rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#2AD368]/50 transition-all border border-white/10"
+              className="w-full pl-12 pr-4 py-3 glass-card bg-[var(--bg-primary)] dark:bg-background-darkblur-xl rounded-xl text-[var(--text-primary)] placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#2AD368]/50 transition-all border border-[var(--border-color)]"
             />
           </div>
 
@@ -143,7 +143,7 @@ const PlantLibraryNew: React.FC = () => {
             className={`px-4 py-3 rounded-xl transition-all flex items-center gap-2 ${
               showFilters
                 ? 'bg-[#2AD368] text-[#121A21]'
-                : 'glass-card backdrop-blur-xl text-gray-400 hover:text-white border border-white/10'
+                : 'glass-card bg-[var(--bg-primary)] dark:bg-background-darkblur-xl text-[var(--text-secondary)] hover:bg-black/5 dark:hover:bg-white/10xt-[var(--text-primary)] border border-[var(--border-color)]'
             }`}
           >
             <span className="material-symbols-outlined">filter_list</span>
@@ -152,17 +152,17 @@ const PlantLibraryNew: React.FC = () => {
 
         {/* Filtres avancés */}
         {showFilters && (
-          <div className="mt-4 glass-card backdrop-blur-xl rounded-2xl p-4 border border-white/10">
+          <div className="mt-4 glass-card bg-[var(--bg-primary)] dark:bg-background-darkblur-xl rounded-2xl p-4 border border-[var(--border-color)]">
             <div className="grid grid-cols-2 gap-4">
               {/* Catégorie */}
               <div>
-                <label className="block text-sm font-semibold text-gray-300 mb-2">
+                <label className="block text-sm font-semibold text-[var(--text-secondary)] mb-2">
                   Catégorie
                 </label>
                 <select
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="w-full px-4 py-2 glass-card backdrop-blur-xl rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-[#2AD368]/50 transition-all border border-white/10"
+                  className="w-full px-4 py-2 glass-card bg-[var(--bg-primary)] dark:bg-background-darkblur-xl rounded-xl text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[#2AD368]/50 transition-all border border-[var(--border-color)]"
                 >
                   <option value="">Toutes les catégories</option>
                   {categories.map((cat) => (
@@ -173,13 +173,13 @@ const PlantLibraryNew: React.FC = () => {
 
               {/* Difficulté */}
               <div>
-                <label className="block text-sm font-semibold text-gray-300 mb-2">
+                <label className="block text-sm font-semibold text-[var(--text-secondary)] mb-2">
                   Difficulté
                 </label>
                 <select
                   value={selectedDifficulty}
                   onChange={(e) => setSelectedDifficulty(e.target.value)}
-                  className="w-full px-4 py-2 glass-card backdrop-blur-xl rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-[#2AD368]/50 transition-all border border-white/10"
+                  className="w-full px-4 py-2 glass-card bg-[var(--bg-primary)] dark:bg-background-darkblur-xl rounded-xl text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[#2AD368]/50 transition-all border border-[var(--border-color)]"
                 >
                   <option value="">Toutes les difficultés</option>
                   {difficulties.map((diff) => (
@@ -194,19 +194,19 @@ const PlantLibraryNew: React.FC = () => {
 
       {/* Résultats */}
       <div className="mb-4">
-        <p className="text-sm text-gray-400">
+        <p className="text-sm text-[var(--text-secondary)]">
           <span className="text-[#2AD368] font-semibold">{filteredPlants.length}</span> plante{filteredPlants.length > 1 ? 's' : ''} trouvée{filteredPlants.length > 1 ? 's' : ''}
         </p>
       </div>
 
       {/* Grille de plantes */}
       {filteredPlants.length === 0 ? (
-        <div className="glass-card backdrop-blur-xl rounded-3xl p-12 text-center border border-white/10">
+        <div className="glass-card bg-[var(--bg-primary)] dark:bg-background-darkblur-xl rounded-3xl p-12 text-center border border-[var(--border-color)]">
           <span className="text-6xl mb-4 block">🔍</span>
-          <h3 className="text-xl font-bold text-white mb-2">
+          <h3 className="text-xl font-bold text-[var(--text-primary)] mb-2">
             Aucune plante trouvée
           </h3>
-          <p className="text-gray-400">
+          <p className="text-[var(--text-secondary)]">
             Essayez de modifier vos critères de recherche
           </p>
         </div>

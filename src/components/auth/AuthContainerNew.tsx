@@ -16,7 +16,7 @@ const AuthContainerNew: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#121A21] flex items-center justify-center p-4 md:p-6 relative overflow-hidden">
+    <div className="min-h-screen bg-[var(--bg-primary)] dark:bg-[#0a1612] flex items-center justify-center p-4 md:p-6 relative overflow-hidden">
       {/* Background Effects */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#2AD368]/10 rounded-full blur-3xl animate-pulse"></div>
@@ -29,7 +29,7 @@ const AuthContainerNew: React.FC = () => {
 
       {/* Login Card */}
       <div className="relative z-10 w-full max-w-md">
-        <div className="glass-card backdrop-blur-xl rounded-3xl p-6 md:p-8 border-2 border-[#2AD368]/20 shadow-2xl">
+        <div className="glass-card backdrop-blur-xl rounded-3xl p-6 md:p-8 border-2 border-[#2AD368]/20 shadow-2xl text-white">
           {/* Error Message */}
           {error && (
             <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400 text-sm">
@@ -46,9 +46,9 @@ const AuthContainerNew: React.FC = () => {
         </div>
 
         {/* Footer */}
-        <div className="mt-8 text-center">
-          <p className="text-gray-500 text-xs">
-            © 2024 Virida. Tous droits réservés.
+        <div className="mt-8 text-[var(--text-primary)]">
+          <p className="text-[var(--text-secondary)] text-xs">
+            2024 Virida. Tous droits réservés.
           </p>
         </div>
       </div>

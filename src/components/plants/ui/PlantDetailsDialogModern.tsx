@@ -400,8 +400,8 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
 
   return (
     <>
-      <div className="fixed inset-0 z-[9000] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-        <div className="glass-card backdrop-blur-xl rounded-3xl w-full max-w-4xl max-h-[90vh] overflow-hidden border-2 border-[#2AD368]/20 shadow-2xl flex flex-col">
+      <div className="fixed inset-0 z-[9000] flex items-center justify-center p-4 bg-black/60 dark:bg-black/60 backdrop-blur-sm">
+        <div className="bg-[var(--bg-secondary)] backdrop-blur-xl rounded-3xl w-full max-w-4xl max-h-[90vh] overflow-hidden border-2 border-[#2AD368]/20 shadow-2xl flex flex-col">
           {/* Header avec image */}
           <div className="relative">
             <div className="h-48 md:h-64 bg-gradient-to-br from-[#1a1f26] to-[#0a0f14] relative overflow-hidden">
@@ -422,7 +422,7 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
             {/* Close button */}
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 size-10 rounded-full bg-black/40 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-black/60 transition-all"
+              className="absolute top-4 right-4 size-10 rounded-full bg-black/40 backdrop-blur-md border border-white/20 flex items-center justify-center text-[var(--text-primary)] hover:bg-black/60 transition-all"
             >
               <span className="material-symbols-outlined">close</span>
             </button>
@@ -431,17 +431,17 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
             <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6">
               <div className="flex items-end justify-between gap-4">
                 <div className="flex-1 min-w-0">
-                  <h2 className="text-2xl md:text-3xl font-black text-white mb-2 truncate">
+                  <h2 className="text-2xl md:text-3xl font-black text-white mb-2 truncate drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
                     {plant.name}
                   </h2>
-                  <p className="text-sm md:text-base text-gray-300 italic truncate">
+                  <p className="text-sm md:text-base text-white/90 italic truncate drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
                     {plant.species}
                   </p>
                 </div>
                 
                 {plant.health !== undefined && (
                   <div className="flex-shrink-0 text-right">
-                    <p className="text-xs text-gray-400 mb-1">Santé</p>
+                    <p className="text-xs text-white/80 mb-1 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">Santé</p>
                     <p className={`text-3xl md:text-4xl font-black ${getHealthColor(plant.health)}`}>
                       {plant.health}%
                     </p>
@@ -452,7 +452,7 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
           </div>
 
           {/* Tabs */}
-          <div className="border-b border-white/10 px-4 md:px-6 bg-[#121A21]/50">
+          <div className="border-b border-[var(--border-color)] px-4 md:px-6 bg-[var(--bg-primary)]">
             <div className="flex gap-1 overflow-x-auto scrollbar-hide">
               {tabs.map((tab) => (
                 <button
@@ -461,7 +461,7 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                   className={`flex items-center gap-2 px-4 md:px-6 py-3 md:py-4 font-semibold text-sm md:text-base whitespace-nowrap transition-all border-b-2 flex-shrink-0 ${
                     currentTab === tab.id
                       ? 'text-[#2AD368] border-[#2AD368]'
-                      : 'text-gray-400 border-transparent hover:text-white'
+                      : 'text-gray-400 border-transparent hover:text-[var(--text-primary)]'
                   }`}
                 >
                   <span className="material-symbols-outlined text-lg md:text-xl">
@@ -485,7 +485,7 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                 {currentTab === 0 && (
                   <div className="space-y-4">
                     <div className="flex justify-between items-center mb-4">
-                      <h3 className="text-xl font-bold text-white">Informations</h3>
+                      <h3 className="text-xl font-bold text-[var(--text-primary)]">Informations</h3>
                       {!isEditing ? (
                         <button
                           onClick={() => setIsEditing(true)}
@@ -499,14 +499,14 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                           <button
                             onClick={handleSave}
                             disabled={loading}
-                            className="px-4 py-2 rounded-xl bg-[#2AD368] text-[#121A21] font-semibold hover:bg-[#1fc75c] transition-all flex items-center gap-2"
+                            className="px-4 py-2 rounded-xl bg-[#2AD368] text-[var(--btn-primary-text)] font-semibold shadow-[0_8px_20px_rgba(42,211,104,0.5)] hover:shadow-[0_12px_30px_rgba(42,211,104,0.8)] hover:scale-105 transition-all flex items-center gap-2 disabled:opacity-50"
                           >
                             <span className="material-symbols-outlined text-lg">save</span>
                             <span>Sauvegarder</span>
                           </button>
                           <button
                             onClick={() => setIsEditing(false)}
-                            className="px-4 py-2 rounded-xl glass-card backdrop-blur-xl border border-white/10 text-gray-300 font-semibold hover:text-white transition-all"
+                            className="px-4 py-2 rounded-xl glass-card backdrop-blur-xl border border-[var(--border-color)] text-gray-300 font-semibold hover:text-[var(--text-primary)] transition-all"
                           >
                             Annuler
                           </button>
@@ -516,43 +516,43 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {/* Nom */}
-                      <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-white/10">
+                      <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-[var(--border-color)]">
                         <label className="text-xs text-gray-400 mb-2 block">Nom</label>
                         {isEditing ? (
                           <input
                             type="text"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
-                            className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#2AD368]"
+                            className="w-full bg-white/5 border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368]"
                           />
                         ) : (
-                          <p className="text-white font-semibold">{name}</p>
+                          <p className="text-[var(--text-primary)] font-semibold">{name}</p>
                         )}
                       </div>
 
                       {/* Zone */}
-                      <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-white/10">
+                      <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-[var(--border-color)]">
                         <label className="text-xs text-gray-400 mb-2 block">Zone</label>
                         {isEditing ? (
                           <input
                             type="text"
                             value={zone}
                             onChange={(e) => setZone(e.target.value)}
-                            className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#2AD368]"
+                            className="w-full bg-white/5 border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368]"
                           />
                         ) : (
-                          <p className="text-white font-semibold">{zone || 'Non défini'}</p>
+                          <p className="text-[var(--text-primary)] font-semibold">{zone || 'Non défini'}</p>
                         )}
                       </div>
 
                       {/* Statut */}
-                      <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-white/10">
+                      <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-[var(--border-color)]">
                         <label className="text-xs text-gray-400 mb-2 block">Statut</label>
                         {isEditing ? (
                           <select
                             value={status}
                             onChange={(e) => setStatus(e.target.value)}
-                            className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#2AD368]"
+                            className="w-full bg-white/5 border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368]"
                           >
                             <option value="PLANTED">Planté</option>
                             <option value="GROWING">En croissance</option>
@@ -563,40 +563,40 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                             <option value="DEAD">Mort</option>
                           </select>
                         ) : (
-                          <p className="text-white font-semibold">{getStatusLabel(status)}</p>
+                          <p className="text-[var(--text-primary)] font-semibold">{getStatusLabel(status)}</p>
                         )}
                       </div>
 
                       {/* Serre */}
-                      <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-white/10">
+                      <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-[var(--border-color)]">
                         <label className="text-xs text-gray-400 mb-2 block">Serre</label>
                         {isEditing ? (
                           <select
                             value={greenhouse}
                             onChange={(e) => setGreenhouse(e.target.value)}
-                            className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#2AD368]"
+                            className="w-full bg-white/5 border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368]"
                           >
                             <option value="">Aucune</option>
                             <option value="greenhouse-demo-1">Serre Principale</option>
                             <option value="greenhouse-demo-2">Serre Expérimentale</option>
                           </select>
                         ) : (
-                          <p className="text-white font-semibold">{greenhouseName || 'Non défini'}</p>
+                          <p className="text-[var(--text-primary)] font-semibold">{greenhouseName || 'Non défini'}</p>
                         )}
                       </div>
 
                       {/* Date de plantation */}
-                      <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-white/10">
+                      <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-[var(--border-color)]">
                         <label className="text-xs text-gray-400 mb-2 block">Date de plantation</label>
                         {isEditing ? (
                           <input
                             type="date"
                             value={plantedAt}
                             onChange={(e) => setPlantedAt(e.target.value)}
-                            className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#2AD368]"
+                            className="w-full bg-white/5 border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368]"
                           />
                         ) : (
-                          <p className="text-white font-semibold">
+                          <p className="text-[var(--text-primary)] font-semibold">
                             {plantedAt ? new Date(plantedAt).toLocaleDateString('fr-FR') : 'Non défini'}
                           </p>
                         )}
@@ -604,24 +604,24 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                     </div>
 
                     {/* Notes */}
-                    <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-white/10">
+                    <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-[var(--border-color)]">
                       <label className="text-xs text-gray-400 mb-2 block">Notes</label>
                       {isEditing ? (
                         <textarea
                           value={notes}
                           onChange={(e) => setNotes(e.target.value)}
                           rows={3}
-                          className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#2AD368] resize-none"
+                          className="w-full bg-white/5 border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368] resize-none"
                         />
                       ) : (
-                        <p className="text-white">{notes || 'Aucune note'}</p>
+                        <p className="text-[var(--text-primary)]">{notes || 'Aucune note'}</p>
                       )}
                     </div>
 
                     {/* Conditions optimales */}
                     {(plant.optimalWatering || plant.optimalLight || plant.optimalTemp || plant.optimalPH) && (
-                      <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-white/10">
-                        <h4 className="font-bold text-white mb-3 flex items-center gap-2">
+                      <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-[var(--border-color)]">
+                        <h4 className="font-bold text-[var(--text-primary)] mb-3 flex items-center gap-2">
                           <span className="material-symbols-outlined text-[#2AD368]">eco</span>
                           Conditions optimales
                         </h4>
@@ -660,13 +660,13 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                 {currentTab === 1 && (
                   <div className="space-y-4">
                     <div className="flex justify-between items-center">
-                      <h3 className="text-xl font-bold text-white">Tâches de soins</h3>
+                      <h3 className="text-xl font-bold text-[var(--text-primary)]">Tâches de soins</h3>
                       <button
                         onClick={() => {
                           setSelectedTaskId(null);
                           setTaskDialogOpen(true);
                         }}
-                        className="px-4 py-2 rounded-xl bg-[#2AD368] text-[#121A21] font-semibold hover:bg-[#1fc75c] transition-all flex items-center gap-2"
+                        className="px-4 py-2 rounded-xl bg-[#2AD368] text-[var(--btn-primary-text)] font-semibold shadow-[0_8px_20px_rgba(42,211,104,0.5)] hover:shadow-[0_12px_30px_rgba(42,211,104,0.8)] hover:scale-105 transition-all flex items-center gap-2"
                       >
                         <span className="material-symbols-outlined text-lg">add</span>
                         <span>Nouvelle tâche</span>
@@ -675,7 +675,7 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
 
                     {tasks.length === 0 ? (
                       <div className="text-center py-12">
-                        <span className="material-symbols-outlined text-gray-500 text-6xl mb-4">task</span>
+                        <span className="material-symbols-outlined text-[var(--text-tertiary)] text-6xl mb-4">task</span>
                         <p className="text-gray-400">Aucune tâche pour cette plante</p>
                       </div>
                     ) : (
@@ -683,7 +683,7 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                         {tasks.map((task) => (
                           <div
                             key={task.id}
-                            className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-white/10 hover:border-[#2AD368]/30 transition-all"
+                            className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-[var(--border-color)] hover:border-[#2AD368]/30 transition-all"
                           >
                             <div className="flex items-start gap-3">
                               <button
@@ -703,7 +703,7 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                                   <span className={`material-symbols-outlined text-lg ${getTaskColor(task.type)}`}>
                                     {getTaskIcon(task.type)}
                                   </span>
-                                  <h4 className="text-white font-semibold">{task.description}</h4>
+                                  <h4 className="text-[var(--text-primary)] font-semibold">{task.description}</h4>
                                 </div>
                                 <p className="text-xs text-gray-400">
                                   {new Date(task.dueDate).toLocaleDateString('fr-FR')}
@@ -727,10 +727,10 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                 {currentTab === 2 && (
                   <div className="space-y-4">
                     <div className="flex justify-between items-center">
-                      <h3 className="text-xl font-bold text-white">Historique de croissance</h3>
+                      <h3 className="text-xl font-bold text-[var(--text-primary)]">Historique de croissance</h3>
                       <button
                         onClick={() => setShowAddHistory(!showAddHistory)}
-                        className="px-4 py-2 rounded-xl bg-[#2AD368] text-[#121A21] font-semibold hover:bg-[#1fc75c] transition-all flex items-center gap-2"
+                        className="px-4 py-2 rounded-xl bg-[#2AD368] text-[var(--btn-primary-text)] font-semibold shadow-[0_8px_20px_rgba(42,211,104,0.5)] hover:shadow-[0_12px_30px_rgba(42,211,104,0.8)] hover:scale-105 transition-all flex items-center gap-2"
                       >
                         <span className="material-symbols-outlined text-lg">add</span>
                         <span>Ajouter une entrée</span>
@@ -739,8 +739,8 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
 
                     {/* Formulaire d'ajout */}
                     {showAddHistory && (
-                      <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-white/10 space-y-3">
-                        <h4 className="font-bold text-white">Nouvelle entrée d'historique</h4>
+                      <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-[var(--border-color)] space-y-3">
+                        <h4 className="font-bold text-[var(--text-primary)]">Nouvelle entrée d'historique</h4>
                         
                         {/* Upload photo */}
                         <div>
@@ -752,10 +752,10 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                               const file = e.target.files?.[0];
                               if (file) setSelectedPhotoFile(file);
                             }}
-                            className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#2AD368] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-[#2AD368] file:text-[#121A21] file:font-semibold hover:file:bg-[#1fc75c]"
+                            className="w-full bg-white/5 border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-[#2AD368] file:text-[var(--btn-primary-text)] file:font-semibold file:shadow-[0_4px_10px_rgba(42,211,104,0.3)] hover:file:shadow-[0_6px_15px_rgba(42,211,104,0.5)]"
                           />
                           {selectedPhotoFile && (
-                            <p className="text-xs text-gray-400 mt-1">
+                            <p className="text-xs text-[var(--text-secondary)] mt-1">
                               {selectedPhotoFile.name} ({(selectedPhotoFile.size / 1024 / 1024).toFixed(2)} MB)
                             </p>
                           )}
@@ -768,7 +768,7 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                             type="text"
                             value={newPhotoCaption}
                             onChange={(e) => setNewPhotoCaption(e.target.value)}
-                            className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#2AD368]"
+                            className="w-full bg-white/5 border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368]"
                             placeholder="Description..."
                           />
                         </div>
@@ -781,7 +781,7 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                               type="number"
                               value={newLogHeight}
                               onChange={(e) => setNewLogHeight(e.target.value)}
-                              className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#2AD368]"
+                              className="w-full bg-white/5 border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368]"
                               placeholder="0"
                               min="0"
                               step="0.1"
@@ -795,7 +795,7 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                               type="number"
                               value={newLogLeafCount}
                               onChange={(e) => setNewLogLeafCount(e.target.value)}
-                              className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#2AD368]"
+                              className="w-full bg-white/5 border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368]"
                               placeholder="0"
                               min="0"
                             />
@@ -809,7 +809,7 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                             value={newLogNotes}
                             onChange={(e) => setNewLogNotes(e.target.value)}
                             rows={2}
-                            className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#2AD368] resize-none"
+                            className="w-full bg-white/5 border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368] resize-none"
                             placeholder="Observations..."
                           />
                         </div>
@@ -824,17 +824,25 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                               setNewLogLeafCount('');
                               setNewLogNotes('');
                             }}
-                            className="px-4 py-2 rounded-xl glass-card backdrop-blur-xl border border-white/10 text-gray-300 font-semibold hover:text-white transition-all"
+                            className="px-4 py-2 rounded-xl glass-card backdrop-blur-xl border border-[var(--border-color)] text-gray-300 font-semibold hover:text-[var(--text-primary)] transition-all"
                           >
                             Annuler
                           </button>
+                          <div className="flex gap-2">
                           <button
                             onClick={handleAddHistory}
                             disabled={loading}
-                            className="px-4 py-2 rounded-xl bg-[#2AD368] text-[#121A21] font-semibold hover:bg-[#1fc75c] transition-all disabled:opacity-50"
+                            className="px-4 py-2 rounded-xl bg-[#2AD368] text-[var(--btn-primary-text)] font-semibold shadow-[0_8px_20px_rgba(42,211,104,0.5)] hover:shadow-[0_12px_30px_rgba(42,211,104,0.8)] hover:scale-105 transition-all disabled:opacity-50"
                           >
                             {loading ? 'Ajout...' : 'Ajouter'}
                           </button>
+                          <button
+                            onClick={() => setShowAddHistory(false)}
+                            className="px-4 py-2 rounded-xl bg-[#2AD368] text-[var(--btn-primary-text)] font-semibold shadow-[0_8px_20px_rgba(42,211,104,0.5)] hover:shadow-[0_12px_30px_rgba(42,211,104,0.8)] hover:scale-105 transition-all"
+                          >
+                            Ajouter
+                          </button>
+                          </div>
                         </div>
                       </div>
                     )}
@@ -842,13 +850,13 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                     {/* Photos */}
                     {photos.length > 0 && (
                       <div>
-                        <h4 className="font-bold text-white mb-3 flex items-center gap-2">
+                        <h4 className="font-bold text-[var(--text-primary)] mb-3 flex items-center gap-2">
                           <span className="material-symbols-outlined text-[#2AD368]">photo_library</span>
                           Photos
                         </h4>
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                           {photos.map((photo: any) => (
-                            <div key={photo.id} className="glass-card backdrop-blur-xl rounded-2xl overflow-hidden border border-white/10">
+                            <div key={photo.id} className="glass-card backdrop-blur-xl rounded-2xl overflow-hidden border border-[var(--border-color)]">
                               <img
                                 src={photo.url}
                                 alt={photo.caption || 'Photo'}
@@ -857,7 +865,7 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                               {photo.caption && (
                                 <div className="p-2">
                                   <p className="text-xs text-gray-300">{photo.caption}</p>
-                                  <p className="text-xs text-gray-500">
+                                  <p className="text-xs text-[var(--text-tertiary)]">
                                     {new Date(photo.createdAt).toLocaleDateString('fr-FR')}
                                   </p>
                                 </div>
@@ -871,13 +879,13 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                     {/* Logs de croissance */}
                     {growthLogs.length > 0 && (
                       <div>
-                        <h4 className="font-bold text-white mb-3 flex items-center gap-2">
+                        <h4 className="font-bold text-[var(--text-primary)] mb-3 flex items-center gap-2">
                           <span className="material-symbols-outlined text-[#2AD368]">trending_up</span>
                           Logs de croissance
                         </h4>
                         <div className="space-y-3">
                           {growthLogs.map((log: any) => (
-                            <div key={log.id} className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-white/10">
+                            <div key={log.id} className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-[var(--border-color)]">
                               <div className="flex justify-between items-start mb-2">
                                 <p className="text-xs text-gray-400">
                                   {new Date(log.createdAt).toLocaleDateString('fr-FR', {
@@ -891,13 +899,13 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                                 {log.height && (
                                   <div>
                                     <p className="text-xs text-gray-400">Hauteur</p>
-                                    <p className="text-white font-semibold">{log.height} cm</p>
+                                    <p className="text-[var(--text-primary)] font-semibold">{log.height} cm</p>
                                   </div>
                                 )}
                                 {log.leafCount && (
                                   <div>
                                     <p className="text-xs text-gray-400">Feuilles</p>
-                                    <p className="text-white font-semibold">{log.leafCount}</p>
+                                    <p className="text-[var(--text-primary)] font-semibold">{log.leafCount}</p>
                                   </div>
                                 )}
                               </div>
@@ -913,9 +921,9 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                     {/* Message si vide */}
                     {photos.length === 0 && growthLogs.length === 0 && !showAddHistory && (
                       <div className="text-center py-12">
-                        <span className="material-symbols-outlined text-gray-500 text-6xl mb-4">history</span>
+                        <span className="material-symbols-outlined text-[var(--text-tertiary)] text-6xl mb-4">history</span>
                         <p className="text-gray-400">Aucune entrée d'historique</p>
-                        <p className="text-sm text-gray-500 mt-2">Commencez à documenter la croissance de votre plante</p>
+                        <p className="text-xs text-white/80 mb-1 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">Commencez à documenter la croissance de votre plante</p>
                       </div>
                     )}
                   </div>
@@ -925,10 +933,10 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                 {currentTab === 3 && (
                   <div className="space-y-4">
                     <div className="flex justify-between items-center">
-                      <h3 className="text-xl font-bold text-white">Récoltes</h3>
+                      <h3 className="text-xl font-bold text-[var(--text-primary)]">Récoltes</h3>
                       <button
                         onClick={() => setShowAddHarvest(!showAddHarvest)}
-                        className="px-4 py-2 rounded-xl bg-[#2AD368] text-[#121A21] font-semibold hover:bg-[#1fc75c] transition-all flex items-center gap-2"
+                        className="px-4 py-2 rounded-xl bg-[#2AD368] text-[var(--btn-primary-text)] font-semibold shadow-[0_8px_20px_rgba(42,211,104,0.5)] hover:shadow-[0_12px_30px_rgba(42,211,104,0.8)] hover:scale-105 transition-all flex items-center gap-2"
                       >
                         <span className="material-symbols-outlined text-lg">add</span>
                         <span>Ajouter</span>
@@ -937,8 +945,8 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
 
                     {/* Formulaire d'ajout */}
                     {showAddHarvest && (
-                      <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-white/10 space-y-3">
-                        <h4 className="font-bold text-white">Nouvelle récolte</h4>
+                      <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-[var(--border-color)] space-y-3">
+                        <h4 className="font-bold text-[var(--text-primary)]">Nouvelle récolte</h4>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                           <div>
                             <label className="text-xs text-gray-400 mb-1 block">Quantité</label>
@@ -946,7 +954,7 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                               type="number"
                               value={newHarvestQuantity}
                               onChange={(e) => setNewHarvestQuantity(e.target.value)}
-                              className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#2AD368]"
+                              className="w-full bg-white/5 border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368]"
                               placeholder="0"
                               min="0"
                               step="0.1"
@@ -957,7 +965,7 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                             <select
                               value={newHarvestUnit}
                               onChange={(e) => setNewHarvestUnit(e.target.value)}
-                              className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#2AD368]"
+                              className="w-full bg-white/5 border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368]"
                             >
                               <option value="kg">Kilogrammes (kg)</option>
                               <option value="g">Grammes (g)</option>
@@ -971,7 +979,7 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                             <select
                               value={newHarvestQuality}
                               onChange={(e) => setNewHarvestQuality(e.target.value)}
-                              className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#2AD368]"
+                              className="w-full bg-white/5 border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368]"
                             >
                               <option value="EXCELLENT">Excellente</option>
                               <option value="GOOD">Bonne</option>
@@ -985,7 +993,7 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                               type="date"
                               value={newHarvestDate}
                               onChange={(e) => setNewHarvestDate(e.target.value)}
-                              className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#2AD368]"
+                              className="w-full bg-white/5 border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368]"
                             />
                           </div>
                         </div>
@@ -995,14 +1003,14 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                             value={newHarvestNotes}
                             onChange={(e) => setNewHarvestNotes(e.target.value)}
                             rows={2}
-                            className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#2AD368] resize-none"
+                            className="w-full bg-white/5 border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368] resize-none"
                             placeholder="Observations..."
                           />
                         </div>
                         <div className="flex gap-2 justify-end">
                           <button
                             onClick={() => setShowAddHarvest(false)}
-                            className="px-4 py-2 rounded-xl glass-card backdrop-blur-xl border border-white/10 text-gray-300 font-semibold hover:text-white transition-all"
+                            className="px-4 py-2 rounded-xl glass-card backdrop-blur-xl border border-[var(--border-color)] text-gray-300 font-semibold hover:text-[var(--text-primary)] transition-all"
                           >
                             Annuler
                           </button>
@@ -1020,7 +1028,7 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                     {/* Liste des récoltes */}
                     {harvests.length === 0 ? (
                       <div className="text-center py-12">
-                        <span className="material-symbols-outlined text-gray-500 text-6xl mb-4">agriculture</span>
+                        <span className="material-symbols-outlined text-[var(--text-tertiary)] text-6xl mb-4">agriculture</span>
                         <p className="text-gray-400">Aucune récolte enregistrée</p>
                       </div>
                     ) : (
@@ -1028,11 +1036,11 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                         {harvests.map((harvest) => (
                           <div
                             key={harvest.id}
-                            className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-white/10"
+                            className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-[var(--border-color)]"
                           >
                             <div className="flex justify-between items-start">
                               <div>
-                                <h4 className="text-white font-bold text-lg">
+                                <h4 className="text-[var(--text-primary)] font-bold text-lg">
                                   {harvest.quantity} {harvest.unit}
                                 </h4>
                                 <p className="text-xs text-gray-400">
@@ -1076,7 +1084,7 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
           </div>
 
           {/* Footer Actions */}
-          <div className="border-t border-white/10 p-4 md:p-6 flex flex-wrap gap-3 justify-between bg-[#121A21]/50">
+          <div className="border-t border-[var(--border-color)] p-4 md:p-6 flex flex-wrap gap-3 justify-between bg-[var(--bg-primary)]">
             <button
               onClick={handleDelete}
               className="px-4 py-2.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 font-semibold hover:bg-red-500/20 transition-all flex items-center gap-2"
@@ -1087,7 +1095,7 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
             
             <button
               onClick={onClose}
-              className="px-4 md:px-6 py-2.5 rounded-xl glass-card backdrop-blur-xl border border-white/10 text-gray-300 font-semibold hover:text-white transition-all"
+              className="px-4 md:px-6 py-2.5 rounded-xl glass-card backdrop-blur-xl border border-[var(--border-color)] text-gray-300 font-semibold hover:text-[var(--text-primary)] transition-all"
             >
               Fermer
             </button>

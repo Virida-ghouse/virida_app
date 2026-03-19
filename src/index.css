@@ -5,27 +5,63 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    /* Light theme colors - Based design */
+    --bg-primary: #f9fffa;
+    --bg-secondary: #f9fffa;
+    --bg-gradient-start: #f9fffa;
+    --bg-gradient-end: rgba(42, 211, 104, 0.03);
+    --text-primary: #0f172a;
+    --text-secondary: #64748b;
+    --text-tertiary: #94a3b8;
+    --border-color: rgba(148, 163, 184, 0.2);
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(148, 163, 184, 0.3);
+    --glass-hover: rgba(255, 255, 255, 0.85);
+    --shadow-color: rgba(31, 38, 135, 0.05);
+    --modal-gradient-start: #f0fdf4;
+    --modal-gradient-end: #ffffff;
+    --btn-primary-text: #ffffff;
+  }
+
+  .dark {
+    /* Dark theme colors */
+    --bg-primary: #121A21;
+    --bg-secondary: #1a2332;
+    --bg-gradient-start: #052E1C;
+    --bg-gradient-end: #121A21;
+    --text-primary: #ffffff;
+    --text-secondary: #e2e8f0;
+    --text-tertiary: #a0aec0;
+    --border-color: rgba(255, 255, 255, 0.1);
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-hover: rgba(255, 255, 255, 0.05);
+    --shadow-color: rgba(0, 0, 0, 0.3);
+    --modal-gradient-start: #052E1C;
+    --modal-gradient-end: #121A21;
+    --btn-primary-text: #121A21;
+  }
+
   body {
     font-family: 'Plus Jakarta Sans', sans-serif;
-    background: radial-gradient(circle at 0% 0%, #052E1C 0%, #121A21 50%);
+    background: radial-gradient(circle at 30% 20%, rgba(42, 211, 104, 0.05) 0%, #f9fffa 40%, #f9fffa 100%);
     min-height: 100vh;
-  }
-  
-  html.dark body {
-    background: radial-gradient(circle at 0% 0%, #052E1C 0%, #121A21 50%);
+    color: var(--text-primary);
+    transition: background 0.3s ease, color 0.3s ease;
   }
 }
 
 @layer components {
   .glass-card {
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--glass-bg);
     backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--glass-border);
     transition: all 0.3s ease;
   }
   
   .glass-card:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--glass-hover);
     transform: translateY(-2px);
   }
   
@@ -65,10 +101,20 @@
     scrollbar-width: none;
   }
 
-  /* Fix pour les options des select - texte noir sur fond blanc */
+  /* Fix pour les options des select */
   select option {
-    background-color: white;
-    color: black;
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+  }
+  
+  .dark select option {
+    background-color: #1a2332;
+    color: #ffffff;
+  }
+  
+  .light select option {
+    background-color: #ffffff;
+    color: #121A21;
   }
 }
 

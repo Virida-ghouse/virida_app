@@ -15,7 +15,7 @@ const menuItems = [
 
 const BottomNav: React.FC<BottomNavProps> = ({ currentView, onViewChange }) => {
   return (
-    <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#0a0f14]/95 backdrop-blur-xl border-t border-white/10 safe-area-bottom">
+    <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-[var(--bg-secondary)]/95 backdrop-blur-xl border-t border-[var(--border-color)] safe-area-bottom">
       <div className="flex items-center justify-around px-2 py-2">
         {menuItems.map((item) => {
           const isActive = currentView === item.id;
@@ -26,7 +26,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ currentView, onViewChange }) => {
               className={`flex flex-col items-center justify-center gap-1 px-3 py-2 rounded-xl transition-all min-w-[60px] ${
                 isActive
                   ? 'text-[#2AD368]'
-                  : 'text-gray-400'
+                  : 'text-[var(--text-secondary)]'
               }`}
             >
               <div className={`relative ${isActive ? 'scale-110' : ''} transition-transform`}>
@@ -40,7 +40,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ currentView, onViewChange }) => {
                 )}
               </div>
               <span className={`text-[10px] font-semibold ${
-                isActive ? 'text-[#2AD368]' : 'text-gray-400'
+                isActive ? 'text-[#2AD368]' : 'text-[var(--text-secondary)]'
               }`}>
                 {item.label}
               </span>

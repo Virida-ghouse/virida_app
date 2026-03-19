@@ -238,7 +238,7 @@ const ChatBotNew: React.FC<ChatBotProps> = ({ sensorData }) => {
       {isOpen && (
         <div className="glass-card backdrop-blur-xl rounded-3xl shadow-2xl w-[calc(100vw-2rem)] sm:w-96 max-w-sm border-2 border-[#2AD368]/30 overflow-hidden">
           {/* Header */}
-          <div className="bg-[#121A21] text-white p-5 flex items-center justify-between border-b border-[#2AD368]/30">
+          <div className="bg-[var(--bg-secondary)] text-[var(--text-primary)] p-5 flex items-center justify-between border-b border-[#2AD368]/30">
             <div className="flex items-center space-x-4">
               <img 
                 src="/abeillevd.svg" 
@@ -249,22 +249,22 @@ const ChatBotNew: React.FC<ChatBotProps> = ({ sensorData }) => {
                 }}
               />
               <div>
-                <h3 className="font-black text-xl text-white">
+                <h3 className="font-black text-xl text-[var(--text-primary)]">
                   EVE <span className="text-[#2AD368]">IA</span>
                 </h3>
-                <p className="text-sm text-gray-400 font-medium">Assistante Jardinage</p>
+                <p className="text-sm text-[var(--text-secondary)] font-medium">Assistante Jardinage</p>
               </div>
             </div>
             <button
               onClick={() => setIsOpen(false)}
               className="hover:bg-white/5 p-2 rounded-full transition-all"
             >
-              <span className="material-symbols-outlined text-white text-2xl">close</span>
+              <span className="material-symbols-outlined text-[var(--text-primary)] text-2xl">close</span>
             </button>
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-5 h-96 bg-[#121A21]/95 custom-scrollbar">
+          <div className="flex-1 overflow-y-auto p-5 h-96 bg-[var(--bg-secondary)]/95 custom-scrollbar">
             {messages.map((message) => (
               <div
                 key={message.id}
@@ -274,7 +274,7 @@ const ChatBotNew: React.FC<ChatBotProps> = ({ sensorData }) => {
                   className={`max-w-xs px-4 py-3 rounded-2xl ${
                     message.sender === 'user'
                       ? 'bg-[#2AD368] text-[#121A21] shadow-lg'
-                      : 'glass-card backdrop-blur-xl text-white border border-white/20'
+                      : 'glass-card backdrop-blur-xl text-[var(--text-primary)] border border-[var(--border-color)]'
                   }`}
                 >
                   <p className="text-sm leading-relaxed">{message.text}</p>
@@ -306,7 +306,7 @@ const ChatBotNew: React.FC<ChatBotProps> = ({ sensorData }) => {
             
             {isTyping && (
               <div className="flex justify-start mb-4">
-                <div className="glass-card backdrop-blur-xl text-white border border-white/20 px-4 py-3 rounded-2xl">
+                <div className="glass-card backdrop-blur-xl text-[var(--text-primary)] border border-[var(--border-color)] px-4 py-3 rounded-2xl">
                   <div className="flex space-x-2">
                     <div className="w-2 h-2 bg-[#2AD368] rounded-full animate-bounce"></div>
                     <div className="w-2 h-2 bg-[#2AD368] rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
@@ -319,7 +319,7 @@ const ChatBotNew: React.FC<ChatBotProps> = ({ sensorData }) => {
           </div>
 
           {/* Input */}
-          <div className="p-4 bg-[#121A21]/95 border-t border-white/10">
+          <div className="p-4 bg-[var(--bg-secondary)]/95 border-t border-[var(--border-color)]">
             <div className="flex space-x-2">
               <input
                 type="text"
@@ -327,13 +327,13 @@ const ChatBotNew: React.FC<ChatBotProps> = ({ sensorData }) => {
                 onChange={(e) => setInputText(e.target.value)}
                 onKeyPress={handleKeyPress}
                 placeholder="Posez votre question à EVE..."
-                className="flex-1 px-4 py-3 glass-card backdrop-blur-xl border border-white/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2AD368] text-sm text-white placeholder-gray-400 transition-all"
+                className="flex-1 px-4 py-3 glass-card backdrop-blur-xl border border-[var(--border-color)] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2AD368] text-sm text-[var(--text-primary)] placeholder-gray-400 transition-all"
                 disabled={isTyping}
               />
               <button
                 onClick={handleSendMessage}
                 disabled={!inputText.trim() || isTyping}
-                className="bg-[#2AD368] hover:bg-[#1fc75c] disabled:bg-gray-600 text-[#121A21] p-3 rounded-xl transition-all shadow-lg hover:shadow-[0_8px_20px_rgba(42,211,104,0.4)] disabled:shadow-none"
+                className="bg-[#2AD368] hover:bg-[#1fc75c] disabled:bg-gray-600 text-[var(--btn-primary-text)] p-3 rounded-xl transition-all shadow-lg hover:shadow-[0_8px_20px_rgba(42,211,104,0.4)] disabled:shadow-none"
               >
                 <span className="material-symbols-outlined">send</span>
               </button>
