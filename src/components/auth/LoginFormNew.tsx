@@ -71,15 +71,15 @@ const LoginFormNew: React.FC<LoginFormNewProps> = ({ onToggleMode, onError }) =>
       {/* Logo et Titre */}
       <div className="text-[var(--text-primary)] text-white mb-10">
         <div className="flex items-center justify-center gap-3 mb-6">
-          <img 
-            src="/src/virida_logo.PNG" 
-            alt="Virida Logo" 
-            className="size-12 object-contain"
-          />
-          <h1 className="text-4xl font-black">
-            <span className="text-[var(--text-primary)]">Vir</span>
-            <span className="text-[#2AD368]">ida</span>
-            <span className="text-[#2AD368]">.</span>
+          <div className="bg-[#1a3d2e] rounded-xl">
+            <img 
+              src="/virida_logo.png" 
+              alt="Virida Logo" 
+              className="size-12 object-contain"
+            />
+          </div>
+          <h1 className="text-4xl font-bold tracking-tight">
+            <span className="text-[var(--text-primary)]">Vir</span><span className="text-[#CBED62]">ida</span><span className="text-[var(--text-primary)]">.</span>
           </h1>
         </div>
         <h2 className="text-2xl font-bold text-[var(--text-primary)] mb-2">

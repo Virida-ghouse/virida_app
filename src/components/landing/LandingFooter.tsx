@@ -5,11 +5,13 @@ const LandingFooter: React.FC = () => {
     <footer className="w-full bg-[var(--bg-secondary)] border-t border-[var(--border-color)]">
       <div className="flex flex-col md:flex-row justify-between items-start px-6 sm:px-8 md:px-12 py-12 md:py-16 max-w-7xl mx-auto text-xs text-[var(--text-secondary)]">
         <div className="mb-10 md:mb-0">
-          <img 
-            alt="Virida Logo" 
-            className="h-6 sm:h-7 md:h-8 mb-4 md:mb-6" 
-            src="/virida_logo.png"
-          />
+          <div className="bg-[#1a3d2e] rounded-xl inline-block mb-4 md:mb-6">
+            <img 
+              alt="Virida Logo" 
+              className="h-6 sm:h-7 md:h-8" 
+              src="/virida_logo.png"
+            />
+          </div>
           <p className="max-w-xs mb-6 md:mb-8 text-xs sm:text-sm leading-relaxed">
             Conservatoire Néo-Futuriste.<br/>
             L'excellence technologique au service de la biodiversité.

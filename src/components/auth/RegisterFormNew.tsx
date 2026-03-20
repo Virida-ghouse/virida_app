@@ -102,15 +102,15 @@ const RegisterFormNew: React.FC<RegisterFormNewProps> = ({
       {/* Header */}
       <div className="text-[var(--text-primary)] mb-8">
         <div className="flex items-center justify-center gap-2 mb-3">
-          <img 
-            src="/src/virida_logo.PNG" 
-            alt="Virida Logo" 
-            className="size-12 rounded-xl object-contain"
-          />
-          <h1 className="text-4xl font-black">
-            <span className="text-[var(--text-primary)]">Vir</span>
-            <span className="text-[#2AD368]">ida</span>
-            <span className="text-[#2AD368]">.</span>
+          <div className="bg-[#1a3d2e] rounded-xl">
+            <img 
+              src="/virida_logo.png" 
+              alt="Virida Logo" 
+              className="size-12 object-contain"
+            />
+          </div>
+          <h1 className="text-4xl font-bold tracking-tight">
+            <span className="text-[var(--text-primary)]">Vir</span><span className="text-[#CBED62]">ida</span><span className="text-[var(--text-primary)]">.</span>
           </h1>
         </div>
         <p className="text-[var(--text-secondary)] text-sm">

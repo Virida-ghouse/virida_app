@@ -13,11 +13,11 @@ const CTASection: React.FC<CTASectionProps> = ({ onNavigateToLogin }) => {
         
         <img 
           alt="Eve Mascot" 
-          className="w-28 h-28 md:w-36 md:h-36 lg:w-40 lg:h-40 mx-auto mb-6 md:mb-8 drop-shadow-[0_0_25px_rgba(42,211,104,0.8)]" 
+          className="w-28 h-28 md:w-36 md:h-36 lg:w-40 lg:h-40 mx-auto mb-6 md:mb-8" 
           src="/abeillevd.svg"
           style={{ 
             animation: 'float 6s ease-in-out infinite',
-            filter: 'brightness(0) saturate(100%) invert(64%) sepia(89%) saturate(419%) hue-rotate(76deg) brightness(95%) contrast(92%)'
+            filter: 'brightness(0) saturate(100%) invert(64%) sepia(89%) saturate(419%) hue-rotate(76deg) brightness(95%) contrast(92%) drop-shadow(0 0 30px rgba(42,211,104,0.9)) drop-shadow(0 0 15px rgba(203,237,98,0.7))'
           }}
         />
         

@@ -26,11 +26,13 @@ const SidebarNew: React.FC<SidebarProps> = ({
       <div className="space-y-8">
         {/* Logo */}
         <div className="flex items-center gap-3 px-2">
-          <img 
-            src="/src/virida_logo.PNG" 
-            alt="Virida Logo" 
-            className="size-10 rounded-xl object-contain"
-          />
+          <div className="bg-[#1a3d2e] rounded-full">
+            <img 
+              src="/virida_logo.png" 
+              alt="Virida Logo" 
+              className="size-10 object-contain"
+            />
+          </div>
           <div>
             <h1 className="text-2xl font-bold tracking-tight">
               <span className="text-[var(--text-primary)]">Vir</span><span className="text-[#CBED62] text-2xl">ida</span><span className="text-primary">.</span>

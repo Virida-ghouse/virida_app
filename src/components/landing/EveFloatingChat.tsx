@@ -50,7 +50,7 @@ const EveFloatingChat: React.FC<EveFloatingChatProps> = ({ position }) => {
     ? 'absolute left-8 top-[25%]' 
     : 'absolute right-8 top-[35%]';
   
-  // Couleurs pour design moderne
+  // Couleurs et design subtil pour meilleure intégration
   const accentColor = position === 'left' ? '#CBED62' : '#2AD368';
 
   return (
@@ -75,21 +75,23 @@ const EveFloatingChat: React.FC<EveFloatingChatProps> = ({ position }) => {
           />
         </div>
         
-        {/* Speech bubble - design moderne */}
+        {/* Speech bubble - design minimaliste avec contraste */}
         <div 
-          className="relative rounded-2xl px-4 py-3 max-w-[240px] glass-card"
-          style={{ 
-            background: 'var(--glass-bg)',
-            borderLeft: `3px solid ${accentColor}`,
-            boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+          className="relative rounded-xl px-3.5 py-2.5 max-w-[220px] bg-white dark:bg-[#0a1612] border border-[var(--border-color)]"
+          style={{
+            boxShadow: `0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04), 0 0 0 1px ${accentColor}10`
           }}
         >
-          {/* Nom Eve */}
-          <div className="flex items-center gap-2 mb-1.5">
-            <span className="text-xs font-bold" style={{ color: accentColor }}>Eve</span>
-          </div>
           {/* Message */}
-          <p className="text-sm text-[var(--text-primary)] leading-relaxed">{messages[currentMessage]}</p>
+          <p className="text-xs text-[var(--text-primary)] leading-relaxed font-medium">{messages[currentMessage]}</p>
+          {/* Petit accent coloré */}
+          <div 
+            className="absolute -bottom-1 left-4 w-10 h-1 rounded-full"
+            style={{ 
+              backgroundColor: accentColor,
+              boxShadow: `0 2px 8px ${accentColor}40`
+            }}
+          />
         </div>
       </div>
     </div>

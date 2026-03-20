@@ -12,10 +12,21 @@ const GreenhouseSection: React.FC = () => {
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-black mb-6 md:mb-8 text-[var(--text-primary)]">
               La Serre Néo-Futuriste
             </h2>
-            <p className="text-[var(--text-secondary)] text-base md:text-lg mb-8 md:mb-10 leading-relaxed">
+            <p className="text-[var(--text-secondary)] text-base md:text-lg mb-6 leading-relaxed">
               Conçue avec des matériaux aéronautiques et équipée de capteurs laser de haute précision, 
               la serre Virida n'est pas qu'un simple bac à plantes. C'est un laboratoire vivant automatisé.
             </p>
+            <div className="bg-[#2AD368]/10 border-l-4 border-[#2AD368] p-4 md:p-6 rounded-r-xl mb-8 md:mb-10">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="material-symbols-outlined text-[#2AD368]">code</span>
+                <h4 className="font-bold text-lg text-[var(--text-primary)]">100% Open Source</h4>
+              </div>
+              <p className="text-sm md:text-base text-[var(--text-secondary)] leading-relaxed">
+                Tous nos plans, schémas électroniques et code source sont librement accessibles. 
+                Réparez, modifiez et améliorez votre serre comme bon vous semble. 
+                Virida appartient à la communauté.
+              </p>
+            </div>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
               <div className="p-4 md:p-6 rounded-2xl bg-[var(--glass-bg)] border border-[var(--border-color)] backdrop-blur-xl">
@@ -55,9 +66,11 @@ const GreenhouseSection: React.FC = () => {
           <div className="order-1 lg:order-2 relative">
             <div className="absolute -inset-10 bg-[#2AD368]/20 rounded-full blur-[100px] animate-pulse"></div>
             <div className="glass-card rounded-[3rem] p-4 overflow-hidden shadow-2xl relative border-2 border-[var(--border-color)]">
-              <div className="w-full aspect-[4/5] bg-gradient-to-br from-[#2AD368]/20 to-[#CBED62]/20 rounded-[2.5rem] flex items-center justify-center">
-                <span className="material-symbols-outlined text-[#2AD368] text-9xl">potted_plant</span>
-              </div>
+              <img 
+                src="/serre.jpg" 
+                alt="Serre Virida Néo-Futuriste" 
+                className="w-full aspect-[4/5] object-cover rounded-[2.5rem]"
+              />
             </div>
           </div>
         </div>

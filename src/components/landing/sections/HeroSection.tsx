@@ -26,22 +26,19 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onNavigateToLogin }) => {
         </div>
         
         {/* Main title */}
-        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-black tracking-tight mb-6 md:mb-8 px-4">
-          Cultivez le futur <br/>avec <span className="text-[#CBED62] italic">Virida</span>
+        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-black tracking-tight mb-6 md:mb-8 px-4 leading-tight">
+          Cultivez le futur. <br/>Laissez <span className="text-[#CBED62] italic">EVE</span> <br/>faire le reste.
         </h1>
         
         {/* Slogan */}
         <div className="mb-10 md:mb-16 px-4">
-          <p className="text-base sm:text-lg md:text-xl text-[var(--text-secondary)] max-w-2xl mx-auto leading-relaxed mb-3">
-            <span className="font-semibold text-[var(--text-primary)]">Cultivez l'avenir, aujourd'hui.</span> L'agriculture de demain, à portée de main.
-          </p>
-          <p className="text-sm sm:text-base md:text-lg text-[var(--text-secondary)]/70 max-w-xl mx-auto">
-            La fusion parfaite entre l'IA et la nature.
+          <p className="text-lg sm:text-xl md:text-2xl text-[var(--text-secondary)] max-w-2xl mx-auto leading-relaxed">
+            La serre connectée pilotée par votre IA abeille locale
           </p>
         </div>
         
         {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center w-full max-w-md sm:max-w-none px-4">
+        <div className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center w-full max-w-md sm:max-w-none px-4 mb-8">
           <button 
             onClick={onNavigateToLogin}
             className="bg-[#2AD368] text-[var(--btn-primary-text)] text-base md:text-lg font-bold px-8 md:px-10 py-3 md:py-4 rounded-full shadow-[0_8px_20px_rgba(42,211,104,0.5)] hover:shadow-[0_12px_30px_rgba(42,211,104,0.8)] hover:scale-105 transition-all w-full sm:w-auto"
@@ -51,6 +48,16 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onNavigateToLogin }) => {
           <button className="bg-[var(--glass-bg)] border border-[var(--border-color)] text-[var(--text-primary)] text-base md:text-lg font-bold px-8 md:px-10 py-3 md:py-4 rounded-full hover:bg-[var(--glass-hover)] transition-all backdrop-blur-xl w-full sm:w-auto">
             Découvrir la Serre
           </button>
+        </div>
+        
+        {/* Footer */}
+        <div className="flex items-center justify-center gap-2 text-xs sm:text-sm text-[var(--text-secondary)]/60 px-4">
+          <span>avec la participation d'</span>
+          <img 
+            src="/Epitech_Official_Logo.png" 
+            alt="Epitech" 
+            className="h-4 sm:h-5 opacity-70"
+          />
         </div>
       </div>
     </section>

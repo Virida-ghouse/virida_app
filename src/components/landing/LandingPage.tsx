@@ -1,10 +1,12 @@
 import React from 'react';
 import LandingHeader from './LandingHeader';
 import HeroSection from './sections/HeroSection';
-import GreenhouseSection from './sections/GreenhouseSection';
-import DashboardPreview from './sections/DashboardPreview';
+import EveSection from './sections/EveSection';
 import MarketplaceSection from './sections/MarketplaceSection';
+import GreenhouseSection from './sections/GreenhouseSection';
 import PricingSection from './sections/PricingSection';
+import AboutSection from './sections/AboutSection';
+import PartnersSection from './sections/PartnersSection';
 import CTASection from './sections/CTASection';
 import LandingFooter from './LandingFooter';
 
@@ -18,10 +20,12 @@ const LandingPage: React.FC<LandingPageProps> = ({ onNavigateToLogin }) => {
       <LandingHeader onNavigateToLogin={onNavigateToLogin} />
       <main>
         <HeroSection onNavigateToLogin={onNavigateToLogin} />
-        <GreenhouseSection />
-        <DashboardPreview />
+        <EveSection />
         <MarketplaceSection />
+        <GreenhouseSection />
         <PricingSection />
+        <AboutSection />
+        <PartnersSection />
         <CTASection onNavigateToLogin={onNavigateToLogin} />
       </main>
       <LandingFooter />
