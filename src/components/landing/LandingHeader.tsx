@@ -25,14 +25,14 @@ const LandingHeader: React.FC<LandingHeaderProps> = ({ onNavigateToLogin }) => {
         </div>
         
         <div className="hidden md:flex items-center gap-8 font-bold text-sm tracking-wide">
+          <a className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors" href="#serre">
+            Serre
+          </a>
           <a className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors" href="#eve">
             EVE
           </a>
           <a className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors" href="#marche">
             Marché
-          </a>
-          <a className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors" href="#serre">
-            Serre
           </a>
           <a className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors" href="#tarifs">
             Tarifs

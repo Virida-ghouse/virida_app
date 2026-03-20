@@ -17,7 +17,7 @@ const CTASection: React.FC<CTASectionProps> = ({ onNavigateToLogin }) => {
           src="/abeillevd.svg"
           style={{ 
             animation: 'float 6s ease-in-out infinite',
-            filter: 'brightness(0) saturate(100%) invert(64%) sepia(89%) saturate(419%) hue-rotate(76deg) brightness(95%) contrast(92%) drop-shadow(0 0 30px rgba(42,211,104,0.9)) drop-shadow(0 0 15px rgba(203,237,98,0.7))'
+            filter: 'brightness(0) saturate(100%) invert(64%) sepia(89%) saturate(419%) hue-rotate(76deg) brightness(95%) contrast(92%) drop-shadow(0 0 20px rgba(42,211,104,0.5)) drop-shadow(0 0 10px rgba(203,237,98,0.4))'
           }}
         />
         

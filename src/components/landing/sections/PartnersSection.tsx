@@ -1,6 +1,8 @@
 import React from 'react';
+import { useTheme } from '../../../contexts/ThemeContext';
 
 const PartnersSection: React.FC = () => {
+  const { theme } = useTheme();
   return (
     <section id="partners" className="py-16 md:py-24 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto text-center">
@@ -28,7 +30,7 @@ const PartnersSection: React.FC = () => {
           {/* Clever Cloud */}
           <div className="glass-card p-8 md:p-10 rounded-2xl border border-[var(--border-color)] backdrop-blur-xl hover:border-[#2AD368]/40 transition-all w-full flex items-center justify-center min-h-[120px]">
             <img 
-              src="/logo_clever.svg" 
+              src={theme === 'dark' ? '/logo_on_dark_clever.png' : '/logo_clever.svg'}
               alt="Clever Cloud" 
               className="h-12 md:h-14 opacity-80 hover:opacity-100 transition-opacity"
             />

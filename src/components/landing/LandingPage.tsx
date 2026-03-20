@@ -9,6 +9,7 @@ import AboutSection from './sections/AboutSection';
 import PartnersSection from './sections/PartnersSection';
 import CTASection from './sections/CTASection';
 import LandingFooter from './LandingFooter';
+import OpenSourceSection from './sections/OpenSourceSection';
 
 interface LandingPageProps {
   onNavigateToLogin: () => void;
@@ -20,12 +21,13 @@ const LandingPage: React.FC<LandingPageProps> = ({ onNavigateToLogin }) => {
       <LandingHeader onNavigateToLogin={onNavigateToLogin} />
       <main>
         <HeroSection onNavigateToLogin={onNavigateToLogin} />
-        <EveSection />
-        <MarketplaceSection />
         <GreenhouseSection />
+        <EveSection />
+        <OpenSourceSection />
+        <MarketplaceSection />
         <PricingSection />
-        <AboutSection />
         <PartnersSection />
+        <AboutSection />
         <CTASection onNavigateToLogin={onNavigateToLogin} />
       </main>
       <LandingFooter />

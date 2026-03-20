@@ -69,7 +69,7 @@ const EveSection: React.FC = () => {
                 className="w-64 h-64 md:w-80 md:h-80"
                 style={{ 
                   animation: 'float 6s ease-in-out infinite',
-                  filter: 'brightness(0) saturate(100%) invert(64%) sepia(89%) saturate(419%) hue-rotate(76deg) brightness(95%) contrast(92%) drop-shadow(0 0 40px rgba(203,237,98,0.8)) drop-shadow(0 0 20px rgba(42,211,104,0.6))'
+                  filter: 'brightness(0) saturate(100%) invert(64%) sepia(89%) saturate(419%) hue-rotate(76deg) brightness(95%) contrast(92%) drop-shadow(0 0 30px rgba(203,237,98,0.4)) drop-shadow(0 0 15px rgba(42,211,104,0.3))'
                 }}
               />
             </div>
