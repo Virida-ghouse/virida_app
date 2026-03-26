@@ -9,6 +9,7 @@ import AutomationRulesNew from './automation/AutomationRulesNew';
 import EnergyManagementNew from './energy/EnergyManagementNew';
 import SettingsPanelNew from './settings/SettingsPanelNew';
 import ChatBotNew from './chatbot/ChatBotNew';
+import AdminPage from './admin/AdminPage';
 
 const MainAppNew: React.FC = () => {
   const [currentView, setCurrentView] = React.useState('dashboard');
@@ -36,6 +37,8 @@ const MainAppNew: React.FC = () => {
         return <EnergyManagementNew />;
       case 'settings':
         return <SettingsPanelNew />;
+      case 'admin':
+        return <AdminPage />;
       case 'reports':
         return (
           <div className="p-8 text-[var(--text-primary)]">

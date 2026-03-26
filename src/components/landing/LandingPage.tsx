@@ -7,6 +7,7 @@ import GreenhouseSection from './sections/GreenhouseSection';
 import PricingSection from './sections/PricingSection';
 import AboutSection from './sections/AboutSection';
 import PartnersSection from './sections/PartnersSection';
+import ContactFormSection from './sections/ContactFormSection';
 import CTASection from './sections/CTASection';
 import LandingFooter from './LandingFooter';
 import OpenSourceSection from './sections/OpenSourceSection';
@@ -28,6 +29,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onNavigateToLogin }) => {
         <PricingSection />
         <PartnersSection />
         <AboutSection />
+        <ContactFormSection />
         <CTASection onNavigateToLogin={onNavigateToLogin} />
       </main>
       <LandingFooter />

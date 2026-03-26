@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useViridaStore } from '../../store/useViridaStore';
+import { sensorService } from '../../services/api';
 
 interface Sensor {
   id: string;
@@ -69,14 +70,8 @@ export const SensorsNew: React.FC = () => {
   const fetchSensors = async () => {
     setLoading(true);
     try {
-      const token = localStorage.getItem('virida_token');
-      const response = await fetch(`${apiUrl}/api/sensors`, {
-        headers: { 'Authorization': `Bearer ${token}` },
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setSensors(data.sensors || data.data || []);
-      }
+      const data = await sensorService.getAllSensors();
+      setSensors(data as any || []);
     } catch (error) {
       console.error('Erreur:', error);
       setSensors([

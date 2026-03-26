@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { authService } from '../services/api';
 
 interface User {
   id: string;
@@ -35,8 +36,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // URL de base de l'API - à adapter selon votre configuration
-  const API_BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:3001') + '/api';
 
   useEffect(() => {
     // Vérifier si un token existe dans le localStorage au démarrage
@@ -60,28 +59,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       setIsLoading(true);
       
-      const response = await fetch(`${API_BASE_URL}/auth/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Erreur de connexion');
-      }
-
-      const data = await response.json();
+      const data = await authService.login({ email, password });
       
       if (data.token && data.user) {
         setToken(data.token);
         setUser(data.user);
         
-        // Sauvegarder dans le localStorage
         localStorage.setItem('virida_token', data.token);
         localStorage.setItem('virida_user', JSON.stringify(data.user));
+        localStorage.setItem('token', data.token);
       } else {
         throw new Error('Réponse invalide du serveur');
       }
@@ -102,34 +88,19 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       setIsLoading(true);
       
-      // Générer un username à partir de l'email
-      const username = userData.email.split('@')[0].toLowerCase();
-      
-      const response = await fetch(`${API_BASE_URL}/auth/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...userData,
-          username
-        }),
+      const data = await authService.register({
+        email: userData.email,
+        password: userData.password,
+        name: `${userData.firstName} ${userData.lastName}`
       });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Erreur lors de l\'inscription');
-      }
-
-      const data = await response.json();
       
       if (data.token && data.user) {
         setToken(data.token);
         setUser(data.user);
         
-        // Sauvegarder dans le localStorage
         localStorage.setItem('virida_token', data.token);
         localStorage.setItem('virida_user', JSON.stringify(data.user));
+        localStorage.setItem('token', data.token);
       } else {
         throw new Error('Réponse invalide du serveur');
       }

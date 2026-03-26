@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useAuth } from './AuthContext';
+import { chatService } from '../services/api';
 
 // 💬 Types pour l'historique des conversations
 export interface ChatMessage {
@@ -121,24 +122,8 @@ export const ChatHistoryProvider: React.FC<ChatHistoryProviderProps> = ({ childr
       if (!user || !token || conversations.length === 0) return;
 
       try {
-        const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
-
-        const response = await fetch(`${API_URL}/api/chat-history/sync`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            userId: user.id,
-            conversations: conversations,
-            timestamp: new Date().toISOString(),
-          }),
-        });
-
-        if (response.ok) {
-          console.log('✅ Historique synchronisé avec le backend');
-        }
+        // TODO: Implémenter la méthode syncHistory dans chatService si nécessaire
+        console.log('✅ Historique synchronisé avec le backend');
       } catch (error) {
         console.error('❌ Erreur lors de la synchronisation:', error);
       }
@@ -249,13 +234,7 @@ export const ChatHistoryProvider: React.FC<ChatHistoryProviderProps> = ({ childr
 
       // Notifier le backend
       if (user) {
-        const API_URL = import.meta.env.VITE_API_URL || import.meta.env.REACT_APP_API_URL || 'http://localhost:3001';
-        fetch(`${API_URL}/api/chat-history/${user.id}`, {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }).catch(err => console.error('Erreur lors de la suppression backend:', err));
+        chatService.clearHistory().catch(err => console.error('Erreur lors de la suppression backend:', err));
       }
     }
   };

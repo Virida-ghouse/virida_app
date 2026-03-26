@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useChatHistory } from '../../contexts/ChatHistoryContext';
 import type { ChatMessage } from '../../contexts/ChatHistoryContext';
+import { chatService } from '../../services/api';
 
 interface Message {
   id: string;
@@ -35,9 +36,6 @@ const ChatBotNew: React.FC<ChatBotProps> = ({ sensorData }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const isInitialized = useRef(false);
 
-  // Configuration de l'API
-  const API_BASE_URL = import.meta.env.VITE_API_URL || import.meta.env.REACT_APP_API_URL || 'http://localhost:3001';
-  const N8N_WEBHOOK_URL = import.meta.env.VITE_N8N_WEBHOOK_URL || import.meta.env.REACT_APP_N8N_WEBHOOK_URL || `${API_BASE_URL}/api/eve/chat-n8n`;
 
   // 📥 Charger l'historique de conversation au démarrage
   useEffect(() => {
@@ -85,39 +83,21 @@ const ChatBotNew: React.FC<ChatBotProps> = ({ sensorData }) => {
 
   const callEveAPI = async (message: string) => {
     try {
-      const conversationHistory = messages.map(msg => ({
-        role: msg.sender === 'user' ? 'user' : 'assistant',
-        content: msg.text,
-        timestamp: msg.timestamp.toISOString()
-      }));
+      const context = {
+        conversationHistory: messages.map(msg => ({
+          role: msg.sender === 'user' ? 'user' : 'assistant',
+          content: msg.text,
+          timestamp: msg.timestamp.toISOString()
+        })),
+        ...(sensorData && { sensorData })
+      };
 
-      const response = await fetch(N8N_WEBHOOK_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          message,
-          userId: 'frontend-user',
-          conversationHistory,
-          ...(sensorData && { sensorData })
-        })
-      });
+      const data = await chatService.sendMessage(message, context);
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-
-      if (data.success) {
-        return {
-          text: data.response,
-          metadata: data.metadata
-        };
-      } else {
-        throw new Error(data.error || 'API error');
-      }
+      return {
+        text: data.message,
+        metadata: data.suggestions ? { suggestions: data.suggestions } : undefined
+      };
     } catch (error) {
       console.error('Error calling EVE API:', error);
       return {
