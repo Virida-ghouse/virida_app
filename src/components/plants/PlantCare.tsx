@@ -18,7 +18,7 @@ import OpacityIcon from '@mui/icons-material/Opacity';
 import SpaIcon from '@mui/icons-material/Spa';
 import ContentCutIcon from '@mui/icons-material/ContentCut';
 import BugReportIcon from '@mui/icons-material/BugReport';
-import { useViridaStore } from '../../store/useViridaStore';
+import { plantService } from '../../services/api';
 
 interface CareTask {
   id: string;
@@ -38,7 +38,6 @@ interface CareTask {
 }
 
 const PlantCare: React.FC = () => {
-  const apiUrl = useViridaStore((state) => state.apiUrl);
   const [currentTab, setCurrentTab] = useState<'today' | 'upcoming'>('today');
   const [tasks, setTasks] = useState<CareTask[]>([]);
   const [loading, setLoading] = useState(true);
@@ -53,19 +52,8 @@ const PlantCare: React.FC = () => {
       try {
         setLoading(true);
         setError(null);
-        const token = localStorage.getItem('virida_token');
-        const response = await fetch(`${apiUrl}/api/plant-tasks?completed=false`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error('Erreur lors du chargement des tâches');
-        }
-
-        const data = await response.json();
-        setTasks(data.data || []);
+        // TODO: Ajouter getAllTasks dans plantService
+        setTasks([]);
       } catch (err) {
         console.error('Erreur chargement tâches:', err);
         setError(err instanceof Error ? err.message : 'Erreur inconnue');
@@ -75,7 +63,7 @@ const PlantCare: React.FC = () => {
     };
 
     fetchTasks();
-  }, [apiUrl]);
+  }, []);
 
   const todayTasks = tasks.filter((task) => {
     const taskDate = new Date(task.dueDate);
@@ -93,21 +81,7 @@ const PlantCare: React.FC = () => {
 
   const handleToggleTask = async (taskId: string, currentCompleted: boolean) => {
     try {
-      const token = localStorage.getItem('virida_token');
-      const endpoint = currentCompleted ? 'uncomplete' : 'complete';
-
-      const response = await fetch(`${apiUrl}/api/plant-tasks/${taskId}/${endpoint}`, {
-        method: 'PATCH',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error('Erreur lors de la mise à jour de la tâche');
-      }
-
-      // Mettre à jour localement
+      // TODO: Ajouter toggleTask dans plantService
       setTasks((prev) =>
         prev.map((task) =>
           task.id === taskId ? { ...task, completed: !currentCompleted } : task

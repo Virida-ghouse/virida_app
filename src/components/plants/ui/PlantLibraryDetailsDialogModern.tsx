@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useViridaStore } from '../../../store/useViridaStore';
+import { plantService } from '../../../services/api';
 
 interface PlantLibraryDetailsDialogModernProps {
   open: boolean;
@@ -48,7 +48,6 @@ export const PlantLibraryDetailsDialogModern: React.FC<PlantLibraryDetailsDialog
   plantId,
   plantName,
 }) => {
-  const apiUrl = useViridaStore((state) => state.apiUrl);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [catalogData, setCatalogData] = useState<CatalogData | null>(null);
@@ -64,12 +63,7 @@ export const PlantLibraryDetailsDialogModern: React.FC<PlantLibraryDetailsDialog
     try {
       setLoading(true);
       setError(null);
-      const token = localStorage.getItem('virida_token');
-      const response = await fetch(`${apiUrl}/api/plant-catalog/${plantId}`, {
-        headers: { 'Authorization': `Bearer ${token}` },
-      });
-      if (!response.ok) throw new Error('Impossible de charger les données');
-      const data = await response.json();
+      const data = await plantService.getPlantCatalogItem(plantId);
       setCatalogData(data.plant || data || {});
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erreur inconnue');

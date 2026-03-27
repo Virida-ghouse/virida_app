@@ -21,7 +21,7 @@ import BugReportIcon from '@mui/icons-material/BugReport';
 import AgricultureIcon from '@mui/icons-material/Agriculture';
 import LocalFloristIcon from '@mui/icons-material/LocalFlorist';
 import ScienceIcon from '@mui/icons-material/Science';
-import { useViridaStore } from '../../../store/useViridaStore';
+import { plantService } from '../../../services/api';
 
 interface TaskNotification {
   id: string;
@@ -37,7 +37,6 @@ interface TaskNotification {
 }
 
 export const NotificationMenu: React.FC = () => {
-  const apiUrl = useViridaStore((state) => state.apiUrl);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [notifications, setNotifications] = useState<TaskNotification[]>([]);
   const [loading, setLoading] = useState(false);
@@ -54,7 +53,6 @@ export const NotificationMenu: React.FC = () => {
   const fetchNotifications = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem('virida_token');
 
       const today = new Date();
       today.setHours(0, 0, 0, 0);
@@ -65,18 +63,12 @@ export const NotificationMenu: React.FC = () => {
       const twoDaysFromNow = new Date(today);
       twoDaysFromNow.setDate(twoDaysFromNow.getDate() + 2);
 
-      const response = await fetch(
-        `${apiUrl}/api/plant-tasks?completed=false&fromDate=${today.toISOString()}&toDate=${twoDaysFromNow.toISOString()}`,
-        {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (response.ok) {
-        const data = await response.json();
-        const tasks = data.data || [];
+      const data = await plantService.getAllTasks({
+        completed: 'false',
+        fromDate: today.toISOString(),
+        toDate: twoDaysFromNow.toISOString(),
+      });
+      const tasks = data.data || [];
 
         const processedNotifications: TaskNotification[] = tasks.map((task: any) => {
           const dueDate = new Date(task.dueDate);
@@ -112,7 +104,6 @@ export const NotificationMenu: React.FC = () => {
         });
 
         setNotifications(processedNotifications);
-      }
     } catch (error) {
       console.error('Erreur lors du chargement des notifications:', error);
     } finally {

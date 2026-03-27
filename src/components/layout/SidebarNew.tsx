@@ -1,4 +1,5 @@
 import React from 'react';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface SidebarProps {
   open?: boolean;
@@ -20,6 +21,8 @@ const SidebarNew: React.FC<SidebarProps> = ({
   currentView,
   onViewChange,
 }) => {
+  const { user } = useAuth();
+  const isAdmin = user?.role === 'ADMIN';
   return (
     <aside className="hidden lg:flex w-64 border-r border-[var(--border-color)] bg-[var(--bg-secondary)] dark:bg-background-dark/50 flex-col justify-between p-6 fixed h-screen">
       {/* Top Section */}
@@ -69,20 +72,21 @@ const SidebarNew: React.FC<SidebarProps> = ({
 
       {/* Bottom Section */}
       <div className="space-y-4">
-        {/* Admin - TODO: Conditionner selon le rôle utilisateur */}
-        <div
-          onClick={() => onViewChange('admin')}
-          className={`
-            flex items-center gap-3 px-3 py-2 rounded-xl cursor-pointer transition-all
-            ${currentView === 'admin'
-              ? 'glass-card backdrop-blur-xl text-[#2AD368] border border-[#2AD368]/30 bg-[#2AD368]/10'
-              : 'text-[var(--text-secondary)] hover:glass-card hover:backdrop-blur-xl hover:bg-[#2AD368]/5 hover:text-[#2AD368] hover:border hover:border-[#2AD368]/20'
-            }
-          `}
-        >
-          <span className="material-symbols-outlined text-[22px]">admin_panel_settings</span>
-          <span className="text-sm font-medium">Admin</span>
-        </div>
+        {isAdmin && (
+          <div
+            onClick={() => onViewChange('admin')}
+            className={`
+              flex items-center gap-3 px-3 py-2 rounded-xl cursor-pointer transition-all
+              ${currentView === 'admin'
+                ? 'glass-card backdrop-blur-xl text-[#2AD368] border border-[#2AD368]/30 bg-[#2AD368]/10'
+                : 'text-[var(--text-secondary)] hover:glass-card hover:backdrop-blur-xl hover:bg-[#2AD368]/5 hover:text-[#2AD368] hover:border hover:border-[#2AD368]/20'
+              }
+            `}
+          >
+            <span className="material-symbols-outlined text-[22px]">admin_panel_settings</span>
+            <span className="text-sm font-medium">Admin</span>
+          </div>
+        )}
 
         {/* Settings */}
         <div

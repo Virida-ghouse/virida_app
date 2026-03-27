@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { PlantCardMinimal, ConfirmDialog, AddPlantDialog, PlantDetailsDialog } from './ui';
-import { useViridaStore } from '../../store/useViridaStore';
+import { plantService } from '../../services/api';
 
 interface UserPlant {
   id: string;
@@ -27,7 +27,6 @@ interface UserPlant {
 }
 
 const MyGarden: React.FC = () => {
-  const apiUrl = useViridaStore((state) => state.apiUrl);
   const [currentFilter, setCurrentFilter] = useState<'all' | 'active' | 'ready'>('all');
   const [userPlants, setUserPlants] = useState<UserPlant[]>([]);
   const [loading, setLoading] = useState(true);
@@ -38,35 +37,23 @@ const MyGarden: React.FC = () => {
   const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
   const [selectedPlantId, setSelectedPlantId] = useState<string | null>(null);
 
-  // Récupérer les plantes de l'utilisateur
+  const fetchUserPlants = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await plantService.getPlants();
+      setUserPlants((data as any).data || []);
+    } catch (err) {
+      console.error('Erreur chargement plantes utilisateur:', err);
+      setError(err instanceof Error ? err.message : 'Erreur inconnue');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchUserPlants = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const token = localStorage.getItem('virida_token');
-        const response = await fetch(`${apiUrl}/api/plants`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error('Erreur lors du chargement des plantes');
-        }
-
-        const data = await response.json();
-        setUserPlants(data.data || []);
-      } catch (err) {
-        console.error('Erreur chargement plantes utilisateur:', err);
-        setError(err instanceof Error ? err.message : 'Erreur inconnue');
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchUserPlants();
-  }, [apiUrl]);
+  }, []);
 
   // Ouvrir le dialogue de confirmation de suppression
   const handleDeletePlant = (plantId: string) => {
@@ -82,22 +69,8 @@ const MyGarden: React.FC = () => {
     if (!plantToDelete) return;
 
     try {
-      const token = localStorage.getItem('virida_token');
-      const response = await fetch(`${apiUrl}/api/plants/${plantToDelete.id}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error('Erreur lors de la suppression de la plante');
-      }
-
-      // Retirer la plante de la liste localement
+      await plantService.deletePlant(plantToDelete.id);
       setUserPlants((prev) => prev.filter((plant) => plant.id !== plantToDelete.id));
-
-      // Fermer le dialogue
       setConfirmDialogOpen(false);
       setPlantToDelete(null);
     } catch (err) {
@@ -125,24 +98,6 @@ const MyGarden: React.FC = () => {
 
   // Callback après ajout réussi d'une plante
   const handlePlantAdded = () => {
-    // Recharger la liste des plantes
-    const fetchUserPlants = async () => {
-      try {
-        const token = localStorage.getItem('virida_token');
-        const response = await fetch(`${apiUrl}/api/plants`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setUserPlants(data.data || []);
-        }
-      } catch (err) {
-        console.error('Erreur rechargement plantes:', err);
-      }
-    };
     fetchUserPlants();
   };
 
@@ -160,47 +115,11 @@ const MyGarden: React.FC = () => {
 
   // Callback après mise à jour d'une plante
   const handlePlantUpdated = () => {
-    // Recharger la liste des plantes
-    const fetchUserPlants = async () => {
-      try {
-        const token = localStorage.getItem('virida_token');
-        const response = await fetch(`${apiUrl}/api/plants`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setUserPlants(data.data || []);
-        }
-      } catch (err) {
-        console.error('Erreur rechargement plantes:', err);
-      }
-    };
     fetchUserPlants();
   };
 
   // Callback après suppression d'une plante depuis les détails
   const handlePlantDeleted = () => {
-    // Recharger la liste des plantes
-    const fetchUserPlants = async () => {
-      try {
-        const token = localStorage.getItem('virida_token');
-        const response = await fetch(`${apiUrl}/api/plants`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setUserPlants(data.data || []);
-        }
-      } catch (err) {
-        console.error('Erreur rechargement plantes:', err);
-      }
-    };
     fetchUserPlants();
   };
 

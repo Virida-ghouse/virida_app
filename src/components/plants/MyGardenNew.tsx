@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { PlantCardModern } from './ui/PlantCardModern';
 import { PlantDetailsDialogModern } from './ui/PlantDetailsDialogModern';
 import { ConfirmDialog, AddPlantDialog } from './ui';
-import { useViridaStore } from '../../store/useViridaStore';
+import { plantService } from '../../services/api';
 
 interface UserPlant {
   id: string;
@@ -17,7 +17,6 @@ interface UserPlant {
 }
 
 const MyGardenNew: React.FC = () => {
-  const apiUrl = useViridaStore((state) => state.apiUrl);
   const [currentFilter, setCurrentFilter] = useState<'all' | 'active' | 'ready'>('all');
   const [userPlants, setUserPlants] = useState<UserPlant[]>([]);
   const [loading, setLoading] = useState(true);
@@ -34,19 +33,8 @@ const MyGardenNew: React.FC = () => {
       try {
         setLoading(true);
         setError(null);
-        const token = localStorage.getItem('virida_token');
-        const response = await fetch(`${apiUrl}/api/plants`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error('Erreur lors du chargement des plantes');
-        }
-
-        const data = await response.json();
-        setUserPlants(data.data || []);
+        const data = await plantService.getPlants();
+        setUserPlants(data as any || []);
       } catch (err) {
         console.error('Erreur chargement plantes utilisateur:', err);
         setError(err instanceof Error ? err.message : 'Erreur inconnue');
@@ -56,7 +44,7 @@ const MyGardenNew: React.FC = () => {
     };
 
     fetchUserPlants();
-  }, [apiUrl]);
+  }, []);
 
   const handleDeletePlant = (plantId: string) => {
     const plant = userPlants.find(p => p.id === plantId);
@@ -70,18 +58,7 @@ const MyGardenNew: React.FC = () => {
     if (!plantToDelete) return;
 
     try {
-      const token = localStorage.getItem('virida_token');
-      const response = await fetch(`${apiUrl}/api/plants/${plantToDelete.id}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error('Erreur lors de la suppression de la plante');
-      }
-
+      await plantService.deletePlant(plantToDelete.id);
       setUserPlants((prev) => prev.filter((plant) => plant.id !== plantToDelete.id));
       setConfirmDialogOpen(false);
       setPlantToDelete(null);
@@ -102,17 +79,8 @@ const MyGardenNew: React.FC = () => {
   const handlePlantAdded = () => {
     const fetchUserPlants = async () => {
       try {
-        const token = localStorage.getItem('virida_token');
-        const response = await fetch(`${apiUrl}/api/plants`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setUserPlants(data.data || []);
-        }
+        const data = await plantService.getPlants();
+        setUserPlants(data as any || []);
       } catch (err) {
         console.error('Erreur rechargement plantes:', err);
       }
@@ -133,17 +101,8 @@ const MyGardenNew: React.FC = () => {
   const handlePlantUpdated = () => {
     const fetchUserPlants = async () => {
       try {
-        const token = localStorage.getItem('virida_token');
-        const response = await fetch(`${apiUrl}/api/plants`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setUserPlants(data.data || []);
-        }
+        const data = await plantService.getPlants();
+        setUserPlants(data as any || []);
       } catch (err) {
         console.error('Erreur rechargement plantes:', err);
       }
@@ -154,17 +113,8 @@ const MyGardenNew: React.FC = () => {
   const handlePlantDeleted = () => {
     const fetchUserPlants = async () => {
       try {
-        const token = localStorage.getItem('virida_token');
-        const response = await fetch(`${apiUrl}/api/plants`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setUserPlants(data.data || []);
-        }
+        const data = await plantService.getPlants();
+        setUserPlants(data as any || []);
       } catch (err) {
         console.error('Erreur rechargement plantes:', err);
       }

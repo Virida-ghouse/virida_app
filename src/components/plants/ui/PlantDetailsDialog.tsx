@@ -38,7 +38,7 @@ import {
   CheckCircle,
   MoreVert,
 } from '@mui/icons-material';
-import { useViridaStore } from '../../../store/useViridaStore';
+import { plantService, API_CONFIG } from '../../../services/api';
 import { TaskDialog } from './TaskDialog';
 
 interface PlantDetailsDialogProps {
@@ -77,7 +77,6 @@ export const PlantDetailsDialog: React.FC<PlantDetailsDialogProps> = ({
   onPlantUpdated,
   onPlantDeleted,
 }) => {
-  const apiUrl = useViridaStore((state) => state.apiUrl);
   const [tabValue, setTabValue] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -142,27 +141,17 @@ export const PlantDetailsDialog: React.FC<PlantDetailsDialogProps> = ({
 
     setLoading(true);
     try {
-      const token = localStorage.getItem('virida_token');
-      const response = await fetch(`${apiUrl}/api/plants/${plantId}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
+      const data = await plantService.getPlant(plantId);
+      const plantData = (data as any).data || data;
+      setPlant(plantData);
 
-      if (response.ok) {
-        const data = await response.json();
-        const plantData = data.data;
-        setPlant(plantData);
-
-        // Initialize form fields
-        setName(plantData.name || '');
-        setZone(plantData.zone || '');
-        setGreenhouse(plantData.greenhouse?.id || '');
-        setGreenhouseName(plantData.greenhouse?.name || '');
-        setPlantedAt(plantData.plantedAt ? new Date(plantData.plantedAt).toISOString().split('T')[0] : '');
-        setNotes(plantData.notes || '');
-        setStatus(plantData.status || 'PLANTED');
-      }
+      setName(plantData.name || '');
+      setZone(plantData.zone || '');
+      setGreenhouse(plantData.greenhouse?.id || '');
+      setGreenhouseName(plantData.greenhouse?.name || '');
+      setPlantedAt(plantData.plantedAt ? new Date(plantData.plantedAt).toISOString().split('T')[0] : '');
+      setNotes(plantData.notes || '');
+      setStatus(plantData.status || 'PLANTED');
     } catch (error) {
       console.error('Erreur lors du chargement de la plante:', error);
     } finally {
@@ -172,19 +161,9 @@ export const PlantDetailsDialog: React.FC<PlantDetailsDialogProps> = ({
 
   const fetchTasks = async () => {
     if (!plantId) return;
-
     try {
-      const token = localStorage.getItem('virida_token');
-      const response = await fetch(`${apiUrl}/api/plant-tasks?plantId=${plantId}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setTasks(data.data || []);
-      }
+      const data = await plantService.getAllTasks({ plantId });
+      setTasks(data.data || []);
     } catch (error) {
       console.error('Erreur lors du chargement des tâches:', error);
     }
@@ -192,19 +171,9 @@ export const PlantDetailsDialog: React.FC<PlantDetailsDialogProps> = ({
 
   const fetchPhotos = async () => {
     if (!plantId) return;
-
     try {
-      const token = localStorage.getItem('virida_token');
-      const response = await fetch(`${apiUrl}/api/plant-advanced/${plantId}/photos`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setPhotos(data.data.photos || []);
-      }
+      const data = await plantService.getPhotos(plantId);
+      setPhotos(data.data.photos || []);
     } catch (error) {
       console.error('Erreur lors du chargement des photos:', error);
     }
@@ -212,19 +181,9 @@ export const PlantDetailsDialog: React.FC<PlantDetailsDialogProps> = ({
 
   const fetchGrowthLogs = async () => {
     if (!plantId) return;
-
     try {
-      const token = localStorage.getItem('virida_token');
-      const response = await fetch(`${apiUrl}/api/plant-advanced/${plantId}/growth-logs`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setGrowthLogs(data.data.logs || []);
-      }
+      const data = await plantService.getGrowthLogs(plantId);
+      setGrowthLogs(data.data.logs || []);
     } catch (error) {
       console.error('Erreur lors du chargement des logs de croissance:', error);
     }
@@ -262,7 +221,6 @@ export const PlantDetailsDialog: React.FC<PlantDetailsDialogProps> = ({
 
     setLoading(true);
     try {
-      const token = localStorage.getItem('virida_token');
       const payload = {
         name,
         zone: zone || undefined,
@@ -272,22 +230,10 @@ export const PlantDetailsDialog: React.FC<PlantDetailsDialogProps> = ({
         status,
       };
 
-      const response = await fetch(`${apiUrl}/api/plants/${plantId}`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (response.ok) {
-        await fetchPlantDetails();
-        setIsEditing(false);
-        onPlantUpdated();
-      } else {
-        console.error('Erreur lors de la mise à jour de la plante');
-      }
+      await plantService.updatePlant(plantId, payload as any);
+      await fetchPlantDetails();
+      setIsEditing(false);
+      onPlantUpdated();
     } catch (error) {
       console.error('Erreur:', error);
     } finally {
@@ -305,22 +251,10 @@ export const PlantDetailsDialog: React.FC<PlantDetailsDialogProps> = ({
       onConfirm: async () => {
         setLoading(true);
         try {
-          const token = localStorage.getItem('virida_token');
-          const response = await fetch(`${apiUrl}/api/plants/${plantId}`, {
-            method: 'DELETE',
-            headers: {
-              'Authorization': `Bearer ${token}`,
-            },
-          });
-
-          if (response.ok) {
-            setConfirmDialog({ ...confirmDialog, open: false });
-            onPlantDeleted();
-            onClose();
-          } else {
-            console.error('Erreur lors de la suppression de la plante');
-            setConfirmDialog({ ...confirmDialog, open: false });
-          }
+          await plantService.deletePlant(plantId!);
+          setConfirmDialog({ ...confirmDialog, open: false });
+          onPlantDeleted();
+          onClose();
         } catch (error) {
           console.error('Erreur:', error);
           setConfirmDialog({ ...confirmDialog, open: false });
@@ -337,23 +271,9 @@ export const PlantDetailsDialog: React.FC<PlantDetailsDialogProps> = ({
 
     setLoading(true);
     try {
-      const token = localStorage.getItem('virida_token');
-
       // Uploader la photo si un fichier est sélectionné
       if (selectedPhotoFile) {
-        const formData = new FormData();
-        formData.append('photo', selectedPhotoFile);
-        if (newPhotoCaption.trim()) {
-          formData.append('caption', newPhotoCaption.trim());
-        }
-
-        await fetch(`${apiUrl}/api/plant-advanced/${plantId}/photos/upload`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
-          body: formData,
-        });
+        await plantService.uploadPhotoLegacy(plantId!, selectedPhotoFile);
       }
 
       // Ajouter le log de croissance si des données sont fournies
@@ -362,15 +282,7 @@ export const PlantDetailsDialog: React.FC<PlantDetailsDialogProps> = ({
         if (newLogHeight) logPayload.height = parseFloat(newLogHeight);
         if (newLogLeafCount) logPayload.leafCount = parseInt(newLogLeafCount);
         if (newLogNotes.trim()) logPayload.notes = newLogNotes.trim();
-
-        await fetch(`${apiUrl}/api/plant-advanced/${plantId}/growth-logs`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(logPayload),
-        });
+        await plantService.createGrowthLog(plantId!, logPayload);
       }
 
       // Recharger les données
@@ -401,14 +313,7 @@ export const PlantDetailsDialog: React.FC<PlantDetailsDialogProps> = ({
       message: 'Êtes-vous sûr de vouloir supprimer cette photo ? Cette action est irréversible.',
       onConfirm: async () => {
         try {
-          const token = localStorage.getItem('virida_token');
-          await fetch(`${apiUrl}/api/plant-advanced/${plantId}/photos/${photoId}`, {
-            method: 'DELETE',
-            headers: {
-              'Authorization': `Bearer ${token}`,
-            },
-          });
-
+          await plantService.deletePhoto(plantId!, photoId);
           fetchPhotos();
           setConfirmDialog({ ...confirmDialog, open: false });
         } catch (error) {
@@ -428,14 +333,7 @@ export const PlantDetailsDialog: React.FC<PlantDetailsDialogProps> = ({
       message: 'Êtes-vous sûr de vouloir supprimer ce log de croissance ? Cette action est irréversible.',
       onConfirm: async () => {
         try {
-          const token = localStorage.getItem('virida_token');
-          await fetch(`${apiUrl}/api/plant-advanced/${plantId}/growth-logs/${logId}`, {
-            method: 'DELETE',
-            headers: {
-              'Authorization': `Bearer ${token}`,
-            },
-          });
-
+          await plantService.deleteGrowthLog(plantId!, logId);
           fetchGrowthLogs();
           setConfirmDialog({ ...confirmDialog, open: false });
         } catch (error) {
@@ -463,19 +361,8 @@ export const PlantDetailsDialog: React.FC<PlantDetailsDialogProps> = ({
 
   const handleCompleteTask = async (taskId: string) => {
     try {
-      const token = localStorage.getItem('virida_token');
-      const response = await fetch(`${apiUrl}/api/plant-tasks/${taskId}`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ status: 'COMPLETED' }),
-      });
-
-      if (response.ok) {
-        fetchTasks();
-      }
+      await plantService.updateStandaloneTask(taskId, { status: 'COMPLETED' });
+      fetchTasks();
     } catch (error) {
       console.error('Erreur lors de la complétion de la tâche:', error);
     }
@@ -488,18 +375,9 @@ export const PlantDetailsDialog: React.FC<PlantDetailsDialogProps> = ({
       message: 'Êtes-vous sûr de vouloir supprimer cette tâche ? Cette action est irréversible.',
       onConfirm: async () => {
         try {
-          const token = localStorage.getItem('virida_token');
-          const response = await fetch(`${apiUrl}/api/plant-tasks/${taskId}`, {
-            method: 'DELETE',
-            headers: {
-              'Authorization': `Bearer ${token}`,
-            },
-          });
-
-          if (response.ok) {
-            fetchTasks();
-            setConfirmDialog({ ...confirmDialog, open: false });
-          }
+          await plantService.deleteStandaloneTask(taskId);
+          fetchTasks();
+          setConfirmDialog({ ...confirmDialog, open: false });
         } catch (error) {
           console.error('Erreur lors de la suppression de la tâche:', error);
           setConfirmDialog({ ...confirmDialog, open: false });
@@ -517,19 +395,9 @@ export const PlantDetailsDialog: React.FC<PlantDetailsDialogProps> = ({
   // Harvest management functions
   const fetchHarvests = async () => {
     if (!plantId) return;
-
     try {
-      const token = localStorage.getItem('virida_token');
-      const response = await fetch(`${apiUrl}/api/plant-advanced/${plantId}/harvests`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setHarvests(data.data.harvests || []);
-      }
+      const data = await plantService.getHarvests(plantId);
+      setHarvests(data.data.harvests || []);
     } catch (error) {
       console.error('Erreur lors du chargement des récoltes:', error);
     }
@@ -540,34 +408,20 @@ export const PlantDetailsDialog: React.FC<PlantDetailsDialogProps> = ({
 
     setLoading(true);
     try {
-      const token = localStorage.getItem('virida_token');
-      const payload = {
+      await plantService.createHarvest(plantId, {
         quantity: parseFloat(newHarvestQuantity),
         unit: newHarvestUnit,
         quality: newHarvestQuality,
         notes: newHarvestNotes.trim() || undefined,
         harvestedAt: new Date(newHarvestDate).toISOString(),
-      };
-
-      const response = await fetch(`${apiUrl}/api/plant-advanced/${plantId}/harvests`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
       });
-
-      if (response.ok) {
-        fetchHarvests();
-        // Réinitialiser le formulaire
-        setNewHarvestQuantity('');
-        setNewHarvestUnit('kg');
-        setNewHarvestQuality('GOOD');
-        setNewHarvestNotes('');
-        setNewHarvestDate(new Date().toISOString().split('T')[0]);
-        setShowAddHarvest(false);
-      }
+      fetchHarvests();
+      setNewHarvestQuantity('');
+      setNewHarvestUnit('kg');
+      setNewHarvestQuality('GOOD');
+      setNewHarvestNotes('');
+      setNewHarvestDate(new Date().toISOString().split('T')[0]);
+      setShowAddHarvest(false);
     } catch (error) {
       console.error('Erreur lors de l\'ajout de la récolte:', error);
     } finally {
@@ -584,14 +438,7 @@ export const PlantDetailsDialog: React.FC<PlantDetailsDialogProps> = ({
       message: 'Êtes-vous sûr de vouloir supprimer cette récolte ? Cette action est irréversible.',
       onConfirm: async () => {
         try {
-          const token = localStorage.getItem('virida_token');
-          await fetch(`${apiUrl}/api/plant-advanced/${plantId}/harvests/${harvestId}`, {
-            method: 'DELETE',
-            headers: {
-              'Authorization': `Bearer ${token}`,
-            },
-          });
-
+          await plantService.deleteHarvest(plantId!, harvestId);
           fetchHarvests();
           setConfirmDialog({ ...confirmDialog, open: false });
         } catch (error) {
@@ -1234,7 +1081,7 @@ export const PlantDetailsDialog: React.FC<PlantDetailsDialogProps> = ({
                             position: 'relative',
                             paddingTop: '75%',
                             bgcolor: '#f0f0f0',
-                            backgroundImage: `url(${photo.url.startsWith('http') ? photo.url : apiUrl + photo.url})`,
+                            backgroundImage: `url(${photo.url.startsWith('http') ? photo.url : API_CONFIG.BASE_URL + photo.url})`,
                             backgroundSize: 'cover',
                             backgroundPosition: 'center',
                           }}

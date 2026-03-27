@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useViridaStore } from '../../../store/useViridaStore';
 import { TaskDialogModern } from './TaskDialogModern';
+import { plantService } from '../../../services/api';
 
 interface PlantDetailsDialogModernProps {
   open: boolean;
@@ -17,7 +17,6 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
   onPlantUpdated,
   onPlantDeleted,
 }) => {
-  const apiUrl = useViridaStore((state) => state.apiUrl);
   const [currentTab, setCurrentTab] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -83,22 +82,16 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
     if (!plantId) return;
     setLoading(true);
     try {
-      const token = localStorage.getItem('virida_token');
-      const response = await fetch(`${apiUrl}/api/plants/${plantId}`, {
-        headers: { 'Authorization': `Bearer ${token}` },
-      });
-      if (response.ok) {
-        const data = await response.json();
-        const plantData = data.data;
-        setPlant(plantData);
-        setName(plantData.name || '');
-        setZone(plantData.zone || '');
-        setGreenhouse(plantData.greenhouse?.id || '');
-        setGreenhouseName(plantData.greenhouse?.name || '');
-        setPlantedAt(plantData.plantedAt ? new Date(plantData.plantedAt).toISOString().split('T')[0] : '');
-        setNotes(plantData.notes || '');
-        setStatus(plantData.status || 'PLANTED');
-      }
+      const data = await plantService.getPlant(plantId);
+      const plantData = data;
+      setPlant(plantData);
+      setName(plantData.name || '');
+      setZone(plantData.zone || '');
+      setGreenhouse(plantData.greenhouse?.id || '');
+      setGreenhouseName(plantData.greenhouse?.name || '');
+      setPlantedAt(plantData.plantedAt ? new Date(plantData.plantedAt).toISOString().split('T')[0] : '');
+      setNotes(plantData.notes || '');
+      setStatus(plantData.status || 'PLANTED');
     } catch (error) {
       console.error('Erreur:', error);
     } finally {
@@ -109,35 +102,19 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
   const fetchTasks = async () => {
     if (!plantId) return;
     try {
-      const token = localStorage.getItem('virida_token');
-      const response = await fetch(`${apiUrl}/api/plant-tasks?plantId=${plantId}`, {
-        headers: { 'Authorization': `Bearer ${token}` },
-      });
-      if (response.ok) {
-        const data = await response.json();
-        console.log('📋 Tâches reçues:', data);
-        const tasksList = data.data || data.tasks || [];
-        console.log('📋 Tâches extraites:', tasksList);
-        setTasks(tasksList);
-      } else {
-        console.error('❌ Erreur fetch tasks:', response.status);
-      }
+      const data = await plantService.getAllTasks({ plantId });
+      const tasksList = data.data || data.tasks || [];
+      setTasks(tasksList);
     } catch (error) {
-      console.error('❌ Erreur:', error);
+      console.error('Erreur fetch tasks:', error);
     }
   };
 
   const fetchPhotos = async () => {
     if (!plantId) return;
     try {
-      const token = localStorage.getItem('virida_token');
-      const response = await fetch(`${apiUrl}/api/plant-advanced/${plantId}/photos`, {
-        headers: { 'Authorization': `Bearer ${token}` },
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setPhotos(data.data.photos || []);
-      }
+      const data = await plantService.getPhotos(plantId);
+      setPhotos(data.data.photos || []);
     } catch (error) {
       console.error('Erreur:', error);
     }
@@ -146,14 +123,8 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
   const fetchGrowthLogs = async () => {
     if (!plantId) return;
     try {
-      const token = localStorage.getItem('virida_token');
-      const response = await fetch(`${apiUrl}/api/plant-advanced/${plantId}/growth-logs`, {
-        headers: { 'Authorization': `Bearer ${token}` },
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setGrowthLogs(data.data.logs || []);
-      }
+      const data = await plantService.getGrowthLogs(plantId);
+      setGrowthLogs(data.data.logs || []);
     } catch (error) {
       console.error('Erreur:', error);
     }
@@ -162,14 +133,8 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
   const fetchHarvests = async () => {
     if (!plantId) return;
     try {
-      const token = localStorage.getItem('virida_token');
-      const response = await fetch(`${apiUrl}/api/plant-advanced/${plantId}/harvests`, {
-        headers: { 'Authorization': `Bearer ${token}` },
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setHarvests(data.data.harvests || []);
-      }
+      const data = await plantService.getHarvests(plantId);
+      setHarvests(data.data.harvests || []);
     } catch (error) {
       console.error('Erreur:', error);
     }
@@ -179,20 +144,10 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
     if (!plantId) return;
     setLoading(true);
     try {
-      const token = localStorage.getItem('virida_token');
-      const response = await fetch(`${apiUrl}/api/plants/${plantId}`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name, zone, greenhouse, plantedAt, notes, status }),
-      });
-      if (response.ok) {
-        setIsEditing(false);
-        fetchPlantDetails();
-        onPlantUpdated();
-      }
+      await plantService.updatePlant(plantId, { name, zone, greenhouse, plantedAt, notes, status } as any);
+      setIsEditing(false);
+      fetchPlantDetails();
+      onPlantUpdated();
     } catch (error) {
       console.error('Erreur:', error);
     } finally {
@@ -201,17 +156,11 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
   };
 
   const handleDelete = async () => {
-    if (!confirm('Êtes-vous sûr de vouloir supprimer cette plante ?')) return;
+    if (!plantId || !confirm('Êtes-vous sûr de vouloir supprimer cette plante ?')) return;
     try {
-      const token = localStorage.getItem('virida_token');
-      const response = await fetch(`${apiUrl}/api/plants/${plantId}`, {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` },
-      });
-      if (response.ok) {
-        onPlantDeleted();
-        onClose();
-      }
+      await plantService.deletePlant(plantId);
+      onPlantDeleted();
+      onClose();
     } catch (error) {
       console.error('Erreur:', error);
     }
@@ -219,12 +168,8 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
 
   const handleCompleteTask = async (taskId: string, isCompleted: boolean) => {
     try {
-      const token = localStorage.getItem('virida_token');
       const endpoint = isCompleted ? 'uncomplete' : 'complete';
-      await fetch(`${apiUrl}/api/plant-tasks/${taskId}/${endpoint}`, {
-        method: 'PATCH',
-        headers: { 'Authorization': `Bearer ${token}` },
-      });
+      await plantService.toggleTaskStatus(taskId, endpoint as any);
       fetchTasks();
     } catch (error) {
       console.error('Erreur:', error);
@@ -234,11 +179,7 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
   const handleDeleteTask = async (taskId: string) => {
     if (!confirm('Supprimer cette tâche ?')) return;
     try {
-      const token = localStorage.getItem('virida_token');
-      await fetch(`${apiUrl}/api/plant-tasks/${taskId}`, {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` },
-      });
+      await plantService.deleteStandaloneTask(taskId);
       fetchTasks();
     } catch (error) {
       console.error('Erreur:', error);
@@ -249,20 +190,12 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
     if (!plantId || !newHarvestQuantity) return;
     setLoading(true);
     try {
-      const token = localStorage.getItem('virida_token');
-      await fetch(`${apiUrl}/api/plant-advanced/${plantId}/harvests`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          quantity: parseFloat(newHarvestQuantity),
-          unit: newHarvestUnit,
-          quality: newHarvestQuality,
-          notes: newHarvestNotes.trim() || undefined,
-          harvestedAt: new Date(newHarvestDate).toISOString(),
-        }),
+      await plantService.createHarvest(plantId, {
+        quantity: parseFloat(newHarvestQuantity),
+        unit: newHarvestUnit,
+        quality: newHarvestQuality,
+        notes: newHarvestNotes.trim() || undefined,
+        harvestedAt: new Date(newHarvestDate).toISOString(),
       });
       fetchHarvests();
       setNewHarvestQuantity('');
@@ -281,11 +214,7 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
   const handleDeleteHarvest = async (harvestId: string) => {
     if (!plantId || !confirm('Supprimer cette récolte ?')) return;
     try {
-      const token = localStorage.getItem('virida_token');
-      await fetch(`${apiUrl}/api/plant-advanced/${plantId}/harvests/${harvestId}`, {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` },
-      });
+      await plantService.deleteHarvest(plantId, harvestId);
       fetchHarvests();
     } catch (error) {
       console.error('Erreur:', error);
@@ -296,21 +225,9 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
     if (!plantId) return;
     setLoading(true);
     try {
-      const token = localStorage.getItem('virida_token');
-
       // Upload photo si présente
       if (selectedPhotoFile) {
-        const formData = new FormData();
-        formData.append('photo', selectedPhotoFile);
-        if (newPhotoCaption) {
-          formData.append('caption', newPhotoCaption);
-        }
-
-        await fetch(`${apiUrl}/api/plant-advanced/${plantId}/photos`, {
-          method: 'POST',
-          headers: { 'Authorization': `Bearer ${token}` },
-          body: formData,
-        });
+        await plantService.uploadPhoto(plantId, selectedPhotoFile);
       }
 
       // Ajouter log de croissance si des données sont présentes
@@ -319,15 +236,7 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
         if (newLogHeight) logPayload.height = parseFloat(newLogHeight);
         if (newLogLeafCount) logPayload.leafCount = parseInt(newLogLeafCount);
         if (newLogNotes) logPayload.notes = newLogNotes;
-
-        await fetch(`${apiUrl}/api/plant-advanced/${plantId}/growth-logs`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(logPayload),
-        });
+        await plantService.createGrowthLog(plantId, logPayload);
       }
 
       // Rafraîchir les données

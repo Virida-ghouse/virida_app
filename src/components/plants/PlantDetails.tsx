@@ -24,7 +24,7 @@ import GrowthTimeline from './GrowthTimeline';
 import PhotoGallery from './PhotoGallery';
 import CareEvents from './CareEvents';
 import HealthStatus from './HealthStatus';
-import { useViridaStore } from '../../store/useViridaStore';
+import { plantService } from '../../services/api';
 
 interface Plant {
   id: string;
@@ -102,8 +102,7 @@ function TabPanel_Component(props: any) {
 }
 
 const PlantDetails: React.FC<PlantDetailsProps> = ({ plant, onClose }) => {
-  const apiUrl = useViridaStore((state) => state.apiUrl);
-  const [tabValue, setTabValue] = useState(0);
+  const [currentTab, setCurrentTab] = useState(0);
   const [loading, setLoading] = useState(false);
   const [plantData, setPlantData] = useState<any>(null);
   const [healthData, setHealthData] = useState<any>(null);
@@ -118,9 +117,7 @@ const PlantDetails: React.FC<PlantDetailsProps> = ({ plant, onClose }) => {
         const token = localStorage.getItem('authToken');
 
         // Récupérer les données de santé
-        const healthResponse = await fetch(`${apiUrl}/api/plant-advanced/${plant.id}/health`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const healthResponse = await plantService.getPlantHealth(plant.id, token);
 
         if (healthResponse.ok) {
           const healthRes = await healthResponse.json();
@@ -128,13 +125,7 @@ const PlantDetails: React.FC<PlantDetailsProps> = ({ plant, onClose }) => {
         }
 
         // Récupérer les recommandations EVE
-        const recsResponse = await fetch(`${apiUrl}/api/plant-advanced/${plant.id}/recommendations`, {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        });
+        const recsResponse = await plantService.getRecommendations(plant.id, token);
 
         if (recsResponse.ok) {
           const recsRes = await recsResponse.json();

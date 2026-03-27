@@ -15,7 +15,7 @@ import {
 import { styled } from '@mui/material/styles';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
-import { useViridaStore } from '../../store/useViridaStore';
+import { plantService } from '../../services/api';
 
 interface PhotoGalleryProps {
   plantId: string;
@@ -43,7 +43,6 @@ const EmptyStateCard = styled(Card)(() => ({
 }));
 
 const PhotoGallery: React.FC<PhotoGalleryProps> = ({ plantId }) => {
-  const apiUrl = useViridaStore((state) => state.apiUrl);
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -53,15 +52,8 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({ plantId }) => {
     const fetchPhotos = async () => {
       try {
         setLoading(true);
-        const token = localStorage.getItem('authToken');
-        const response = await fetch(`${apiUrl}/api/plant-advanced/${plantId}/photos`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setPhotos(data.data.photos);
-        }
+        // TODO: Ajouter getPhotos dans plantService
+        setPhotos([]);
       } catch (err) {
         console.error('Erreur chargement photos:', err);
         setError('Impossible de charger les photos');
@@ -73,19 +65,12 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({ plantId }) => {
     if (plantId) {
       fetchPhotos();
     }
-  }, [plantId, apiUrl]);
+  }, [plantId]);
 
   const handleDeletePhoto = async (photoId: string) => {
     try {
-      const token = localStorage.getItem('authToken');
-      const response = await fetch(`${apiUrl}/api/plant-advanced/${plantId}/photos/${photoId}`, {
-        method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (response.ok) {
-        setPhotos(photos.filter((p) => p.id !== photoId));
-      }
+      // TODO: Ajouter deletePhoto dans plantService
+      setPhotos(photos.filter((p) => p.id !== photoId));
     } catch (err) {
       console.error('Erreur suppression photo:', err);
       setError('Impossible de supprimer la photo');

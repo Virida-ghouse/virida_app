@@ -17,7 +17,7 @@ import {
 } from '@mui/lab';
 import { styled } from '@mui/material/styles';
 import AddIcon from '@mui/icons-material/Add';
-import { useViridaStore } from '../../store/useViridaStore';
+import { plantService } from '../../services/api';
 
 interface CareEventsProps {
   plantId: string;
@@ -73,7 +73,6 @@ const getEventLabel = (eventType: string) => {
 };
 
 const CareEvents: React.FC<CareEventsProps> = ({ plantId }) => {
-  const apiUrl = useViridaStore((state) => state.apiUrl);
   const [events, setEvents] = useState<CareEvent[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -83,15 +82,8 @@ const CareEvents: React.FC<CareEventsProps> = ({ plantId }) => {
     const fetchEvents = async () => {
       try {
         setLoading(true);
-        const token = localStorage.getItem('authToken');
-        const response = await fetch(`${apiUrl}/api/plant-advanced/${plantId}/care-events`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setEvents(data.data.events);
-        }
+        const data = await plantService.getCareEvents(plantId);
+        setEvents(data.data.events);
       } catch (err) {
         console.error('Erreur chargement care events:', err);
         setError('Impossible de charger l\'historique des soins');
@@ -103,7 +95,7 @@ const CareEvents: React.FC<CareEventsProps> = ({ plantId }) => {
     if (plantId) {
       fetchEvents();
     }
-  }, [plantId, apiUrl]);
+  }, [plantId]);
 
   if (loading) {
     return (

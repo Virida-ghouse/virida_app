@@ -23,7 +23,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import StarIcon from '@mui/icons-material/Star';
 import { CircularGauge, SensorIndicator } from './ui';
-import { useViridaStore } from '../../store/useViridaStore';
+import { plantService } from '../../services/api';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -43,7 +43,6 @@ function TabPanel(props: TabPanelProps) {
 const PlantProfilePage: React.FC = () => {
   const { plantId } = useParams<{ plantId: string }>();
   const navigate = useNavigate();
-  const apiUrl = useViridaStore((state) => state.apiUrl);
 
   const [currentTab, setCurrentTab] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
@@ -53,20 +52,12 @@ const PlantProfilePage: React.FC = () => {
   useEffect(() => {
     const fetchPlantData = async () => {
       try {
-        const token = localStorage.getItem('virida_token');
-        const response = await fetch(`${apiUrl}/api/plant-catalog?search=${plantId}`, {
-          headers: { 'Authorization': `Bearer ${token}` },
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          // On cherche la plante correspondante dans le catalogue retourné
-          const plant =
-            data.data?.plants?.find((p: any) => p.id === plantId) ??
-            data.data?.plants?.[0] ??
-            null;
-          setPlantData(plant);
-        }
+        const data = await plantService.getPlantCatalog({ search: plantId || '' });
+        const plant =
+          data.data?.plants?.find((p: any) => p.id === plantId) ??
+          data.data?.plants?.[0] ??
+          null;
+        setPlantData(plant);
       } catch (error) {
         console.error('Error fetching plant:', error);
       } finally {
@@ -75,7 +66,7 @@ const PlantProfilePage: React.FC = () => {
     };
 
     fetchPlantData();
-  }, [plantId, apiUrl]);
+  }, [plantId]);
 
   // Mock data pour la démo (sera remplacé par vraies données IoT)
   const mockSensorData = {

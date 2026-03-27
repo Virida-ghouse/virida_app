@@ -16,7 +16,7 @@ import {
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { PlantCardMinimal } from './ui';
 import { PlantLibraryDetailsDialog } from './ui/PlantLibraryDetailsDialog';
-import { useViridaStore } from '../../store/useViridaStore';
+import { plantService } from '../../services/api';
 
 interface PlantCatalog {
   id: string;
@@ -45,8 +45,6 @@ interface PlantCatalog {
 }
 
 const PlantLibrary: React.FC = () => {
-  const apiUrl = useViridaStore((state) => state.apiUrl);
-
   const [plants, setPlants] = useState<PlantCatalog[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -67,19 +65,8 @@ const PlantLibrary: React.FC = () => {
       try {
         setLoading(true);
         setError(null);
-        const token = localStorage.getItem('virida_token');
-        const response = await fetch(`${apiUrl}/api/plant-catalog`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error('Erreur lors du chargement du catalogue');
-        }
-
-        const data = await response.json();
-        setPlants(data.data?.plants || []);
+        const data = await plantService.getPlantLibrary();
+        setPlants(data as any || []);
       } catch (err) {
         console.error('Erreur chargement catalogue:', err);
         setError(err instanceof Error ? err.message : 'Erreur inconnue');

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useViridaStore } from '../../store/useViridaStore';
+import { plantService } from '../../services/api';
 
 interface CareTask {
   id: string;
@@ -19,7 +19,6 @@ interface CareTask {
 }
 
 const PlantCalendarNew: React.FC = () => {
-  const apiUrl = useViridaStore((state) => state.apiUrl);
   const [tasks, setTasks] = useState<CareTask[]>([]);
   const [loading, setLoading] = useState(true);
   const months = [
@@ -38,25 +37,15 @@ const PlantCalendarNew: React.FC = () => {
     const fetchTasks = async () => {
       try {
         setLoading(true);
-        const token = localStorage.getItem('virida_token');
-        
-        // Calculer les dates de début et fin du mois
         const fromDate = new Date(selectedYear, selectedMonth, 1);
         const toDate = new Date(selectedYear, selectedMonth + 1, 0);
-        
-        const response = await fetch(
-          `${apiUrl}/api/plant-tasks?completed=false&fromDate=${fromDate.toISOString()}&toDate=${toDate.toISOString()}`,
-          {
-            headers: {
-              'Authorization': `Bearer ${token}`,
-            },
-          }
-        );
 
-        if (response.ok) {
-          const data = await response.json();
-          setTasks(data.data || []);
-        }
+        const data = await plantService.getAllTasks({
+          completed: 'false',
+          fromDate: fromDate.toISOString(),
+          toDate: toDate.toISOString(),
+        });
+        setTasks(data.data || []);
       } catch (err) {
         console.error('Erreur chargement tâches:', err);
       } finally {
@@ -65,7 +54,7 @@ const PlantCalendarNew: React.FC = () => {
     };
 
     fetchTasks();
-  }, [apiUrl, selectedMonth, selectedYear]);
+  }, [selectedMonth, selectedYear]);
 
   // Obtenir les tâches pour un jour donné
   const getTasksForDay = (day: number) => {

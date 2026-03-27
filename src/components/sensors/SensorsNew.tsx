@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useViridaStore } from '../../store/useViridaStore';
 import { sensorService } from '../../services/api';
 
 interface Sensor {
@@ -17,8 +16,7 @@ interface Sensor {
 }
 
 export const SensorsNew: React.FC = () => {
-  console.log('🔧 SensorsNew - Composant en cours de rendu');
-  const apiUrl = useViridaStore((state) => state.apiUrl);
+  console.log('SensorsNew - Composant en cours de rendu');
   const [sensors, setSensors] = useState<Sensor[]>([]);
   const [loading, setLoading] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
@@ -147,11 +145,7 @@ export const SensorsNew: React.FC = () => {
   const handleDeleteSensor = async (id: string) => {
     if (!confirm('Supprimer ce capteur ?')) return;
     try {
-      const token = localStorage.getItem('virida_token');
-      await fetch(`${apiUrl}/api/sensors/${id}`, {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` },
-      });
+      await sensorService.deleteSensor(id);
       fetchSensors();
     } catch (error) {
       console.error('Erreur:', error);
@@ -161,11 +155,7 @@ export const SensorsNew: React.FC = () => {
 
   const handleCalibrateSensor = async (id: string) => {
     try {
-      const token = localStorage.getItem('virida_token');
-      await fetch(`${apiUrl}/api/sensors/${id}/calibrate`, {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${token}` },
-      });
+      await sensorService.calibrateSensor(id);
       fetchSensors();
     } catch (error) {
       console.error('Erreur:', error);
@@ -181,30 +171,15 @@ export const SensorsNew: React.FC = () => {
 
   const handleSaveSensor = async () => {
     try {
-      const token = localStorage.getItem('virida_token');
       if (editingSensor) {
-        await fetch(`${apiUrl}/api/sensors/${editingSensor.id}`, {
-          method: 'PUT',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formData),
-        });
+        await sensorService.updateSensor(editingSensor.id, formData);
       } else {
-        await fetch(`${apiUrl}/api/sensors`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            ...formData,
-            batteryLevel: 100,
-            signalStrength: 100,
-            accuracy: 100,
-            lastCalibration: new Date().toISOString().split('T')[0],
-          }),
+        await sensorService.createSensor({
+          ...formData,
+          batteryLevel: 100,
+          signalStrength: 100,
+          accuracy: 100,
+          lastCalibration: new Date().toISOString().split('T')[0],
         });
       }
       fetchSensors();

@@ -10,7 +10,7 @@ import {
 import { LineChart as RechartLineChart, Line as RechartLine, ResponsiveContainer as RechartResponsiveContainer, XAxis as RechartXAxis, YAxis as RechartYAxis, CartesianGrid as RechartCartesianGrid, Tooltip as RechartTooltip } from 'recharts';
 import { styled } from '@mui/material/styles';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
-import { useViridaStore } from '../../store/useViridaStore';
+import { plantService } from '../../services/api';
 
 interface GrowthTimelineProps {
   plantId: string;
@@ -45,7 +45,6 @@ const RecommendationCard = styled(Card)(() => ({
 }));
 
 const GrowthTimeline: React.FC<GrowthTimelineProps> = ({ plantId, recommendations }) => {
-  const apiUrl = useViridaStore((state) => state.apiUrl);
   const [logs, setLogs] = useState<GrowthLog[]>([]);
   const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState(false);
@@ -56,19 +55,9 @@ const GrowthTimeline: React.FC<GrowthTimelineProps> = ({ plantId, recommendation
     const fetchGrowthLogs = async () => {
       try {
         setLoading(true);
-        const token = localStorage.getItem('authToken');
-        const response = await fetch(
-          `${apiUrl}/api/plant-advanced/${plantId}/growth-logs?limit=100`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-
-        if (response.ok) {
-          const data = await response.json();
-          setLogs(data.data.logs);
-          setStats(data.data.stats);
-        }
+        const data = await plantService.getGrowthLogs(plantId, { limit: '100' });
+        setLogs(data.data.logs);
+        setStats(data.data.stats);
       } catch (err) {
         console.error('Erreur chargement growth logs:', err);
         setError('Impossible de charger l\'historique de croissance');
@@ -80,7 +69,7 @@ const GrowthTimeline: React.FC<GrowthTimelineProps> = ({ plantId, recommendation
     if (plantId) {
       fetchGrowthLogs();
     }
-  }, [plantId, apiUrl]);
+  }, [plantId]);
 
   const chartData = logs
     .slice()

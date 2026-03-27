@@ -15,7 +15,7 @@ import {
   IconButton,
 } from '@mui/material';
 import { Close as CloseIcon } from '@mui/icons-material';
-import { useViridaStore } from '../../../store/useViridaStore';
+import { plantService } from '../../../services/api';
 
 interface TaskDialogProps {
   open: boolean;
@@ -32,7 +32,6 @@ export const TaskDialog: React.FC<TaskDialogProps> = ({
   taskId,
   onTaskSaved,
 }) => {
-  const apiUrl = useViridaStore((state) => state.apiUrl);
   const [loading, setLoading] = useState(false);
 
   // Form fields
@@ -69,25 +68,16 @@ export const TaskDialog: React.FC<TaskDialogProps> = ({
 
     setLoading(true);
     try {
-      const token = localStorage.getItem('virida_token');
-      const response = await fetch(`${apiUrl}/api/plant-tasks/${taskId}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
+      const data = await plantService.getTaskById(taskId);
+      const task = data.data;
 
-      if (response.ok) {
-        const data = await response.json();
-        const task = data.data;
-
-        setTaskType(task.taskType || 'WATERING');
-        setTitle(task.title || '');
-        setDescription(task.description || '');
-        setDueDate(task.dueDate ? new Date(task.dueDate).toISOString().split('T')[0] : '');
-        setFrequencyDays(task.frequencyDays ? task.frequencyDays.toString() : '');
-        setPriority(task.priority || 'MEDIUM');
-        setStatus(task.status || 'PENDING');
-      }
+      setTaskType(task.taskType || 'WATERING');
+      setTitle(task.title || '');
+      setDescription(task.description || '');
+      setDueDate(task.dueDate ? new Date(task.dueDate).toISOString().split('T')[0] : '');
+      setFrequencyDays(task.frequencyDays ? task.frequencyDays.toString() : '');
+      setPriority(task.priority || 'MEDIUM');
+      setStatus(task.status || 'PENDING');
     } catch (error) {
       console.error('Erreur lors du chargement de la tâche:', error);
     } finally {
@@ -108,8 +98,6 @@ export const TaskDialog: React.FC<TaskDialogProps> = ({
 
     setLoading(true);
     try {
-      const token = localStorage.getItem('virida_token');
-
       // Construire le payload de base
       const createPayload: any = {
         plantId,
@@ -140,43 +128,25 @@ export const TaskDialog: React.FC<TaskDialogProps> = ({
         status,
       };
 
-      const url = taskId
-        ? `${apiUrl}/api/plant-tasks/${taskId}`
-        : `${apiUrl}/api/plant-tasks`;
-
-      const method = taskId ? 'PUT' : 'POST';
       const payload = taskId ? updatePayload : createPayload;
 
-      console.log('📤 Envoi de la tâche:', payload);
-
-      const response = await fetch(url, {
-        method,
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (response.ok) {
-        onTaskSaved();
-        onClose();
-        resetForm();
+      if (taskId) {
+        await plantService.updateStandaloneTask(taskId, payload);
       } else {
-        const error = await response.json();
-        console.error('❌ Erreur serveur:', error);
-
-        // Afficher un message d'erreur plus détaillé
-        if (error.details && Array.isArray(error.details)) {
-          const errorMessages = error.details.map((e: any) => `• ${e.msg} (${e.param})`).join('\n');
-          alert(`Erreur de validation:\n${errorMessages}`);
-        } else {
-          alert('Erreur lors de la sauvegarde de la tâche');
-        }
+        await plantService.createStandaloneTask(payload);
       }
-    } catch (error) {
-      console.error('❌ Erreur réseau:', error);
-      alert('Erreur de connexion lors de la sauvegarde de la tâche');
+
+      onTaskSaved();
+      onClose();
+      resetForm();
+    } catch (error: any) {
+      console.error('Erreur sauvegarde tâche:', error);
+      if (error?.data?.details && Array.isArray(error.data.details)) {
+        const errorMessages = error.data.details.map((e: any) => `• ${e.msg} (${e.param})`).join('\n');
+        alert(`Erreur de validation:\n${errorMessages}`);
+      } else {
+        alert('Erreur lors de la sauvegarde de la tâche');
+      }
     } finally {
       setLoading(false);
     }

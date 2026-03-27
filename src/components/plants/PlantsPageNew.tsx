@@ -25,7 +25,7 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import LocalFloristIcon from '@mui/icons-material/LocalFlorist';
 import { PlantCardMinimal } from './ui';
 import { StatCard } from './ui/StatCard';
-import { useViridaStore } from '../../store/useViridaStore';
+import { plantService } from '../../services/api';
 import PlantDetails from './PlantDetails';
 
 interface Plant {
@@ -44,7 +44,6 @@ interface Plant {
 const PlantsPageNew: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const apiUrl = useViridaStore((state) => state.apiUrl);
 
   const [plants, setPlants] = useState<Plant[]>([]);
   const [selectedPlant, setSelectedPlant] = useState<Plant | null>(null);
@@ -63,18 +62,7 @@ const PlantsPageNew: React.FC = () => {
       try {
         setLoading(true);
         setError(null);
-        const token = localStorage.getItem('virida_token');
-        const response = await fetch(`${apiUrl}/api/plant-catalog`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error('Erreur lors du chargement des plantes');
-        }
-
-        const data = await response.json();
+        const data = await plantService.getPlantCatalog();
         const catalogPlants = data.data?.plants || [];
 
         // Convertir le format du catalogue vers le format Plant
@@ -101,7 +89,7 @@ const PlantsPageNew: React.FC = () => {
     };
 
     fetchPlants();
-  }, [apiUrl]);
+  }, []);
 
   // Filtrer les plantes
   const filteredPlants = plants.filter((plant) => {

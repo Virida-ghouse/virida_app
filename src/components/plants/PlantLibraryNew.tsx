@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { PlantCardModern } from './ui/PlantCardModern';
 import { PlantLibraryDetailsDialogModern } from './ui/PlantLibraryDetailsDialogModern';
-import { useViridaStore } from '../../store/useViridaStore';
+import { plantService } from '../../services/api';
 
 interface PlantCatalog {
   id: string;
@@ -28,7 +28,6 @@ interface PlantCatalog {
 }
 
 const PlantLibraryNew: React.FC = () => {
-  const apiUrl = useViridaStore((state) => state.apiUrl);
   const [plants, setPlants] = useState<PlantCatalog[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -44,24 +43,8 @@ const PlantLibraryNew: React.FC = () => {
       try {
         setLoading(true);
         setError(null);
-        const token = localStorage.getItem('virida_token');
-
-        const response = await fetch(`${apiUrl}/api/plant-catalog`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (!response.ok) {
-          // Gestion plus précise des erreurs pour aider au debug
-          if (response.status === 429) {
-            throw new Error('Trop de requêtes vers l’API (429). Réessaie dans quelques instants.');
-          }
-          throw new Error('Erreur lors du chargement du catalogue');
-        }
-
-        const data = await response.json();
-        setPlants(data.data?.plants || []);
+        const data = await plantService.getPlantLibrary();
+        setPlants(data as any || []);
       } catch (err) {
         console.error('Erreur chargement catalogue:', err);
         setError(err instanceof Error ? err.message : 'Erreur inconnue');
@@ -71,7 +54,7 @@ const PlantLibraryNew: React.FC = () => {
     };
 
     fetchCatalog();
-  }, [apiUrl]);
+  }, []);
 
   const filteredPlants = plants.filter((plant) => {
     const matchesSearch =

@@ -46,24 +46,11 @@ class ContactService {
    * Soumettre un nouveau contact (formulaire public)
    */
   async submitContact(data: ContactFormData): Promise<ContactSubmitResponse> {
-    const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/contact`, {
+    const response = await apiFetch('/api/contact', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
       body: JSON.stringify(data),
     });
-
-    const responseData = await response.json();
-
-    if (!response.ok) {
-      throw {
-        status: response.status,
-        data: responseData
-      };
-    }
-
-    return responseData;
+    return response.json();
   }
 
   /**

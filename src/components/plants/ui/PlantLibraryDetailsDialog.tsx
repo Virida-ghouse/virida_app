@@ -24,7 +24,7 @@ import ScienceIcon from '@mui/icons-material/Science';
 import HeightIcon from '@mui/icons-material/Height';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import { useViridaStore } from '../../../store/useViridaStore';
+import { plantService } from '../../../services/api';
 
 interface PlantLibraryDetailsDialogProps {
   open: boolean;
@@ -135,7 +135,6 @@ export const PlantLibraryDetailsDialog: React.FC<PlantLibraryDetailsDialogProps>
   plantId,
   plantName,
 }) => {
-  const apiUrl = useViridaStore((state) => state.apiUrl);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [catalogData, setCatalogData] = useState<CatalogData | null>(null);
@@ -145,7 +144,6 @@ export const PlantLibraryDetailsDialog: React.FC<PlantLibraryDetailsDialogProps>
   useEffect(() => {
     if (open && plantId) {
       fetchCatalogData();
-      // fetchPlantDetails(); // Temporairement désactivé - endpoint RAG non disponible
     }
   }, [open, plantId]);
 
@@ -153,19 +151,7 @@ export const PlantLibraryDetailsDialog: React.FC<PlantLibraryDetailsDialogProps>
     try {
       setLoading(true);
       setError(null);
-      const token = localStorage.getItem('virida_token');
-
-      const response = await fetch(`${apiUrl}/api/plant-catalog/${plantId}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error('Impossible de charger les données du catalogue');
-      }
-
-      const data = await response.json();
+      const data = await plantService.getPlantCatalogItem(plantId);
       setCatalogData(data.plant || data || {});
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erreur inconnue');

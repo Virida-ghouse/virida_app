@@ -10,8 +10,10 @@ import EnergyManagementNew from './energy/EnergyManagementNew';
 import SettingsPanelNew from './settings/SettingsPanelNew';
 import ChatBotNew from './chatbot/ChatBotNew';
 import AdminPage from './admin/AdminPage';
+import { useAuth } from '../contexts/AuthContext';
 
 const MainAppNew: React.FC = () => {
+  const { user } = useAuth();
   const [currentView, setCurrentView] = React.useState('dashboard');
   const [sidebarOpen] = React.useState(true);
   
@@ -38,7 +40,7 @@ const MainAppNew: React.FC = () => {
       case 'settings':
         return <SettingsPanelNew />;
       case 'admin':
-        return <AdminPage />;
+        return user?.role === 'ADMIN' ? <AdminPage /> : <DashboardNew />;
       case 'reports':
         return (
           <div className="p-8 text-[var(--text-primary)]">

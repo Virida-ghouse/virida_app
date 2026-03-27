@@ -30,7 +30,7 @@ import EventIcon from '@mui/icons-material/Event';
 import AgricultureIcon from '@mui/icons-material/Agriculture';
 import LocalFloristIcon from '@mui/icons-material/LocalFlorist';
 import ScienceIcon from '@mui/icons-material/Science';
-import { useViridaStore } from '../../store/useViridaStore';
+import { plantService } from '../../services/api';
 
 interface CalendarTask {
   id: string;
@@ -49,7 +49,6 @@ interface APITask {
 }
 
 const PlantCalendar: React.FC = () => {
-  const apiUrl = useViridaStore((state) => state.apiUrl);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [tasks, setTasks] = useState<CalendarTask[]>([]);
   const [loading, setLoading] = useState(true);
@@ -103,24 +102,10 @@ const PlantCalendar: React.FC = () => {
     const fetchTasks = async () => {
       try {
         setLoading(true);
-        const token = localStorage.getItem('virida_token');
-
-        // Récupérer toutes les tâches non complétées
-        const response = await fetch(`${apiUrl}/api/plant-tasks?completed=false`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error('Erreur lors du chargement des tâches');
-        }
-
-        const data = await response.json();
-        const apiTasks: APITask[] = data.data || [];
+        const data = await plantService.getAllTasks();
 
         // Convertir les tâches de l'API vers le format du calendrier
-        const calendarTasks: CalendarTask[] = apiTasks.map((task) => ({
+        const calendarTasks: CalendarTask[] = data.map((task) => ({
           id: task.id,
           plantName: task.plant.name,
           type: mapTaskType(task.type),
@@ -136,7 +121,7 @@ const PlantCalendar: React.FC = () => {
     };
 
     fetchTasks();
-  }, [apiUrl, currentDate]);
+  }, [currentDate]);
 
   const handlePrevMonth = () => {
     setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));

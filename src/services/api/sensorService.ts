@@ -29,17 +29,11 @@ export interface SensorHistory {
 }
 
 class SensorService {
-  /**
-   * Récupérer les données actuelles de tous les capteurs
-   */
   async getCurrentReadings(): Promise<SensorReading> {
     const response = await apiFetch('/api/sensors/current');
     return response.json();
   }
 
-  /**
-   * Récupérer l'historique d'un capteur
-   */
   async getSensorHistory(
     sensorType: string,
     startDate?: string,
@@ -54,29 +48,48 @@ class SensorService {
     return response.json();
   }
 
-  /**
-   * Récupérer toutes les données des capteurs
-   */
   async getAllSensors(): Promise<SensorData[]> {
     const response = await apiFetch('/api/sensors');
     return response.json();
   }
 
-  /**
-   * Récupérer les alertes des capteurs
-   */
   async getSensorAlerts(): Promise<any[]> {
     const response = await apiFetch('/api/sensors/alerts');
     return response.json();
   }
 
-  /**
-   * Configurer les seuils d'alerte
-   */
   async updateAlertThresholds(sensorType: string, thresholds: any): Promise<void> {
     await apiFetch(`/api/sensors/${sensorType}/thresholds`, {
       method: 'PUT',
       body: JSON.stringify(thresholds),
+    });
+  }
+
+  async createSensor(data: any): Promise<any> {
+    const response = await apiFetch('/api/sensors', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+    return response.json();
+  }
+
+  async updateSensor(id: string, data: any): Promise<any> {
+    const response = await apiFetch(`/api/sensors/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+    return response.json();
+  }
+
+  async deleteSensor(id: string): Promise<void> {
+    await apiFetch(`/api/sensors/${id}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async calibrateSensor(id: string): Promise<void> {
+    await apiFetch(`/api/sensors/${id}/calibrate`, {
+      method: 'POST',
     });
   }
 }
