@@ -20,11 +20,12 @@ const HeaderNew: React.FC<HeaderNewProps> = ({ currentView = 'dashboard' }) => {
   const viewTitles: Record<string, string> = {
     dashboard: 'Dashboard',
     plants: 'Plantes',
-    irrigation: 'Irrigation',
+    irrigation: 'Capteurs',
     automation: 'Automation',
     energy: 'Énergie',
     reports: 'Rapports',
-    settings: 'Paramètres'
+    settings: 'Paramètres',
+    admin: 'Administration',
   };
 
   return (
@@ -66,7 +67,7 @@ const HeaderNew: React.FC<HeaderNewProps> = ({ currentView = 'dashboard' }) => {
               <p className="text-sm font-bold text-[var(--text-primary)]">
                 {user.firstName} {user.lastName}
               </p>
-              <p className="text-[10px] text-[#2AD368] uppercase font-bold">Admin</p>
+              <p className="text-[10px] text-[#2AD368] uppercase font-bold">{user.role || 'Utilisateur'}</p>
             </div>
             <div
               className="size-10 rounded-full border-2 border-[#2AD368]/50 overflow-hidden cursor-pointer bg-[#2AD368] flex items-center justify-center text-white font-bold shadow-[0_0_15px_rgba(42,211,104,0.4)] hover:shadow-[0_0_25px_rgba(42,211,104,0.6)] transition-all relative z-50"
