@@ -4,11 +4,13 @@ import { useAuth } from '../../contexts/AuthContext';
 interface RegisterFormNewProps {
   onToggleMode: () => void;
   onError: (error: string) => void;
+  onNavigateToLegal?: (page: 'mentions' | 'confidentialite') => void;
 }
 
 const RegisterFormNew: React.FC<RegisterFormNewProps> = ({
   onToggleMode,
-  onError
+  onError,
+  onNavigateToLegal,
 }) => {
   const { register } = useAuth();
   const [formData, setFormData] = useState({
@@ -283,13 +285,13 @@ const RegisterFormNew: React.FC<RegisterFormNewProps> = ({
             />
             <span className="text-sm text-[var(--text-secondary)] group-hover:text-[var(--text-secondary)] transition-colors">
               J'accepte les{' '}
-              <a href="#" className="text-[#2AD368] hover:underline">
-                conditions d'utilisation
-              </a>{' '}
+              <button type="button" onClick={() => onNavigateToLegal?.('mentions')} className="text-[#2AD368] hover:underline">
+                mentions légales
+              </button>{' '}
               et la{' '}
-              <a href="#" className="text-[#2AD368] hover:underline">
+              <button type="button" onClick={() => onNavigateToLegal?.('confidentialite')} className="text-[#2AD368] hover:underline">
                 politique de confidentialité
-              </a>
+              </button>
             </span>
           </label>
           {validationErrors.terms && (

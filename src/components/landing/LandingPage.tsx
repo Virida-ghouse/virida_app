@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import LandingHeader from './LandingHeader';
 import HeroSection from './sections/HeroSection';
 import EveSection from './sections/EveSection';
@@ -14,9 +14,17 @@ import OpenSourceSection from './sections/OpenSourceSection';
 
 interface LandingPageProps {
   onNavigateToLogin: () => void;
+  onNavigateToLegal?: (page: 'mentions' | 'confidentialite') => void;
 }
 
-const LandingPage: React.FC<LandingPageProps> = ({ onNavigateToLogin }) => {
+const LandingPage: React.FC<LandingPageProps> = ({ onNavigateToLogin, onNavigateToLegal }) => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    if (window.location.hash) {
+      history.replaceState(null, '', window.location.pathname);
+    }
+  }, []);
+
   return (
     <div className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
       <LandingHeader onNavigateToLogin={onNavigateToLogin} />
@@ -32,7 +40,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onNavigateToLogin }) => {
         <ContactFormSection />
         <CTASection onNavigateToLogin={onNavigateToLogin} />
       </main>
-      <LandingFooter />
+      <LandingFooter onNavigateToLegal={onNavigateToLegal} />
     </div>
   );
 };

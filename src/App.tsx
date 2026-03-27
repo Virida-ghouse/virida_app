@@ -5,6 +5,8 @@ import { CircularProgress } from '@mui/material';
 import MainAppNew from './components/MainAppNew';
 import AuthContainerNew from './components/auth/AuthContainerNew';
 import LandingPage from './components/landing/LandingPage';
+import MentionsLegales from './components/legal/MentionsLegales';
+import PolitiqueConfidentialite from './components/legal/PolitiqueConfidentialite';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { RGPDProvider } from './contexts/RGPDContext';
@@ -17,6 +19,7 @@ import theme from './theme';
 const AppContent: React.FC = () => {
   const { isAuthenticated, isLoading } = useAuth();
   const [showLanding, setShowLanding] = useState(true);
+  const [legalPage, setLegalPage] = useState<'mentions' | 'confidentialite' | null>(null);
 
   if (isLoading) {
     return (
@@ -26,6 +29,14 @@ const AppContent: React.FC = () => {
     );
   }
 
+  // Pages légales
+  if (legalPage === 'mentions') {
+    return <MentionsLegales onBack={() => { setLegalPage(null); window.scrollTo(0, 0); }} />;
+  }
+  if (legalPage === 'confidentialite') {
+    return <PolitiqueConfidentialite onBack={() => { setLegalPage(null); window.scrollTo(0, 0); }} />;
+  }
+
   // Si authentifié, afficher l'app
   if (isAuthenticated) {
     return <MainAppNew />;
@@ -33,10 +44,10 @@ const AppContent: React.FC = () => {
 
   // Si non authentifié, afficher landing ou login selon l'état
   if (showLanding) {
-    return <LandingPage onNavigateToLogin={() => setShowLanding(false)} />;
+    return <LandingPage onNavigateToLogin={() => setShowLanding(false)} onNavigateToLegal={setLegalPage} />;
   }
 
-  return <AuthContainerNew onBackToLanding={() => setShowLanding(true)} />;
+  return <AuthContainerNew onBackToLanding={() => { window.scrollTo(0, 0); setShowLanding(true); }} onNavigateToLegal={setLegalPage} />;
 };
 
 function App() {

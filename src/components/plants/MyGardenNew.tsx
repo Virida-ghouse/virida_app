@@ -33,8 +33,9 @@ const MyGardenNew: React.FC = () => {
       try {
         setLoading(true);
         setError(null);
-        const data = await plantService.getPlants();
-        setUserPlants(data as any || []);
+        const response = await plantService.getPlants();
+        const plants = (response as any).data || response || [];
+        setUserPlants(Array.isArray(plants) ? plants : []);
       } catch (err) {
         console.error('Erreur chargement plantes utilisateur:', err);
         setError(err instanceof Error ? err.message : 'Erreur inconnue');
@@ -79,8 +80,9 @@ const MyGardenNew: React.FC = () => {
   const handlePlantAdded = () => {
     const fetchUserPlants = async () => {
       try {
-        const data = await plantService.getPlants();
-        setUserPlants(data as any || []);
+        const response = await plantService.getPlants();
+        const plants = (response as any).data || response || [];
+        setUserPlants(Array.isArray(plants) ? plants : []);
       } catch (err) {
         console.error('Erreur rechargement plantes:', err);
       }
@@ -101,8 +103,9 @@ const MyGardenNew: React.FC = () => {
   const handlePlantUpdated = () => {
     const fetchUserPlants = async () => {
       try {
-        const data = await plantService.getPlants();
-        setUserPlants(data as any || []);
+        const response = await plantService.getPlants();
+        const plants = (response as any).data || response || [];
+        setUserPlants(Array.isArray(plants) ? plants : []);
       } catch (err) {
         console.error('Erreur rechargement plantes:', err);
       }
@@ -113,8 +116,9 @@ const MyGardenNew: React.FC = () => {
   const handlePlantDeleted = () => {
     const fetchUserPlants = async () => {
       try {
-        const data = await plantService.getPlants();
-        setUserPlants(data as any || []);
+        const response = await plantService.getPlants();
+        const plants = (response as any).data || response || [];
+        setUserPlants(Array.isArray(plants) ? plants : []);
       } catch (err) {
         console.error('Erreur rechargement plantes:', err);
       }

@@ -1,11 +1,17 @@
 import { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTheme } from '../../contexts/ThemeContext';
+import { useRGPD } from '../../contexts/RGPDContext';
+import { useChatHistory } from '../../contexts/ChatHistoryContext';
+import PrivacyPolicy from '../rgpd/PrivacyPolicy';
 
 export default function SettingsPanelNew() {
   const { user, logout } = useAuth();
   const { theme: currentTheme, setTheme } = useTheme();
+  const { openPreferences } = useRGPD();
+  const { exportHistory, clearAllHistory } = useChatHistory();
   const [activeTab, setActiveTab] = useState('general');
+  const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
   const [showSavedAlert, setShowSavedAlert] = useState(false);
 
   const [settings, setSettings] = useState({
@@ -538,7 +544,7 @@ export default function SettingsPanelNew() {
             {/* Actions principales */}
             <div className="space-y-3">
               {/* Gérer les cookies */}
-              <button className="w-full p-4 glass-card backdrop-blur-xl rounded-xl border border-[var(--border-color)] hover:border-[#2AD368]/30 transition-all flex items-center justify-between group">
+              <button onClick={openPreferences} className="w-full p-4 glass-card backdrop-blur-xl rounded-xl border border-[var(--border-color)] hover:border-[#2AD368]/30 transition-all flex items-center justify-between group">
                 <div className="flex items-center gap-3">
                   <div className="size-10 bg-[#2AD368]/20 rounded-lg flex items-center justify-center">
                     <span className="material-symbols-outlined text-[#2AD368]">cookie</span>
@@ -552,7 +558,7 @@ export default function SettingsPanelNew() {
               </button>
 
               {/* Politique de confidentialité */}
-              <button className="w-full p-4 glass-card backdrop-blur-xl rounded-xl border border-[var(--border-color)] hover:border-[#2AD368]/30 transition-all flex items-center justify-between group">
+              <button onClick={() => setShowPrivacyPolicy(true)} className="w-full p-4 glass-card backdrop-blur-xl rounded-xl border border-[var(--border-color)] hover:border-[#2AD368]/30 transition-all flex items-center justify-between group">
                 <div className="flex items-center gap-3">
                   <div className="size-10 bg-[#2AD368]/20 rounded-lg flex items-center justify-center">
                     <span className="material-symbols-outlined text-[#2AD368]">description</span>
@@ -568,7 +574,7 @@ export default function SettingsPanelNew() {
               <div className="border-t border-[var(--border-color)] my-4"></div>
 
               {/* Exporter conversations avec Eve */}
-              <button className="w-full p-4 glass-card backdrop-blur-xl rounded-xl border border-[var(--border-color)] hover:border-[#2AD368]/30 transition-all flex items-center justify-between group">
+              <button onClick={() => { exportHistory(); alert('Conversations exportées !'); }} className="w-full p-4 glass-card backdrop-blur-xl rounded-xl border border-[var(--border-color)] hover:border-[#2AD368]/30 transition-all flex items-center justify-between group">
                 <div className="flex items-center gap-3">
                   <div className="size-10 bg-[#2AD368]/20 rounded-lg flex items-center justify-center">
                     <span className="material-symbols-outlined text-[#2AD368]">chat</span>
@@ -582,7 +588,7 @@ export default function SettingsPanelNew() {
               </button>
 
               {/* Supprimer conversations avec Eve */}
-              <button className="w-full p-4 glass-card backdrop-blur-xl rounded-xl border border-red-500/30 bg-red-500/5 hover:bg-red-500/10 transition-all flex items-center justify-between group">
+              <button onClick={() => { if (confirm('Supprimer toutes vos conversations avec Eve ?')) { clearAllHistory(); alert('Conversations supprimées.'); } }} className="w-full p-4 glass-card backdrop-blur-xl rounded-xl border border-red-500/30 bg-red-500/5 hover:bg-red-500/10 transition-all flex items-center justify-between group">
                 <div className="flex items-center gap-3">
                   <div className="size-10 bg-red-500/20 rounded-lg flex items-center justify-center">
                     <span className="material-symbols-outlined text-red-400">delete</span>
@@ -598,7 +604,12 @@ export default function SettingsPanelNew() {
               <div className="border-t border-[var(--border-color)] my-4"></div>
 
               {/* Exporter données RGPD */}
-              <button className="w-full p-4 glass-card backdrop-blur-xl rounded-xl border border-[var(--border-color)] hover:border-[#2AD368]/30 transition-all flex items-center justify-between group">
+              <button onClick={() => {
+                const data = { user, consent: localStorage.getItem('virida_rgpd_consent'), consentDate: localStorage.getItem('virida_rgpd_consent_date'), theme: currentTheme };
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a'); a.href = url; a.download = 'virida-rgpd-export.json'; a.click(); URL.revokeObjectURL(url);
+              }} className="w-full p-4 glass-card backdrop-blur-xl rounded-xl border border-[var(--border-color)] hover:border-[#2AD368]/30 transition-all flex items-center justify-between group">
                 <div className="flex items-center gap-3">
                   <div className="size-10 bg-[#2AD368]/20 rounded-lg flex items-center justify-center">
                     <span className="material-symbols-outlined text-[#2AD368]">download</span>
@@ -612,7 +623,7 @@ export default function SettingsPanelNew() {
               </button>
 
               {/* Supprimer données RGPD */}
-              <button className="w-full p-4 glass-card backdrop-blur-xl rounded-xl border border-red-500/30 bg-red-500/5 hover:bg-red-500/10 transition-all flex items-center justify-between group">
+              <button onClick={() => { if (confirm('Supprimer toutes vos données de consentement RGPD ?')) { localStorage.removeItem('virida_rgpd_consent'); localStorage.removeItem('virida_rgpd_consent_date'); alert('Données RGPD supprimées. La page va se recharger.'); window.location.reload(); } }} className="w-full p-4 glass-card backdrop-blur-xl rounded-xl border border-red-500/30 bg-red-500/5 hover:bg-red-500/10 transition-all flex items-center justify-between group">
                 <div className="flex items-center gap-3">
                   <div className="size-10 bg-red-500/20 rounded-lg flex items-center justify-center">
                     <span className="material-symbols-outlined text-red-400">delete_forever</span>
@@ -629,7 +640,7 @@ export default function SettingsPanelNew() {
             {/* Informations protection données */}
             <div className="glass-card backdrop-blur-xl rounded-xl p-4 border-l-4 border-[#2AD368] bg-[#2AD368]/5">
               <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
-                <strong className="text-[var(--text-primary)]">🇫🇷 Protection de vos données :</strong> Toutes vos données sont hébergées en France (Scaleway/OVH) et chiffrées AES-256. Vous pouvez exercer vos droits RGPD à tout moment via privacy@virida.fr
+                <strong className="text-[var(--text-primary)]">🇫🇷 Protection de vos données :</strong> Toutes vos données sont hébergées en France (Clever Cloud). Vous pouvez exercer vos droits RGPD à tout moment via virida.ghouse@gmail.com
               </p>
             </div>
           </div>
@@ -676,6 +687,32 @@ export default function SettingsPanelNew() {
           </div>
         )}
       </div>
+      {/* Modal Politique de confidentialité */}
+      {showPrivacyPolicy && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9000] flex items-end sm:items-center justify-center p-0 sm:p-4" onClick={() => setShowPrivacyPolicy(false)}>
+          <div className="bg-[var(--bg-secondary)] w-full sm:max-w-3xl sm:rounded-3xl rounded-t-3xl border border-[var(--border-color)] shadow-2xl max-h-[90vh] flex flex-col" onClick={e => e.stopPropagation()}>
+            {/* Header */}
+            <div className="p-5 border-b border-[var(--border-color)] flex items-center justify-between shrink-0">
+              <div className="flex items-center gap-3">
+                <div className="size-10 rounded-xl bg-[#2AD368]/10 flex items-center justify-center">
+                  <span className="material-symbols-outlined text-[#2AD368]">shield</span>
+                </div>
+                <div>
+                  <h2 className="text-base font-bold text-[var(--text-primary)]">Politique de confidentialité</h2>
+                  <p className="text-[10px] text-[var(--text-secondary)]">Conforme au RGPD (UE 2016/679)</p>
+                </div>
+              </div>
+              <button onClick={() => setShowPrivacyPolicy(false)} className="size-8 rounded-lg hover:bg-[var(--bg-primary)] text-[var(--text-secondary)] flex items-center justify-center">
+                <span className="material-symbols-outlined text-xl">close</span>
+              </button>
+            </div>
+            {/* Content */}
+            <div className="flex-1 overflow-y-auto">
+              <PrivacyPolicy />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

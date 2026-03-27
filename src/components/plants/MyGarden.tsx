@@ -41,8 +41,9 @@ const MyGarden: React.FC = () => {
     try {
       setLoading(true);
       setError(null);
-      const data = await plantService.getPlants();
-      setUserPlants((data as any).data || []);
+      const response = await plantService.getPlants();
+      const plants = (response as any).data || response || [];
+      setUserPlants(Array.isArray(plants) ? plants : []);
     } catch (err) {
       console.error('Erreur chargement plantes utilisateur:', err);
       setError(err instanceof Error ? err.message : 'Erreur inconnue');

@@ -4,9 +4,10 @@ import RegisterFormNew from './RegisterFormNew';
 
 interface AuthContainerNewProps {
   onBackToLanding?: () => void;
+  onNavigateToLegal?: (page: 'mentions' | 'confidentialite') => void;
 }
 
-const AuthContainerNew: React.FC<AuthContainerNewProps> = ({ onBackToLanding }) => {
+const AuthContainerNew: React.FC<AuthContainerNewProps> = ({ onBackToLanding, onNavigateToLegal }) => {
   const [isLogin, setIsLogin] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -52,14 +53,14 @@ const AuthContainerNew: React.FC<AuthContainerNewProps> = ({ onBackToLanding }) 
           {isLogin ? (
             <LoginFormNew onToggleMode={handleToggleMode} onError={handleError} />
           ) : (
-            <RegisterFormNew onToggleMode={handleToggleMode} onError={handleError} />
+            <RegisterFormNew onToggleMode={handleToggleMode} onError={handleError} onNavigateToLegal={onNavigateToLegal} />
           )}
         </div>
 
         {/* Footer */}
         <div className="mt-8 text-center">
           <p className="text-[var(--text-secondary)] text-xs">
-            © 2024 Virida. Tous droits réservés.
+            © 2024-2026 Virida. Projet Epitech Paris.
           </p>
         </div>
       </div>

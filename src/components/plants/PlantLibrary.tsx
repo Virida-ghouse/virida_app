@@ -65,8 +65,9 @@ const PlantLibrary: React.FC = () => {
       try {
         setLoading(true);
         setError(null);
-        const data = await plantService.getPlantLibrary();
-        setPlants(data as any || []);
+        const response = await plantService.getPlantCatalog();
+        const catalog = (response as any).data?.plants || response || [];
+        setPlants(Array.isArray(catalog) ? catalog : []);
       } catch (err) {
         console.error('Erreur chargement catalogue:', err);
         setError(err instanceof Error ? err.message : 'Erreur inconnue');

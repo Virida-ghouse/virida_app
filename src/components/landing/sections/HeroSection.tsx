@@ -33,7 +33,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onNavigateToLogin }) => {
         {/* Slogan */}
         <div className="mb-8 md:mb-16 px-4">
           <p className="text-base sm:text-xl md:text-2xl text-[var(--text-secondary)] max-w-2xl mx-auto leading-relaxed">
-            La serre connectée pilotée par votre IA abeille locale
+            Votre serre intelligente. Plantez, EVE s'occupe du reste.
           </p>
         </div>
         
@@ -44,9 +44,12 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onNavigateToLogin }) => {
             className="bg-[#2AD368] text-[var(--btn-primary-text)] text-sm md:text-lg font-bold px-6 md:px-10 py-2 md:py-4 rounded-full shadow-[0_8px_20px_rgba(42,211,104,0.5)] hover:shadow-[0_12px_30px_rgba(42,211,104,0.8)] hover:scale-105 transition-all w-full sm:w-auto">
             Lancer l'expérience
           </button>
-          <button className="bg-[var(--bg-secondary)] border-2 border-[var(--border-color)] text-[var(--text-primary)] text-sm md:text-lg font-bold px-6 md:px-10 py-2 md:py-4 rounded-full hover:border-[#2AD368] transition-all w-full sm:w-auto">
+          <a
+            href="#serre"
+            className="bg-[var(--bg-secondary)] border-2 border-[var(--border-color)] text-[var(--text-primary)] text-sm md:text-lg font-bold px-6 md:px-10 py-2 md:py-4 rounded-full hover:border-[#2AD368] transition-all w-full sm:w-auto text-center"
+          >
             Découvrir la Serre
-          </button>
+          </a>
         </div>
         
         {/* Footer */}

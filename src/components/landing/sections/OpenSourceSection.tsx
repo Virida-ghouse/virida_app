@@ -5,15 +5,15 @@ const OpenSourceSection: React.FC = () => {
     <section id="opensource" className="py-16 md:py-24 px-4 sm:px-6 bg-[var(--bg-secondary)]">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12 md:mb-16">
-          <span className="text-[#2AD368] font-bold tracking-widest uppercase mb-4 block">
+          <span className="text-[#2AD368] font-bold tracking-widest uppercase mb-4 block text-sm">
             Open Source
           </span>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-black mb-6 md:mb-8 text-[var(--text-primary)]">
-            Un Écosystème Ouvert
+            Transparent par nature
           </h2>
           <p className="text-[var(--text-secondary)] text-base md:text-lg max-w-3xl mx-auto leading-relaxed">
-            Virida est bien plus qu'un produit. C'est un écosystème complet, entièrement open source, 
-            conçu pour être accessible, modifiable et améliorable par tous.
+            Virida est un projet open source. Tout notre code, nos schémas et nos modèles IA
+            sont accessibles librement. Pas de boîte noire, pas de surprises.
           </p>
         </div>
 
@@ -25,16 +25,19 @@ const OpenSourceSection: React.FC = () => {
               </div>
               <div>
                 <h4 className="font-bold text-lg md:text-xl text-[var(--text-primary)]">100% Open Source</h4>
-                <p className="text-xs text-[#2AD368] font-bold">Libre • Gratuit • Communautaire</p>
+                <p className="text-xs text-[#2AD368] font-bold">Libre • Transparent • Communautaire</p>
               </div>
             </div>
             <p className="text-sm md:text-base text-[var(--text-secondary)] leading-relaxed mb-6">
-              Tous nos <span className="font-bold text-[var(--text-primary)]">plans</span>, <span className="font-bold text-[var(--text-primary)]">schémas électroniques</span>, <span className="font-bold text-[var(--text-primary)]">code source</span> et <span className="font-bold text-[var(--text-primary)]">modèles IA</span> sont librement accessibles. 
-              Réparez, modifiez et améliorez l'écosystème Virida comme bon vous semble.
+              Le <span className="font-bold text-[var(--text-primary)]">code source</span> du dashboard,
+              les <span className="font-bold text-[var(--text-primary)]">schémas électroniques</span> de la serre,
+              le <span className="font-bold text-[var(--text-primary)]">firmware des capteurs</span> et
+              les <span className="font-bold text-[var(--text-primary)]">modèles IA d'EVE</span> sont
+              accessibles à tous. Vous savez exactement ce qui tourne chez vous.
             </p>
             <div className="flex items-center gap-2 text-sm font-bold text-[#2AD368]">
               <span className="material-symbols-outlined text-lg">check_circle</span>
-              <span>Virida appartient à la communauté</span>
+              <span>Virida appartient à sa communauté</span>
             </div>
           </div>
         </div>
@@ -42,42 +45,38 @@ const OpenSourceSection: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
           <div className="glass-card p-6 md:p-8 rounded-2xl border border-[var(--border-color)] backdrop-blur-xl">
             <span className="material-symbols-outlined text-[#2AD368] mb-4 text-4xl">construction</span>
-            <h4 className="font-bold text-lg mb-3 text-[var(--text-primary)]">Plans & Schémas</h4>
+            <h4 className="font-bold text-lg mb-3 text-[var(--text-primary)]">Plans & schémas</h4>
             <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
-              Tous les plans de construction et schémas électroniques de la serre sont disponibles. 
+              Plans de construction de la serre et schémas électroniques complets.
               Construisez, modifiez et partagez vos améliorations.
             </p>
           </div>
 
           <div className="glass-card p-6 md:p-8 rounded-2xl border border-[var(--border-color)] backdrop-blur-xl">
             <span className="material-symbols-outlined text-[#2AD368] mb-4 text-4xl">terminal</span>
-            <h4 className="font-bold text-lg mb-3 text-[var(--text-primary)]">Code Source</h4>
+            <h4 className="font-bold text-lg mb-3 text-[var(--text-primary)]">Dashboard & API</h4>
             <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
-              Le code du dashboard, des capteurs et de l'API est entièrement ouvert. 
-              Contribuez, forkez et adaptez selon vos besoins.
+              Le code du dashboard, des capteurs et de l'API backend est entièrement ouvert.
+              Contribuez et adaptez selon vos besoins.
             </p>
           </div>
 
           <div className="glass-card p-6 md:p-8 rounded-2xl border border-[var(--border-color)] backdrop-blur-xl">
             <span className="material-symbols-outlined text-[#2AD368] mb-4 text-4xl">psychology</span>
-            <h4 className="font-bold text-lg mb-3 text-[var(--text-primary)]">Modèles IA</h4>
+            <h4 className="font-bold text-lg mb-3 text-[var(--text-primary)]">Modèle IA (Qwen)</h4>
             <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
-              Les modèles de vision et de langage d'EVE sont open source. 
-              Entraînez vos propres modèles et partagez vos découvertes.
+              Le modèle d'EVE et son jeu de données agronomique sont open source.
+              Entraînez, améliorez et partagez vos découvertes.
             </p>
           </div>
         </div>
 
         <div className="mt-12 md:mt-16 text-center">
-          <a 
-            href="https://github.com" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-3 bg-[#2AD368] text-[var(--btn-primary-text)] font-bold px-8 py-4 rounded-full shadow-xl shadow-[#2AD368]/20 hover:scale-105 transition-all"
-          >
-            <span className="material-symbols-outlined">code</span>
-            <span>Voir sur GitHub</span>
-          </a>
+          <p className="text-sm text-[var(--text-secondary)] mb-4">Le repo GitHub sera bientôt disponible publiquement.</p>
+          <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[var(--glass-bg)] border border-[var(--border-color)] text-[var(--text-secondary)] font-semibold">
+            <span className="material-symbols-outlined text-lg">notifications</span>
+            <span className="text-sm">Restez informé via le formulaire de contact</span>
+          </div>
         </div>
       </div>
     </section>

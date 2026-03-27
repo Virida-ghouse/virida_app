@@ -186,12 +186,6 @@ const LoginFormNew: React.FC<LoginFormNewProps> = ({ onToggleMode, onError }) =>
         </div>
       </form>
 
-      {/* Démo rapide */}
-      <div className="mt-8 p-4 glass-card backdrop-blur-xl rounded-xl border border-[#2AD368]/30">
-        <p className="text-xs text-[var(--text-primary)] mb-2">
-          <span className="text-[#2AD368] font-semibold">Démo rapide :</span> admin@virida.com / admin123
-        </p>
-      </div>
     </div>
   );
 };
