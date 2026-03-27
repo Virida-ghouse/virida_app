@@ -4,6 +4,7 @@ import HeroSection from './sections/HeroSection';
 import EveSection from './sections/EveSection';
 import MarketplaceSection from './sections/MarketplaceSection';
 import GreenhouseSection from './sections/GreenhouseSection';
+import DashboardPreview from './sections/DashboardPreview';
 import PricingSection from './sections/PricingSection';
 import AboutSection from './sections/AboutSection';
 import PartnersSection from './sections/PartnersSection';
@@ -32,6 +33,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onNavigateToLogin, onNavigate
         <HeroSection onNavigateToLogin={onNavigateToLogin} />
         <GreenhouseSection />
         <EveSection />
+        <DashboardPreview />
         <OpenSourceSection />
         <MarketplaceSection />
         <PricingSection />
