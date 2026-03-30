@@ -24,11 +24,6 @@ export default defineConfig({
   define: {
     global: 'globalThis'
   },
-  resolve: {
-    alias: {
-      '@': './src'
-    },
-  },
   server: {
     host: true,
     port: 5173
