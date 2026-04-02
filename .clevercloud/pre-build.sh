@@ -6,7 +6,7 @@ echo "Optimisation pour build rapide..."
 # Nettoyer le cache npm pour éviter les conflits
 npm cache clean --force
 
-# Installer seulement les dépendances de production
-npm ci --only=production --no-audit --no-fund
+# Installer toutes les dépendances (y compris devDeps pour le build Vite)
+npm ci --no-audit --no-fund
 
 echo "=== PRE-BUILD TERMINÉ ==="
