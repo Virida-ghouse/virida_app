@@ -22,7 +22,7 @@ fi
 
 # Construire l'application
 echo "Construction de l'application..."
-npm run build
+npx vite build
 
 # Vérifier si le build a réussi
 if [ -d "dist" ]; then
