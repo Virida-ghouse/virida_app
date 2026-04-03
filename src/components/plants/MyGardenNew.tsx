@@ -269,10 +269,12 @@ const MyGardenNew: React.FC = () => {
       {/* Dialogs */}
       <ConfirmDialog
         open={confirmDialogOpen}
-        onClose={() => setConfirmDialogOpen(false)}
+        onCancel={() => { setConfirmDialogOpen(false); setPlantToDelete(null); }}
         onConfirm={confirmDeletePlant}
         title="Supprimer cette plante ?"
         message={`Êtes-vous sûr de vouloir supprimer "${plantToDelete?.name}" ? Cette action est irréversible.`}
+        confirmText="Supprimer"
+        isDanger={true}
       />
 
       <AddPlantDialog

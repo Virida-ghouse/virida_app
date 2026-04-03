@@ -87,8 +87,8 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
       setPlant(plantData);
       setName(plantData.name || '');
       setZone(plantData.zone || '');
-      setGreenhouse(plantData.greenhouse?.id || '');
-      setGreenhouseName(plantData.greenhouse?.name || '');
+      setGreenhouse(plantData.greenhouses?.id || plantData.greenhouse?.id || '');
+      setGreenhouseName(plantData.greenhouses?.name || plantData.greenhouse?.name || '');
       setPlantedAt(plantData.plantedAt ? new Date(plantData.plantedAt).toISOString().split('T')[0] : '');
       setNotes(plantData.notes || '');
       setStatus(plantData.status || 'PLANTED');
