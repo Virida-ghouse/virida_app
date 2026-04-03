@@ -10,8 +10,8 @@ export { contactService } from './contactService';
 export { API_CONFIG, getAuthHeaders, apiFetch } from './apiConfig';
 
 // Export des types
-export type { LoginCredentials, RegisterData, AuthResponse } from './authService';
-export type { Plant, PlantTask, CreatePlantData, UpdatePlantData } from './plantService';
-export type { SensorData, SensorReading, SensorHistory } from './sensorService';
-export type { ChatMessage, ChatResponse } from './chatService';
+export type { LoginCredentials, RegisterData, AuthResponse, AuthUser, MeResponse, UpdateProfileData } from './authService';
+export type { Plant, PlantTask, CreatePlantData, UpdatePlantData, HarvestData, CareEventData, GrowthLogData } from './plantService';
+export type { Sensor, SensorReading, SensorReadingsResponse, CreateSensorData, UpdateSensorData } from './sensorService';
+export type { ChatMessage, ChatResponseData } from './chatService';
 export type { Contact, ContactFormData, ContactsResponse } from './contactService';

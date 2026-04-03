@@ -243,6 +243,17 @@ const MyGardenNew: React.FC = () => {
         </button>
       </div>
 
+      {/* Bouton Ajouter */}
+      <div className="flex justify-end mb-4">
+        <button
+          onClick={handleAddPlant}
+          className="px-5 py-2.5 bg-[#2AD368] text-[#121A21] font-bold rounded-xl shadow-[0_8px_20px_rgba(42,211,104,0.4)] hover:shadow-[0_12px_30px_rgba(42,211,104,0.6)] hover:scale-105 transition-all flex items-center gap-2"
+        >
+          <span className="material-symbols-outlined text-lg">add</span>
+          Ajouter une plante
+        </button>
+      </div>
+
       {/* Grille de plantes */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredPlants.map((plant) => (
@@ -258,10 +269,12 @@ const MyGardenNew: React.FC = () => {
       {/* Dialogs */}
       <ConfirmDialog
         open={confirmDialogOpen}
-        onClose={() => setConfirmDialogOpen(false)}
+        onCancel={() => { setConfirmDialogOpen(false); setPlantToDelete(null); }}
         onConfirm={confirmDeletePlant}
         title="Supprimer cette plante ?"
         message={`Êtes-vous sûr de vouloir supprimer "${plantToDelete?.name}" ? Cette action est irréversible.`}
+        confirmText="Supprimer"
+        isDanger={true}
       />
 
       <AddPlantDialog

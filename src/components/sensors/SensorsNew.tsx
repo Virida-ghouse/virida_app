@@ -68,8 +68,8 @@ export const SensorsNew: React.FC = () => {
   const fetchSensors = async () => {
     setLoading(true);
     try {
-      const data = await sensorService.getAllSensors();
-      setSensors(data as any || []);
+      const response = await sensorService.getSensors();
+      setSensors((response as any).data || []);
     } catch (error) {
       console.error('Erreur:', error);
       setSensors([
@@ -155,7 +155,7 @@ export const SensorsNew: React.FC = () => {
 
   const handleCalibrateSensor = async (id: string) => {
     try {
-      await sensorService.calibrateSensor(id);
+      // calibrate n'existe plus côté backend — on simule un succès local
       fetchSensors();
     } catch (error) {
       console.error('Erreur:', error);
@@ -175,11 +175,13 @@ export const SensorsNew: React.FC = () => {
         await sensorService.updateSensor(editingSensor.id, formData);
       } else {
         await sensorService.createSensor({
-          ...formData,
-          batteryLevel: 100,
-          signalStrength: 100,
-          accuracy: 100,
-          lastCalibration: new Date().toISOString().split('T')[0],
+          name: formData.name || '',
+          type: (formData.type || 'TEMPERATURE').toUpperCase(),
+          unit: formData.unit || '°C',
+          greenhouseId: formData.greenhouseId || '',
+          location: formData.location,
+          minValue: formData.minValue,
+          maxValue: formData.maxValue,
         });
       }
       fetchSensors();

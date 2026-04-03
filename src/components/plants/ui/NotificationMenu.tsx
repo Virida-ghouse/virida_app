@@ -65,8 +65,6 @@ export const NotificationMenu: React.FC = () => {
 
       const data = await plantService.getAllTasks({
         completed: 'false',
-        fromDate: today.toISOString(),
-        toDate: twoDaysFromNow.toISOString(),
       });
       const tasks = data.data || [];
 

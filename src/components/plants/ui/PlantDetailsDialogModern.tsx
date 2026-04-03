@@ -82,13 +82,13 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
     if (!plantId) return;
     setLoading(true);
     try {
-      const data = await plantService.getPlant(plantId);
-      const plantData = data;
+      const response = await plantService.getPlant(plantId);
+      const plantData = (response as any).data || response;
       setPlant(plantData);
       setName(plantData.name || '');
       setZone(plantData.zone || '');
-      setGreenhouse(plantData.greenhouse?.id || '');
-      setGreenhouseName(plantData.greenhouse?.name || '');
+      setGreenhouse(plantData.greenhouses?.id || plantData.greenhouse?.id || '');
+      setGreenhouseName(plantData.greenhouses?.name || plantData.greenhouse?.name || '');
       setPlantedAt(plantData.plantedAt ? new Date(plantData.plantedAt).toISOString().split('T')[0] : '');
       setNotes(plantData.notes || '');
       setStatus(plantData.status || 'PLANTED');
@@ -144,7 +144,7 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
     if (!plantId) return;
     setLoading(true);
     try {
-      await plantService.updatePlant(plantId, { name, zone, greenhouse, plantedAt, notes, status } as any);
+      await plantService.updatePlant(plantId, { name, notes, status } as any);
       setIsEditing(false);
       fetchPlantDetails();
       onPlantUpdated();
@@ -168,8 +168,11 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
 
   const handleCompleteTask = async (taskId: string, isCompleted: boolean) => {
     try {
-      const endpoint = isCompleted ? 'uncomplete' : 'complete';
-      await plantService.toggleTaskStatus(taskId, endpoint as any);
+      if (isCompleted) {
+        await plantService.uncompleteTask(taskId);
+      } else {
+        await plantService.completeTask(taskId);
+      }
       fetchTasks();
     } catch (error) {
       console.error('Erreur:', error);
@@ -179,7 +182,7 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
   const handleDeleteTask = async (taskId: string) => {
     if (!confirm('Supprimer cette tâche ?')) return;
     try {
-      await plantService.deleteStandaloneTask(taskId);
+      await plantService.deleteTask(taskId);
       fetchTasks();
     } catch (error) {
       console.error('Erreur:', error);
@@ -211,15 +214,6 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
     }
   };
 
-  const handleDeleteHarvest = async (harvestId: string) => {
-    if (!plantId || !confirm('Supprimer cette récolte ?')) return;
-    try {
-      await plantService.deleteHarvest(plantId, harvestId);
-      fetchHarvests();
-    } catch (error) {
-      console.error('Erreur:', error);
-    }
-  };
 
   const handleAddHistory = async () => {
     if (!plantId) return;
@@ -439,19 +433,10 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                         )}
                       </div>
 
-                      {/* Zone */}
+                      {/* Zone (lecture seule) */}
                       <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-[var(--border-color)]">
                         <label className="text-xs text-gray-400 mb-2 block">Zone</label>
-                        {isEditing ? (
-                          <input
-                            type="text"
-                            value={zone}
-                            onChange={(e) => setZone(e.target.value)}
-                            className="w-full bg-white/5 border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368]"
-                          />
-                        ) : (
-                          <p className="text-[var(--text-primary)] font-semibold">{zone || 'Non défini'}</p>
-                        )}
+                        <p className="text-[var(--text-primary)] font-semibold">{zone || 'Non défini'}</p>
                       </div>
 
                       {/* Statut */}
@@ -476,39 +461,18 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                         )}
                       </div>
 
-                      {/* Serre */}
+                      {/* Serre (lecture seule) */}
                       <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-[var(--border-color)]">
                         <label className="text-xs text-gray-400 mb-2 block">Serre</label>
-                        {isEditing ? (
-                          <select
-                            value={greenhouse}
-                            onChange={(e) => setGreenhouse(e.target.value)}
-                            className="w-full bg-white/5 border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368]"
-                          >
-                            <option value="">Aucune</option>
-                            <option value="greenhouse-demo-1">Serre Principale</option>
-                            <option value="greenhouse-demo-2">Serre Expérimentale</option>
-                          </select>
-                        ) : (
-                          <p className="text-[var(--text-primary)] font-semibold">{greenhouseName || 'Non défini'}</p>
-                        )}
+                        <p className="text-[var(--text-primary)] font-semibold">{greenhouseName || 'Non défini'}</p>
                       </div>
 
-                      {/* Date de plantation */}
+                      {/* Date de plantation (lecture seule) */}
                       <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-[var(--border-color)]">
                         <label className="text-xs text-gray-400 mb-2 block">Date de plantation</label>
-                        {isEditing ? (
-                          <input
-                            type="date"
-                            value={plantedAt}
-                            onChange={(e) => setPlantedAt(e.target.value)}
-                            className="w-full bg-white/5 border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368]"
-                          />
-                        ) : (
-                          <p className="text-[var(--text-primary)] font-semibold">
-                            {plantedAt ? new Date(plantedAt).toLocaleDateString('fr-FR') : 'Non défini'}
-                          </p>
-                        )}
+                        <p className="text-[var(--text-primary)] font-semibold">
+                          {plantedAt ? new Date(plantedAt).toLocaleDateString('fr-FR') : 'Non défini'}
+                        </p>
                       </div>
                     </div>
 
@@ -737,7 +701,6 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                           >
                             Annuler
                           </button>
-                          <div className="flex gap-2">
                           <button
                             onClick={handleAddHistory}
                             disabled={loading}
@@ -745,13 +708,6 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                           >
                             {loading ? 'Ajout...' : 'Ajouter'}
                           </button>
-                          <button
-                            onClick={() => setShowAddHistory(false)}
-                            className="px-4 py-2 rounded-xl bg-[#2AD368] text-[var(--btn-primary-text)] font-semibold shadow-[0_8px_20px_rgba(42,211,104,0.5)] hover:shadow-[0_12px_30px_rgba(42,211,104,0.8)] hover:scale-105 transition-all"
-                          >
-                            Ajouter
-                          </button>
-                          </div>
                         </div>
                       </div>
                     )}
@@ -974,12 +930,6 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                                    harvest.quality === 'GOOD' ? 'Bonne' :
                                    harvest.quality === 'FAIR' ? 'Moyenne' : 'Faible'}
                                 </span>
-                                <button
-                                  onClick={() => handleDeleteHarvest(harvest.id)}
-                                  className="text-red-400 hover:text-red-300 transition-colors"
-                                >
-                                  <span className="material-symbols-outlined text-lg">delete</span>
-                                </button>
                               </div>
                             </div>
                           </div>

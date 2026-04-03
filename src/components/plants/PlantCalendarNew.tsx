@@ -37,13 +37,8 @@ const PlantCalendarNew: React.FC = () => {
     const fetchTasks = async () => {
       try {
         setLoading(true);
-        const fromDate = new Date(selectedYear, selectedMonth, 1);
-        const toDate = new Date(selectedYear, selectedMonth + 1, 0);
-
         const data = await plantService.getAllTasks({
           completed: 'false',
-          fromDate: fromDate.toISOString(),
-          toDate: toDate.toISOString(),
         });
         setTasks(data.data || []);
       } catch (err) {

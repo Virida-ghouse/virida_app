@@ -48,8 +48,8 @@ export const TaskDialogModern: React.FC<TaskDialogModernProps> = ({
     if (!taskId) return;
     setLoading(true);
     try {
-      // TODO: Implémenter getTask dans plantService si nécessaire
-      const task = {} as any;
+      const response = await plantService.getTaskById(taskId);
+      const task = (response as any).data || response;
       setTaskType(task.taskType || 'WATERING');
       setTitle(task.title || '');
       setDescription(task.description || '');
@@ -76,7 +76,6 @@ export const TaskDialogModern: React.FC<TaskDialogModernProps> = ({
 
     setLoading(true);
     try {
-      const token = localStorage.getItem('virida_token');
       const createPayload: any = {
         plantId,
         type: taskType,
@@ -98,13 +97,11 @@ export const TaskDialogModern: React.FC<TaskDialogModernProps> = ({
         }
       }
 
-      const updatePayload = { ...createPayload, status };
-      const payload = taskId ? updatePayload : createPayload;
-
       if (taskId) {
-        await plantService.updateTask(plantId, taskId, payload);
+        const updatePayload = { ...createPayload, status };
+        await plantService.updateTask(taskId, updatePayload);
       } else {
-        await plantService.createTask(plantId, payload);
+        await plantService.createTask(createPayload);
       }
 
       onTaskSaved();

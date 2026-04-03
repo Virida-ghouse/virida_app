@@ -25,7 +25,7 @@ import {
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { plantService } from '../../../services/api';
+import { plantService, apiFetch } from '../../../services/api';
 
 interface PlantCatalog {
   id: string;
@@ -120,12 +120,13 @@ export const AddPlantDialog: React.FC<AddPlantDialogProps> = ({
   const fetchGreenhouses = async () => {
     try {
       setLoadingGreenhouses(true);
-      // TODO: Créer un service greenhouse si nécessaire
-      setGreenhouses([]);
+      const response = await apiFetch('/api/greenhouses');
+      const data = await response.json();
+      const list = data.data || [];
+      setGreenhouses(list);
 
-      // Auto-select first greenhouse if none selected
-      if (data.data && data.data.length > 0 && !greenhouse) {
-        setGreenhouse(data.data[0].id);
+      if (list.length > 0 && !greenhouse) {
+        setGreenhouse(list[0].id);
       }
     } catch (error) {
       console.error('Error fetching greenhouses:', error);
@@ -156,13 +157,19 @@ export const AddPlantDialog: React.FC<AddPlantDialogProps> = ({
     try {
       setSubmitting(true);
       setSubmitError(null);
-      const token = localStorage.getItem('virida_token');
+
+      if (!greenhouse) {
+        setSubmitError('Veuillez sélectionner une serre');
+        setSubmitting(false);
+        return;
+      }
 
       const payload = {
         catalogId: selectedPlant.id,
         name: plantName || selectedPlant.commonName,
+        species: selectedPlant.species,
         zone,
-        greenhouse,
+        greenhouseId: greenhouse,
         plantedAt: new Date(plantedAt).toISOString(),
         notes: notes || undefined,
       };
@@ -174,7 +181,8 @@ export const AddPlantDialog: React.FC<AddPlantDialogProps> = ({
       onClose();
     } catch (err) {
       console.error('Erreur ajout plante:', err);
-      setSubmitError(err instanceof Error ? err.message : 'Erreur lors de l\'ajout');
+      const msg = (err as any)?.data?.message || (err instanceof Error ? err.message : 'Erreur lors de l\'ajout');
+      setSubmitError(msg);
     } finally {
       setSubmitting(false);
     }
@@ -505,7 +513,7 @@ export const AddPlantDialog: React.FC<AddPlantDialogProps> = ({
                       Serre
                     </Typography>
                     <Chip
-                      label={greenhouse}
+                      label={greenhouses.find(g => g.id === greenhouse)?.name || greenhouse || 'Non sélectionnée'}
                       size="small"
                       sx={{ mt: 0.5, bgcolor: '#E8F5E9', color: '#052E1C' }}
                     />

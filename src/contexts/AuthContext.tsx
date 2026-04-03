@@ -6,6 +6,7 @@ interface User {
   firstName: string;
   lastName: string;
   email: string;
+  username?: string;
   role: string;
   createdAt: string;
 }
@@ -58,16 +59,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const login = async (email: string, password: string): Promise<void> => {
     try {
       setIsLoading(true);
-      
+
       const data = await authService.login({ email, password });
-      
+
       if (data.token && data.user) {
         setToken(data.token);
-        setUser(data.user);
-        
+        setUser(data.user as User);
+
         localStorage.setItem('virida_token', data.token);
         localStorage.setItem('virida_user', JSON.stringify(data.user));
-        localStorage.setItem('token', data.token);
       } else {
         throw new Error('Réponse invalide du serveur');
       }
@@ -87,20 +87,21 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }): Promise<void> => {
     try {
       setIsLoading(true);
-      
+
       const data = await authService.register({
         email: userData.email,
         password: userData.password,
-        name: `${userData.firstName} ${userData.lastName}`
+        username: userData.email,
+        firstName: userData.firstName,
+        lastName: userData.lastName,
       });
-      
+
       if (data.token && data.user) {
         setToken(data.token);
-        setUser(data.user);
-        
+        setUser(data.user as User);
+
         localStorage.setItem('virida_token', data.token);
         localStorage.setItem('virida_user', JSON.stringify(data.user));
-        localStorage.setItem('token', data.token);
       } else {
         throw new Error('Réponse invalide du serveur');
       }

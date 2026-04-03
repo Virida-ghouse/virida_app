@@ -33,6 +33,7 @@ const ChatBotNew: React.FC<ChatBotProps> = ({ sensorData }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [conversationId, setConversationId] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const isInitialized = useRef(false);
 
@@ -83,20 +84,15 @@ const ChatBotNew: React.FC<ChatBotProps> = ({ sensorData }) => {
 
   const callEveAPI = async (message: string) => {
     try {
-      const context = {
-        conversationHistory: messages.map(msg => ({
-          role: msg.sender === 'user' ? 'user' : 'assistant',
-          content: msg.text,
-          timestamp: msg.timestamp.toISOString()
-        })),
-        ...(sensorData && { sensorData })
-      };
+      const data = await chatService.sendMessage(message, conversationId || undefined);
 
-      const data = await chatService.sendMessage(message, context);
+      if (data.conversationId && !conversationId) {
+        setConversationId(data.conversationId);
+      }
 
       return {
-        text: data.message,
-        metadata: data.suggestions ? { suggestions: data.suggestions } : undefined
+        text: data.eveResponse,
+        metadata: data.processing ? { method: data.processing.method, sources: data.processing.sources } : undefined
       };
     } catch (error) {
       console.error('Error calling EVE API:', error);
