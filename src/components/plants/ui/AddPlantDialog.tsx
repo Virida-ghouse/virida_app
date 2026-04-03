@@ -1,30 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  Typography,
-  Box,
-  Stepper,
-  Step,
-  StepLabel,
-  Grid,
-  Card,
-  CardMedia,
-  TextField,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  CircularProgress,
-  Alert,
-  Chip,
-} from '@mui/material';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { plantService, apiFetch } from '../../../services/api';
 
 interface PlantCatalog {
@@ -36,9 +10,6 @@ interface PlantCatalog {
   totalGrowthDays: number;
   imageUrl?: string;
   iconEmoji?: string;
-  wateringFrequencyDays?: number;
-  fertilizingFrequencyDays?: number;
-  description?: string;
 }
 
 interface Greenhouse {
@@ -59,45 +30,36 @@ export const AddPlantDialog: React.FC<AddPlantDialogProps> = ({
   onClose,
   onPlantAdded,
 }) => {
-
-  // Stepper state
   const [activeStep, setActiveStep] = useState(0);
   const steps = ['Sélectionner', 'Configurer', 'Confirmer'];
 
-  // Catalog state
   const [catalog, setCatalog] = useState<PlantCatalog[]>([]);
   const [loadingCatalog, setLoadingCatalog] = useState(false);
   const [catalogError, setCatalogError] = useState<string | null>(null);
+  const [searchText, setSearchText] = useState('');
 
-  // Greenhouses state
   const [greenhouses, setGreenhouses] = useState<Greenhouse[]>([]);
   const [loadingGreenhouses, setLoadingGreenhouses] = useState(false);
 
-
-  // Selected plant
   const [selectedPlant, setSelectedPlant] = useState<PlantCatalog | null>(null);
-
-  // Configuration
   const [plantName, setPlantName] = useState('');
   const [zone, setZone] = useState('Zone 1');
   const [greenhouse, setGreenhouse] = useState('');
   const [plantedAt, setPlantedAt] = useState(new Date().toISOString().split('T')[0]);
   const [notes, setNotes] = useState('');
 
-  // Submission state
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  // Load catalog when dialog opens
   useEffect(() => {
     if (open) {
       fetchCatalog();
       fetchGreenhouses();
-      // Reset state
       setActiveStep(0);
       setSelectedPlant(null);
       setPlantName('');
       setNotes('');
+      setSearchText('');
       setSubmitError(null);
     }
   }, [open]);
@@ -107,11 +69,11 @@ export const AddPlantDialog: React.FC<AddPlantDialogProps> = ({
       setLoadingCatalog(true);
       setCatalogError(null);
       const response = await plantService.getPlantCatalog();
-      const catalog = (response as any).data?.plants || response || [];
-      setCatalog(Array.isArray(catalog) ? catalog : []);
+      const list = (response as any).data?.plants || response || [];
+      setCatalog(Array.isArray(list) ? list : []);
     } catch (err) {
       console.error('Erreur chargement catalogue:', err);
-      setCatalogError(err instanceof Error ? err.message : 'Erreur inconnue');
+      setCatalogError('Impossible de charger le catalogue');
     } finally {
       setLoadingCatalog(false);
     }
@@ -124,7 +86,6 @@ export const AddPlantDialog: React.FC<AddPlantDialogProps> = ({
       const data = await response.json();
       const list = data.data || [];
       setGreenhouses(list);
-
       if (list.length > 0 && !greenhouse) {
         setGreenhouse(list[0].id);
       }
@@ -136,35 +97,23 @@ export const AddPlantDialog: React.FC<AddPlantDialogProps> = ({
     }
   };
 
-
   const handleSelectPlant = (plant: PlantCatalog) => {
     setSelectedPlant(plant);
-    setPlantName(plant.commonName); // Pre-fill with catalog name
+    setPlantName(plant.commonName);
     setActiveStep(1);
-  };
-
-  const handleNext = () => {
-    setActiveStep((prev) => prev + 1);
-  };
-
-  const handleBack = () => {
-    setActiveStep((prev) => prev - 1);
   };
 
   const handleSubmit = async () => {
     if (!selectedPlant) return;
-
     try {
       setSubmitting(true);
       setSubmitError(null);
-
       if (!greenhouse) {
         setSubmitError('Veuillez sélectionner une serre');
         setSubmitting(false);
         return;
       }
-
-      const payload = {
+      await plantService.createPlant({
         catalogId: selectedPlant.id,
         name: plantName || selectedPlant.commonName,
         species: selectedPlant.species,
@@ -172,549 +121,290 @@ export const AddPlantDialog: React.FC<AddPlantDialogProps> = ({
         greenhouseId: greenhouse,
         plantedAt: new Date(plantedAt).toISOString(),
         notes: notes || undefined,
-      };
-
-      await plantService.createPlant(payload as any);
-
-      // Success!
+      } as any);
       onPlantAdded();
       onClose();
     } catch (err) {
-      console.error('Erreur ajout plante:', err);
-      const msg = (err as any)?.data?.message || (err instanceof Error ? err.message : 'Erreur lors de l\'ajout');
+      const msg = (err as any)?.data?.message || (err instanceof Error ? err.message : "Erreur lors de l'ajout");
       setSubmitError(msg);
     } finally {
       setSubmitting(false);
     }
   };
 
-  const renderStepContent = () => {
-    // Step 1: Select plant from catalog
-    if (activeStep === 0) {
-      return (
-        <Box>
-          <Typography variant="body1" sx={{ mb: 3, color: '#757575' }}>
-            Choisissez une plante de notre catalogue pour l'ajouter à votre jardin
-          </Typography>
+  const filteredCatalog = catalog.filter((p) =>
+    (p.commonName?.toLowerCase() || '').includes(searchText.toLowerCase()) ||
+    (p.species?.toLowerCase() || '').includes(searchText.toLowerCase())
+  );
 
-          {catalogError && (
-            <Alert severity="error" sx={{ mb: 3 }}>
-              {catalogError}
-            </Alert>
-          )}
-
-          {loadingCatalog ? (
-            <Box sx={{ display: 'flex', justifyContent: 'center', py: 6 }}>
-              <CircularProgress sx={{ color: '#052E1C' }} />
-            </Box>
-          ) : (
-            <Grid container spacing={2} sx={{ maxHeight: 400, overflowY: 'auto', pr: 1 }}>
-              {catalog.map((plant) => (
-                <Grid item xs={6} sm={4} key={plant.id}>
-                  <Card
-                    onClick={() => handleSelectPlant(plant)}
-                    sx={{
-                      cursor: 'pointer',
-                      transition: 'all 0.2s ease',
-                      borderRadius: 2,
-                      border: '1px solid #F0F0F0',
-                      '&:hover': {
-                        transform: 'translateY(-4px)',
-                        boxShadow: '0 8px 20px rgba(42, 211, 104, 0.15)',
-                        borderColor: '#052E1C',
-                      },
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        height: 120,
-                        bgcolor: '#F9FAFB',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      {plant.imageUrl ? (
-                        <CardMedia
-                          component="img"
-                          height="120"
-                          image={plant.imageUrl}
-                          alt={plant.commonName}
-                          sx={{ objectFit: 'cover' }}
-                        />
-                      ) : (
-                        <Typography sx={{ fontSize: '3rem' }}>
-                          {plant.iconEmoji || '🌱'}
-                        </Typography>
-                      )}
-                    </Box>
-                    <Box sx={{ p: 1.5 }}>
-                      <Typography
-                        variant="body2"
-                        sx={{
-                          fontWeight: 600,
-                          color: '#FFFFFF',
-                          mb: 0.5,
-                          fontSize: '0.875rem',
-                        }}
-                      >
-                        {plant.commonName}
-                      </Typography>
-                      <Typography
-                        variant="caption"
-                        sx={{ color: '#9E9E9E', fontSize: '0.75rem' }}
-                      >
-                        {plant.totalGrowthDays}j
-                      </Typography>
-                    </Box>
-                  </Card>
-                </Grid>
-              ))}
-            </Grid>
-          )}
-        </Box>
-      );
-    }
-
-    // Step 2: Configure plant
-    if (activeStep === 1) {
-      return (
-        <Box>
-          {selectedPlant && (
-            <>
-              {/* Plant preview */}
-              <Box
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 2,
-                  mb: 3,
-                  p: 2,
-                  bgcolor: '#F0F9F4',
-                  borderRadius: 2,
-                }}
-              >
-                <Box
-                  sx={{
-                    width: 60,
-                    height: 60,
-                    borderRadius: 2,
-                    bgcolor: 'white',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
-                  {selectedPlant.imageUrl ? (
-                    <CardMedia
-                      component="img"
-                      sx={{ width: 60, height: 60, borderRadius: 2, objectFit: 'cover' }}
-                      image={selectedPlant.imageUrl}
-                      alt={selectedPlant.commonName}
-                    />
-                  ) : (
-                    <Typography sx={{ fontSize: '2rem' }}>
-                      {selectedPlant.iconEmoji || '🌱'}
-                    </Typography>
-                  )}
-                </Box>
-                <Box sx={{ flex: 1 }}>
-                  <Typography variant="h6" sx={{ fontWeight: 600, color: '#121A21' }}>
-                    {selectedPlant.commonName}
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: '#757575' }}>
-                    {selectedPlant.species}
-                  </Typography>
-                </Box>
-              </Box>
-
-              {/* Configuration form */}
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <TextField
-                    fullWidth
-                    label="Nom personnalisé (optionnel)"
-                    value={plantName}
-                    onChange={(e) => setPlantName(e.target.value)}
-                    placeholder={selectedPlant.commonName}
-                    sx={{
-                      '& .MuiOutlinedInput-root': {
-                        '&.Mui-focused fieldset': { borderColor: '#052E1C' },
-                      },
-                      '& .MuiInputLabel-root.Mui-focused': { color: '#052E1C' },
-                    }}
-                  />
-                </Grid>
-
-                <Grid item xs={12} sm={6}>
-                  <FormControl fullWidth>
-                    <InputLabel>Zone</InputLabel>
-                    <Select
-                      value={zone}
-                      onChange={(e) => setZone(e.target.value)}
-                      label="Zone"
-                      sx={{
-                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                          borderColor: '#052E1C',
-                        },
-                      }}
-                    >
-                      <MenuItem value="Zone 1">Zone 1</MenuItem>
-                      <MenuItem value="Zone 2">Zone 2</MenuItem>
-                      <MenuItem value="Zone 3">Zone 3</MenuItem>
-                      <MenuItem value="Zone 4">Zone 4</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-
-                <Grid item xs={12} sm={6}>
-                  <FormControl fullWidth>
-                    <InputLabel>Serre</InputLabel>
-                    <Select
-                      value={greenhouse}
-                      onChange={(e) => setGreenhouse(e.target.value)}
-                      label="Serre"
-                      sx={{
-                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                          borderColor: '#052E1C',
-                        },
-                      }}
-                    >
-                      {loadingGreenhouses ? (
-                        <MenuItem disabled>Chargement...</MenuItem>
-                      ) : greenhouses.length === 0 ? (
-                        <MenuItem disabled>Aucune serre disponible</MenuItem>
-                      ) : (
-                        greenhouses.map((gh) => (
-                          <MenuItem key={gh.id} value={gh.id}>
-                            {gh.name}
-                            {gh.location && ` - ${gh.location}`}
-                          </MenuItem>
-                        ))
-                      )}
-                    </Select>
-                  </FormControl>
-                </Grid>
-
-                <Grid item xs={12}>
-                  <TextField
-                    fullWidth
-                    label="Date de plantation"
-                    type="date"
-                    value={plantedAt}
-                    onChange={(e) => setPlantedAt(e.target.value)}
-                    InputLabelProps={{ shrink: true }}
-                    sx={{
-                      '& .MuiOutlinedInput-root': {
-                        '&.Mui-focused fieldset': { borderColor: '#052E1C' },
-                      },
-                      '& .MuiInputLabel-root.Mui-focused': { color: '#052E1C' },
-                    }}
-                  />
-                </Grid>
-
-                <Grid item xs={12}>
-                  <TextField
-                    fullWidth
-                    label="Notes (optionnel)"
-                    multiline
-                    rows={3}
-                    value={notes}
-                    onChange={(e) => setNotes(e.target.value)}
-                    placeholder="Ajoutez des notes sur cette plante..."
-                    sx={{
-                      '& .MuiOutlinedInput-root': {
-                        '&.Mui-focused fieldset': { borderColor: '#052E1C' },
-                      },
-                      '& .MuiInputLabel-root.Mui-focused': { color: '#052E1C' },
-                    }}
-                  />
-                </Grid>
-              </Grid>
-            </>
-          )}
-        </Box>
-      );
-    }
-
-    // Step 3: Confirm
-    if (activeStep === 2) {
-      return (
-        <Box>
-          {selectedPlant && (
-            <>
-              <Box sx={{ textAlign: 'center', mb: 4 }}>
-                <CheckCircleIcon sx={{ fontSize: '4rem', color: '#052E1C', mb: 2 }} />
-                <Typography variant="h6" sx={{ fontWeight: 600, color: '#121A21', mb: 1 }}>
-                  Prêt à ajouter votre plante
-                </Typography>
-                <Typography variant="body2" sx={{ color: '#757575' }}>
-                  Vérifiez les informations avant de confirmer
-                </Typography>
-              </Box>
-
-              {submitError && (
-                <Alert severity="error" sx={{ mb: 3 }}>
-                  {submitError}
-                </Alert>
-              )}
-
-              {/* Summary */}
-              <Box
-                sx={{
-                  p: 3,
-                  bgcolor: '#F9FAFB',
-                  borderRadius: 2,
-                  border: '1px solid #F0F0F0',
-                }}
-              >
-                <Grid container spacing={2}>
-                  <Grid item xs={12}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                      <Box
-                        sx={{
-                          width: 60,
-                          height: 60,
-                          borderRadius: 2,
-                          bgcolor: 'white',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                        }}
-                      >
-                        <Typography sx={{ fontSize: '2.5rem' }}>
-                          {selectedPlant.iconEmoji || '🌱'}
-                        </Typography>
-                      </Box>
-                      <Box>
-                        <Typography variant="h6" sx={{ fontWeight: 600, color: '#121A21' }}>
-                          {plantName || selectedPlant.commonName}
-                        </Typography>
-                        <Typography variant="body2" sx={{ color: '#757575' }}>
-                          {selectedPlant.species}
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </Grid>
-
-                  <Grid item xs={6}>
-                    <Typography variant="caption" sx={{ color: '#9E9E9E', display: 'block' }}>
-                      Zone
-                    </Typography>
-                    <Chip
-                      label={zone}
-                      size="small"
-                      sx={{ mt: 0.5, bgcolor: '#E8F5E9', color: '#052E1C' }}
-                    />
-                  </Grid>
-
-                  <Grid item xs={6}>
-                    <Typography variant="caption" sx={{ color: '#9E9E9E', display: 'block' }}>
-                      Serre
-                    </Typography>
-                    <Chip
-                      label={greenhouses.find(g => g.id === greenhouse)?.name || greenhouse || 'Non sélectionnée'}
-                      size="small"
-                      sx={{ mt: 0.5, bgcolor: '#E8F5E9', color: '#052E1C' }}
-                    />
-                  </Grid>
-
-                  <Grid item xs={12}>
-                    <Typography variant="caption" sx={{ color: '#9E9E9E', display: 'block' }}>
-                      Date de plantation
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: '#121A21', mt: 0.5 }}>
-                      {new Date(plantedAt).toLocaleDateString('fr-FR', {
-                        day: 'numeric',
-                        month: 'long',
-                        year: 'numeric',
-                      })}
-                    </Typography>
-                  </Grid>
-
-                  {notes && (
-                    <Grid item xs={12}>
-                      <Typography variant="caption" sx={{ color: '#9E9E9E', display: 'block' }}>
-                        Notes
-                      </Typography>
-                      <Typography variant="body2" sx={{ color: '#121A21', mt: 0.5 }}>
-                        {notes}
-                      </Typography>
-                    </Grid>
-                  )}
-
-                  <Grid item xs={12}>
-                    <Typography variant="caption" sx={{ color: '#9E9E9E', display: 'block' }}>
-                      Durée de croissance
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: '#121A21', mt: 0.5 }}>
-                      {selectedPlant.totalGrowthDays} jours
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </Box>
-            </>
-          )}
-        </Box>
-      );
-    }
-
-    return null;
-  };
+  if (!open) return null;
 
   return (
-    <Dialog
-      open={open}
-      onClose={onClose}
-      maxWidth="md"
-      fullWidth
-      PaperProps={{
-        sx: {
-          borderRadius: 3,
-          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12)',
-        },
-      }}
-    >
-      <DialogTitle sx={{ pb: 2, pt: 3 }}>
-        <Box>
-          <Typography variant="h5" component="div" sx={{ fontWeight: 600, color: '#121A21' }}>
-            Ajouter une plante
-          </Typography>
-          <Typography variant="body2" sx={{ color: '#757575', mt: 0.5 }}>
-            Suivez les étapes pour ajouter une nouvelle plante à votre jardin
-          </Typography>
-        </Box>
-      </DialogTitle>
+    <div className="fixed inset-0 z-[9000] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+      <div className="bg-[var(--bg-secondary)] rounded-3xl w-full max-w-3xl max-h-[90vh] overflow-hidden border-2 border-[#2AD368]/20 shadow-2xl flex flex-col">
 
-      {/* Stepper */}
-      <Box sx={{ px: 3, mb: 2 }}>
-        <Stepper activeStep={activeStep}>
-          {steps.map((label) => (
-            <Step key={label}>
-              <StepLabel
-                sx={{
-                  '& .MuiStepLabel-label': {
-                    color: '#757575',
-                    '&.Mui-active': { color: '#052E1C', fontWeight: 600 },
-                    '&.Mui-completed': { color: '#052E1C' },
-                  },
-                  '& .MuiStepIcon-root': {
-                    color: '#E0E0E0',
-                    '&.Mui-active': { color: '#052E1C' },
-                    '&.Mui-completed': { color: '#052E1C' },
-                  },
-                }}
-              >
-                {label}
-              </StepLabel>
-            </Step>
-          ))}
-        </Stepper>
-      </Box>
+        {/* Header */}
+        <div className="p-5 pb-4 border-b border-[var(--border-color)]">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h2 className="text-xl font-bold text-[var(--text-primary)]">Ajouter une plante</h2>
+              <p className="text-sm text-[var(--text-secondary)] mt-1">
+                {steps[activeStep]} — Étape {activeStep + 1}/{steps.length}
+              </p>
+            </div>
+            <button onClick={onClose} className="size-10 rounded-full bg-[var(--bg-primary)] border border-[var(--border-color)] flex items-center justify-center text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all">
+              <span className="material-symbols-outlined">close</span>
+            </button>
+          </div>
 
-      <DialogContent sx={{ pt: 2, pb: 3, minHeight: 400 }}>
-        {renderStepContent()}
-      </DialogContent>
+          {/* Stepper */}
+          <div className="flex items-center gap-2">
+            {steps.map((label, i) => (
+              <React.Fragment key={label}>
+                <div className="flex items-center gap-2">
+                  <div className={`size-8 rounded-full flex items-center justify-center text-sm font-bold transition-all ${
+                    i < activeStep ? 'bg-[#2AD368] text-white' :
+                    i === activeStep ? 'bg-[#2AD368] text-white' :
+                    'bg-[var(--bg-primary)] border border-[var(--border-color)] text-[var(--text-secondary)]'
+                  }`}>
+                    {i < activeStep ? (
+                      <span className="material-symbols-outlined text-base">check</span>
+                    ) : i + 1}
+                  </div>
+                  <span className={`text-sm font-medium hidden sm:inline ${
+                    i <= activeStep ? 'text-[var(--text-primary)]' : 'text-[var(--text-secondary)]'
+                  }`}>{label}</span>
+                </div>
+                {i < steps.length - 1 && (
+                  <div className={`flex-1 h-0.5 rounded ${i < activeStep ? 'bg-[#2AD368]' : 'bg-[var(--border-color)]'}`} />
+                )}
+              </React.Fragment>
+            ))}
+          </div>
+        </div>
 
-      <DialogActions sx={{ px: 3, pb: 3, gap: 1.5 }}>
-        <Button
-          onClick={onClose}
-          variant="outlined"
-          disabled={submitting}
-          sx={{
-            borderColor: '#E0E0E0',
-            color: '#616161',
-            fontWeight: 600,
-            textTransform: 'none',
-            px: 3,
-            py: 1.2,
-            borderRadius: 2,
-            '&:hover': {
-              borderColor: '#BDBDBD',
-              bgcolor: '#FAFAFA',
-            },
-          }}
-        >
-          Annuler
-        </Button>
+        {/* Content */}
+        <div className="flex-1 overflow-y-auto p-5 custom-scrollbar">
 
-        <Box sx={{ flex: 1 }} />
+          {/* Step 0: Sélectionner */}
+          {activeStep === 0 && (
+            <div>
+              {/* Search */}
+              <div className="relative mb-4">
+                <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-secondary)]">search</span>
+                <input
+                  type="text"
+                  placeholder="Rechercher une plante..."
+                  value={searchText}
+                  onChange={(e) => setSearchText(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[var(--bg-primary)] border border-[var(--border-color)] text-[var(--text-primary)] placeholder-[var(--text-secondary)] focus:outline-none focus:border-[#2AD368] transition-all"
+                />
+              </div>
 
-        {activeStep > 0 && (
-          <Button
-            onClick={handleBack}
-            disabled={submitting}
-            startIcon={<ChevronLeftIcon />}
-            sx={{
-              color: '#757575',
-              fontWeight: 600,
-              textTransform: 'none',
-              px: 3,
-              py: 1.2,
-              '&:hover': {
-                bgcolor: '#F5F5F5',
-              },
-            }}
-          >
-            Précédent
-          </Button>
-        )}
+              {catalogError && (
+                <div className="p-3 mb-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-500 text-sm">{catalogError}</div>
+              )}
 
-        {activeStep < steps.length - 1 ? (
-          <Button
-            onClick={handleNext}
-            disabled={!selectedPlant || submitting}
-            endIcon={<ChevronRightIcon />}
-            variant="contained"
-            sx={{
-              bgcolor: '#052E1C',
-              color: 'white',
-              fontWeight: 600,
-              textTransform: 'none',
-              px: 3,
-              py: 1.2,
-              borderRadius: 2,
-              boxShadow: '0 2px 8px rgba(46, 125, 50, 0.3)',
-              '&:hover': {
-                bgcolor: '#041E13',
-                boxShadow: '0 4px 12px rgba(46, 125, 50, 0.4)',
-              },
-              '&:disabled': {
-                bgcolor: '#E0E0E0',
-                color: '#9E9E9E',
-              },
-            }}
-          >
-            Suivant
-          </Button>
-        ) : (
-          <Button
-            onClick={handleSubmit}
-            disabled={submitting}
-            variant="contained"
-            sx={{
-              bgcolor: '#052E1C',
-              color: 'white',
-              fontWeight: 600,
-              textTransform: 'none',
-              px: 4,
-              py: 1.2,
-              borderRadius: 2,
-              boxShadow: '0 2px 8px rgba(46, 125, 50, 0.3)',
-              '&:hover': {
-                bgcolor: '#041E13',
-                boxShadow: '0 4px 12px rgba(46, 125, 50, 0.4)',
-              },
-            }}
-          >
-            {submitting ? (
-              <CircularProgress size={24} sx={{ color: 'white' }} />
-            ) : (
-              'Ajouter la plante'
+              {loadingCatalog ? (
+                <div className="flex justify-center py-12">
+                  <div className="size-12 border-4 border-[var(--border-color)] border-t-[#2AD368] rounded-full animate-spin" />
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-h-[400px] overflow-y-auto custom-scrollbar pr-1">
+                  {filteredCatalog.map((plant) => (
+                    <button
+                      key={plant.id}
+                      onClick={() => handleSelectPlant(plant)}
+                      className="rounded-2xl overflow-hidden border border-[var(--border-color)] hover:border-[#2AD368]/50 transition-all hover:-translate-y-1 hover:shadow-lg hover:shadow-[#2AD368]/10 text-left group"
+                    >
+                      <div className="h-28 bg-[var(--bg-primary)] relative overflow-hidden">
+                        {plant.imageUrl ? (
+                          <img src={plant.imageUrl} alt={plant.commonName} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-4xl">{plant.iconEmoji || '🌱'}</div>
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                        <span className="absolute bottom-2 left-2 text-white font-semibold text-sm drop-shadow-lg">{plant.commonName}</span>
+                      </div>
+                      <div className="p-2 bg-[var(--bg-secondary)]">
+                        <span className="text-xs text-[var(--text-secondary)]">{plant.totalGrowthDays} jours</span>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Step 1: Configurer */}
+          {activeStep === 1 && selectedPlant && (
+            <div className="space-y-4">
+              {/* Plant preview */}
+              <div className="flex items-center gap-3 p-3 rounded-2xl bg-[#2AD368]/10 border border-[#2AD368]/20">
+                <div className="size-14 rounded-xl overflow-hidden bg-[var(--bg-primary)] flex-shrink-0">
+                  {selectedPlant.imageUrl ? (
+                    <img src={selectedPlant.imageUrl} alt={selectedPlant.commonName} className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-2xl">{selectedPlant.iconEmoji || '🌱'}</div>
+                  )}
+                </div>
+                <div>
+                  <h3 className="font-bold text-[var(--text-primary)]">{selectedPlant.commonName}</h3>
+                  <p className="text-sm text-[var(--text-secondary)] italic">{selectedPlant.species}</p>
+                </div>
+              </div>
+
+              {/* Form */}
+              <div>
+                <label className="text-xs font-semibold text-[var(--text-secondary)] mb-1.5 block">Nom personnalisé</label>
+                <input type="text" value={plantName} onChange={(e) => setPlantName(e.target.value)} placeholder={selectedPlant.commonName}
+                  className="w-full px-3 py-2.5 rounded-xl bg-[var(--bg-primary)] border border-[var(--border-color)] text-[var(--text-primary)] placeholder-[var(--text-secondary)] focus:outline-none focus:border-[#2AD368] transition-all" />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs font-semibold text-[var(--text-secondary)] mb-1.5 block">Zone</label>
+                  <select value={zone} onChange={(e) => setZone(e.target.value)}
+                    className="w-full px-3 py-2.5 rounded-xl bg-[var(--bg-primary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368] transition-all">
+                    <option value="Zone 1">Zone 1</option>
+                    <option value="Zone 2">Zone 2</option>
+                    <option value="Zone 3">Zone 3</option>
+                    <option value="Zone 4">Zone 4</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-xs font-semibold text-[var(--text-secondary)] mb-1.5 block">Serre</label>
+                  <select value={greenhouse} onChange={(e) => setGreenhouse(e.target.value)}
+                    className="w-full px-3 py-2.5 rounded-xl bg-[var(--bg-primary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368] transition-all">
+                    {loadingGreenhouses ? (
+                      <option disabled>Chargement...</option>
+                    ) : greenhouses.length === 0 ? (
+                      <option disabled>Aucune serre</option>
+                    ) : (
+                      greenhouses.map((gh) => (
+                        <option key={gh.id} value={gh.id}>{gh.name}{gh.location ? ` - ${gh.location}` : ''}</option>
+                      ))
+                    )}
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="text-xs font-semibold text-[var(--text-secondary)] mb-1.5 block">Date de plantation</label>
+                <input type="date" value={plantedAt} onChange={(e) => setPlantedAt(e.target.value)}
+                  className="w-full px-3 py-2.5 rounded-xl bg-[var(--bg-primary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368] transition-all" />
+              </div>
+
+              <div>
+                <label className="text-xs font-semibold text-[var(--text-secondary)] mb-1.5 block">Notes (optionnel)</label>
+                <textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={3} placeholder="Ajoutez des notes..."
+                  className="w-full px-3 py-2.5 rounded-xl bg-[var(--bg-primary)] border border-[var(--border-color)] text-[var(--text-primary)] placeholder-[var(--text-secondary)] focus:outline-none focus:border-[#2AD368] transition-all resize-none" />
+              </div>
+            </div>
+          )}
+
+          {/* Step 2: Confirmer */}
+          {activeStep === 2 && selectedPlant && (
+            <div>
+              <div className="text-center mb-6">
+                <div className="size-16 rounded-full bg-[#2AD368]/20 flex items-center justify-center mx-auto mb-3">
+                  <span className="material-symbols-outlined text-[#2AD368] text-3xl">check_circle</span>
+                </div>
+                <h3 className="text-lg font-bold text-[var(--text-primary)]">Prêt à ajouter</h3>
+                <p className="text-sm text-[var(--text-secondary)]">Vérifiez les informations</p>
+              </div>
+
+              {submitError && (
+                <div className="p-3 mb-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-500 text-sm">{submitError}</div>
+              )}
+
+              <div className="rounded-2xl border border-[var(--border-color)] bg-[var(--bg-primary)] p-4 space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="size-14 rounded-xl overflow-hidden bg-[var(--bg-secondary)] flex-shrink-0">
+                    {selectedPlant.imageUrl ? (
+                      <img src={selectedPlant.imageUrl} alt="" className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-2xl">{selectedPlant.iconEmoji || '🌱'}</div>
+                    )}
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-[var(--text-primary)]">{plantName || selectedPlant.commonName}</h4>
+                    <p className="text-sm text-[var(--text-secondary)] italic">{selectedPlant.species}</p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <p className="text-xs text-[var(--text-secondary)] mb-1">Zone</p>
+                    <span className="px-3 py-1 rounded-lg bg-[#2AD368]/10 border border-[#2AD368]/30 text-[#2AD368] text-sm font-semibold">{zone}</span>
+                  </div>
+                  <div>
+                    <p className="text-xs text-[var(--text-secondary)] mb-1">Serre</p>
+                    <span className="px-3 py-1 rounded-lg bg-[#2AD368]/10 border border-[#2AD368]/30 text-[#2AD368] text-sm font-semibold">
+                      {greenhouses.find(g => g.id === greenhouse)?.name || 'Non sélectionnée'}
+                    </span>
+                  </div>
+                  <div>
+                    <p className="text-xs text-[var(--text-secondary)] mb-1">Date de plantation</p>
+                    <p className="text-sm font-semibold text-[var(--text-primary)]">
+                      {new Date(plantedAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-[var(--text-secondary)] mb-1">Croissance</p>
+                    <p className="text-sm font-semibold text-[var(--text-primary)]">{selectedPlant.totalGrowthDays} jours</p>
+                  </div>
+                </div>
+
+                {notes && (
+                  <div>
+                    <p className="text-xs text-[var(--text-secondary)] mb-1">Notes</p>
+                    <p className="text-sm text-[var(--text-primary)]">{notes}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Footer */}
+        <div className="border-t border-[var(--border-color)] p-4 flex items-center justify-between bg-[var(--bg-primary)]">
+          <button onClick={onClose} disabled={submitting}
+            className="px-5 py-2.5 rounded-xl border border-[var(--border-color)] text-[var(--text-secondary)] font-semibold hover:text-[var(--text-primary)] hover:bg-[var(--bg-secondary)] transition-all disabled:opacity-50">
+            Annuler
+          </button>
+
+          <div className="flex gap-2">
+            {activeStep > 0 && (
+              <button onClick={() => setActiveStep(s => s - 1)} disabled={submitting}
+                className="px-5 py-2.5 rounded-xl border border-[var(--border-color)] text-[var(--text-secondary)] font-semibold hover:text-[var(--text-primary)] hover:bg-[var(--bg-secondary)] transition-all flex items-center gap-1">
+                <span className="material-symbols-outlined text-lg">chevron_left</span>
+                Précédent
+              </button>
             )}
-          </Button>
-        )}
-      </DialogActions>
-    </Dialog>
+
+            {activeStep < steps.length - 1 ? (
+              <button onClick={() => setActiveStep(s => s + 1)} disabled={!selectedPlant || submitting}
+                className="px-5 py-2.5 rounded-xl bg-[#2AD368] text-[var(--btn-primary-text)] font-semibold shadow-lg shadow-[#2AD368]/30 hover:shadow-xl hover:shadow-[#2AD368]/40 hover:scale-105 transition-all disabled:opacity-40 disabled:hover:scale-100 flex items-center gap-1">
+                Suivant
+                <span className="material-symbols-outlined text-lg">chevron_right</span>
+              </button>
+            ) : (
+              <button onClick={handleSubmit} disabled={submitting}
+                className="px-6 py-2.5 rounded-xl bg-[#2AD368] text-[var(--btn-primary-text)] font-semibold shadow-lg shadow-[#2AD368]/30 hover:shadow-xl hover:shadow-[#2AD368]/40 hover:scale-105 transition-all disabled:opacity-50 flex items-center gap-2">
+                {submitting ? (
+                  <div className="size-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                ) : (
+                  <>
+                    <span className="material-symbols-outlined text-lg">add</span>
+                    Ajouter la plante
+                  </>
+                )}
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
