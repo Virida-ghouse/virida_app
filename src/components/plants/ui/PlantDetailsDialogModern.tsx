@@ -214,16 +214,6 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
     }
   };
 
-  const handleDeleteHarvest = async (harvestId: string) => {
-    if (!plantId || !confirm('Supprimer cette récolte ?')) return;
-    try {
-      // deleteHarvest n'existe pas côté backend
-      console.warn('Suppression de récolte non supportée par le backend');
-      fetchHarvests();
-    } catch (error) {
-      console.error('Erreur:', error);
-    }
-  };
 
   const handleAddHistory = async () => {
     if (!plantId) return;
@@ -940,12 +930,6 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                                    harvest.quality === 'GOOD' ? 'Bonne' :
                                    harvest.quality === 'FAIR' ? 'Moyenne' : 'Faible'}
                                 </span>
-                                <button
-                                  onClick={() => handleDeleteHarvest(harvest.id)}
-                                  className="text-red-400 hover:text-red-300 transition-colors"
-                                >
-                                  <span className="material-symbols-outlined text-lg">delete</span>
-                                </button>
                               </div>
                             </div>
                           </div>
