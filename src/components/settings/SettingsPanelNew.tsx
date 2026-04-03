@@ -76,7 +76,7 @@ export default function SettingsPanelNew() {
   };
 
   return (
-    <div className="flex-1 overflow-y-auto overflow-x-hidden bg-[var(--bg-primary)] dark:bg-background-dark p-4 md:p-6 lg:p-8 pb-20 lg:pb-8">
+    <div className="flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar bg-[var(--bg-primary)] dark:bg-background-dark p-4 md:p-6 lg:p-8 pb-20 lg:pb-8">
       {/* Header */}
       <div className="mb-6 md:mb-8">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4 md:mb-6">
@@ -707,7 +707,7 @@ export default function SettingsPanelNew() {
               </button>
             </div>
             {/* Content */}
-            <div className="flex-1 overflow-y-auto">
+            <div className="flex-1 overflow-y-auto custom-scrollbar">
               <PrivacyPolicy />
             </div>
           </div>

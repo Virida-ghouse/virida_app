@@ -98,7 +98,7 @@ const CookiePreferencesModal: React.FC = () => {
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto p-5 space-y-3">
+        <div className="flex-1 overflow-y-auto custom-scrollbar p-5 space-y-3">
           <p className="text-xs text-[var(--text-secondary)] leading-relaxed mb-4">
             Vous avez le contrôle total sur vos données. Choisissez les cookies que vous souhaitez autoriser.
           </p>

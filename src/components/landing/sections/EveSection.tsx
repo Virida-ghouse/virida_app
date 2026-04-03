@@ -135,7 +135,7 @@ const EveFakeChat: React.FC = () => {
       </div>
 
       {/* Messages */}
-      <div ref={chatRef} className="flex-1 overflow-y-auto p-4 space-y-3">
+      <div ref={chatRef} className="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-3">
         {messages.map((msg, i) => (
           <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
             <div

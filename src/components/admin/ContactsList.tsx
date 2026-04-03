@@ -256,7 +256,7 @@ const ContactsList: React.FC = () => {
           onClick={() => setSelectedContact(null)}
         >
           <div
-            className="glass-card rounded-3xl border-2 border-[var(--border-color)] max-w-lg w-full max-h-[80vh] overflow-y-auto shadow-2xl"
+            className="glass-card rounded-3xl border-2 border-[var(--border-color)] max-w-lg w-full max-h-[80vh] overflow-y-auto custom-scrollbar shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}
