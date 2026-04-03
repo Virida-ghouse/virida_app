@@ -443,19 +443,10 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                         )}
                       </div>
 
-                      {/* Zone */}
+                      {/* Zone (lecture seule) */}
                       <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-[var(--border-color)]">
                         <label className="text-xs text-gray-400 mb-2 block">Zone</label>
-                        {isEditing ? (
-                          <input
-                            type="text"
-                            value={zone}
-                            onChange={(e) => setZone(e.target.value)}
-                            className="w-full bg-white/5 border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368]"
-                          />
-                        ) : (
-                          <p className="text-[var(--text-primary)] font-semibold">{zone || 'Non défini'}</p>
-                        )}
+                        <p className="text-[var(--text-primary)] font-semibold">{zone || 'Non défini'}</p>
                       </div>
 
                       {/* Statut */}
@@ -480,39 +471,18 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                         )}
                       </div>
 
-                      {/* Serre */}
+                      {/* Serre (lecture seule) */}
                       <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-[var(--border-color)]">
                         <label className="text-xs text-gray-400 mb-2 block">Serre</label>
-                        {isEditing ? (
-                          <select
-                            value={greenhouse}
-                            onChange={(e) => setGreenhouse(e.target.value)}
-                            className="w-full bg-white/5 border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368]"
-                          >
-                            <option value="">Aucune</option>
-                            <option value="greenhouse-demo-1">Serre Principale</option>
-                            <option value="greenhouse-demo-2">Serre Expérimentale</option>
-                          </select>
-                        ) : (
-                          <p className="text-[var(--text-primary)] font-semibold">{greenhouseName || 'Non défini'}</p>
-                        )}
+                        <p className="text-[var(--text-primary)] font-semibold">{greenhouseName || 'Non défini'}</p>
                       </div>
 
-                      {/* Date de plantation */}
+                      {/* Date de plantation (lecture seule) */}
                       <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-[var(--border-color)]">
                         <label className="text-xs text-gray-400 mb-2 block">Date de plantation</label>
-                        {isEditing ? (
-                          <input
-                            type="date"
-                            value={plantedAt}
-                            onChange={(e) => setPlantedAt(e.target.value)}
-                            className="w-full bg-white/5 border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368]"
-                          />
-                        ) : (
-                          <p className="text-[var(--text-primary)] font-semibold">
-                            {plantedAt ? new Date(plantedAt).toLocaleDateString('fr-FR') : 'Non défini'}
-                          </p>
-                        )}
+                        <p className="text-[var(--text-primary)] font-semibold">
+                          {plantedAt ? new Date(plantedAt).toLocaleDateString('fr-FR') : 'Non défini'}
+                        </p>
                       </div>
                     </div>
 
