@@ -157,9 +157,17 @@ export const AddPlantDialog: React.FC<AddPlantDialogProps> = ({
     try {
       setSubmitting(true);
       setSubmitError(null);
+
+      if (!greenhouse) {
+        setSubmitError('Veuillez sélectionner une serre');
+        setSubmitting(false);
+        return;
+      }
+
       const payload = {
         catalogId: selectedPlant.id,
         name: plantName || selectedPlant.commonName,
+        species: selectedPlant.species,
         zone,
         greenhouseId: greenhouse,
         plantedAt: new Date(plantedAt).toISOString(),
@@ -173,7 +181,8 @@ export const AddPlantDialog: React.FC<AddPlantDialogProps> = ({
       onClose();
     } catch (err) {
       console.error('Erreur ajout plante:', err);
-      setSubmitError(err instanceof Error ? err.message : 'Erreur lors de l\'ajout');
+      const msg = (err as any)?.data?.message || (err instanceof Error ? err.message : 'Erreur lors de l\'ajout');
+      setSubmitError(msg);
     } finally {
       setSubmitting(false);
     }
@@ -504,7 +513,7 @@ export const AddPlantDialog: React.FC<AddPlantDialogProps> = ({
                       Serre
                     </Typography>
                     <Chip
-                      label={greenhouse}
+                      label={greenhouses.find(g => g.id === greenhouse)?.name || greenhouse || 'Non sélectionnée'}
                       size="small"
                       sx={{ mt: 0.5, bgcolor: '#E8F5E9', color: '#052E1C' }}
                     />
