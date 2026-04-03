@@ -82,8 +82,8 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
     if (!plantId) return;
     setLoading(true);
     try {
-      const data = await plantService.getPlant(plantId);
-      const plantData = data;
+      const response = await plantService.getPlant(plantId);
+      const plantData = (response as any).data || response;
       setPlant(plantData);
       setName(plantData.name || '');
       setZone(plantData.zone || '');
@@ -144,7 +144,7 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
     if (!plantId) return;
     setLoading(true);
     try {
-      await plantService.updatePlant(plantId, { name, zone, greenhouse, plantedAt, notes, status } as any);
+      await plantService.updatePlant(plantId, { name, notes, status } as any);
       setIsEditing(false);
       fetchPlantDetails();
       onPlantUpdated();
@@ -741,7 +741,6 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                           >
                             Annuler
                           </button>
-                          <div className="flex gap-2">
                           <button
                             onClick={handleAddHistory}
                             disabled={loading}
@@ -749,13 +748,6 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                           >
                             {loading ? 'Ajout...' : 'Ajouter'}
                           </button>
-                          <button
-                            onClick={() => setShowAddHistory(false)}
-                            className="px-4 py-2 rounded-xl bg-[#2AD368] text-[var(--btn-primary-text)] font-semibold shadow-[0_8px_20px_rgba(42,211,104,0.5)] hover:shadow-[0_12px_30px_rgba(42,211,104,0.8)] hover:scale-105 transition-all"
-                          >
-                            Ajouter
-                          </button>
-                          </div>
                         </div>
                       </div>
                     )}

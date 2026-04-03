@@ -25,7 +25,7 @@ import {
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { plantService } from '../../../services/api';
+import { plantService, apiFetch } from '../../../services/api';
 
 interface PlantCatalog {
   id: string;
@@ -120,12 +120,13 @@ export const AddPlantDialog: React.FC<AddPlantDialogProps> = ({
   const fetchGreenhouses = async () => {
     try {
       setLoadingGreenhouses(true);
-      // TODO: Créer un service greenhouse si nécessaire
-      setGreenhouses([]);
+      const response = await apiFetch('/api/greenhouses');
+      const data = await response.json();
+      const list = data.data || [];
+      setGreenhouses(list);
 
-      // Auto-select first greenhouse if none selected
-      if (data.data && data.data.length > 0 && !greenhouse) {
-        setGreenhouse(data.data[0].id);
+      if (list.length > 0 && !greenhouse) {
+        setGreenhouse(list[0].id);
       }
     } catch (error) {
       console.error('Error fetching greenhouses:', error);
@@ -156,13 +157,11 @@ export const AddPlantDialog: React.FC<AddPlantDialogProps> = ({
     try {
       setSubmitting(true);
       setSubmitError(null);
-      const token = localStorage.getItem('virida_token');
-
       const payload = {
         catalogId: selectedPlant.id,
         name: plantName || selectedPlant.commonName,
         zone,
-        greenhouse,
+        greenhouseId: greenhouse,
         plantedAt: new Date(plantedAt).toISOString(),
         notes: notes || undefined,
       };

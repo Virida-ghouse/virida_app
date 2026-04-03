@@ -32,8 +32,9 @@ const PlantCareNew: React.FC = () => {
       try {
         setLoading(true);
         setError(null);
-        // TODO: Ajouter getAllTasks dans plantService
-        setTasks([]);
+        const response = await plantService.getAllTasks({ completed: 'false' });
+        const tasksList = response.data || [];
+        setTasks(tasksList);
       } catch (err) {
         console.error('Erreur chargement tâches:', err);
         setError(err instanceof Error ? err.message : 'Erreur inconnue');
@@ -61,7 +62,11 @@ const PlantCareNew: React.FC = () => {
 
   const handleToggleTask = async (taskId: string, currentCompleted: boolean) => {
     try {
-      // TODO: Ajouter toggleTask dans plantService
+      if (currentCompleted) {
+        await plantService.uncompleteTask(taskId);
+      } else {
+        await plantService.completeTask(taskId);
+      }
       setTasks((prev) =>
         prev.map((task) =>
           task.id === taskId ? { ...task, completed: !currentCompleted } : task
