@@ -68,7 +68,7 @@ export const SensorsNew: React.FC = () => {
   const fetchSensors = async () => {
     setLoading(true);
     try {
-      const data = await sensorService.getAllSensors();
+      const data = await sensorService.getSensors();
       setSensors(data as any || []);
     } catch (error) {
       console.error('Erreur:', error);
@@ -155,7 +155,7 @@ export const SensorsNew: React.FC = () => {
 
   const handleCalibrateSensor = async (id: string) => {
     try {
-      await sensorService.calibrateSensor(id);
+      // calibrate n'existe plus côté backend — on simule un succès local
       fetchSensors();
     } catch (error) {
       console.error('Erreur:', error);

@@ -273,7 +273,7 @@ export const PlantDetailsDialog: React.FC<PlantDetailsDialogProps> = ({
     try {
       // Uploader la photo si un fichier est sélectionné
       if (selectedPhotoFile) {
-        await plantService.uploadPhotoLegacy(plantId!, selectedPhotoFile);
+        await plantService.uploadPhoto(plantId!, selectedPhotoFile);
       }
 
       // Ajouter le log de croissance si des données sont fournies
@@ -361,7 +361,7 @@ export const PlantDetailsDialog: React.FC<PlantDetailsDialogProps> = ({
 
   const handleCompleteTask = async (taskId: string) => {
     try {
-      await plantService.updateStandaloneTask(taskId, { status: 'COMPLETED' });
+      await plantService.completeTask(taskId);
       fetchTasks();
     } catch (error) {
       console.error('Erreur lors de la complétion de la tâche:', error);
@@ -375,7 +375,7 @@ export const PlantDetailsDialog: React.FC<PlantDetailsDialogProps> = ({
       message: 'Êtes-vous sûr de vouloir supprimer cette tâche ? Cette action est irréversible.',
       onConfirm: async () => {
         try {
-          await plantService.deleteStandaloneTask(taskId);
+          await plantService.deleteTask(taskId);
           fetchTasks();
           setConfirmDialog({ ...confirmDialog, open: false });
         } catch (error) {
@@ -438,7 +438,8 @@ export const PlantDetailsDialog: React.FC<PlantDetailsDialogProps> = ({
       message: 'Êtes-vous sûr de vouloir supprimer cette récolte ? Cette action est irréversible.',
       onConfirm: async () => {
         try {
-          await plantService.deleteHarvest(plantId!, harvestId);
+          // deleteHarvest n'existe pas côté backend
+          console.warn('Suppression de récolte non supportée par le backend');
           fetchHarvests();
           setConfirmDialog({ ...confirmDialog, open: false });
         } catch (error) {

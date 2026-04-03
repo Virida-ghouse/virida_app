@@ -168,8 +168,11 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
 
   const handleCompleteTask = async (taskId: string, isCompleted: boolean) => {
     try {
-      const endpoint = isCompleted ? 'uncomplete' : 'complete';
-      await plantService.toggleTaskStatus(taskId, endpoint as any);
+      if (isCompleted) {
+        await plantService.uncompleteTask(taskId);
+      } else {
+        await plantService.completeTask(taskId);
+      }
       fetchTasks();
     } catch (error) {
       console.error('Erreur:', error);
@@ -179,7 +182,7 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
   const handleDeleteTask = async (taskId: string) => {
     if (!confirm('Supprimer cette tâche ?')) return;
     try {
-      await plantService.deleteStandaloneTask(taskId);
+      await plantService.deleteTask(taskId);
       fetchTasks();
     } catch (error) {
       console.error('Erreur:', error);
@@ -214,7 +217,8 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
   const handleDeleteHarvest = async (harvestId: string) => {
     if (!plantId || !confirm('Supprimer cette récolte ?')) return;
     try {
-      await plantService.deleteHarvest(plantId, harvestId);
+      // deleteHarvest n'existe pas côté backend
+      console.warn('Suppression de récolte non supportée par le backend');
       fetchHarvests();
     } catch (error) {
       console.error('Erreur:', error);

@@ -131,9 +131,9 @@ export const TaskDialog: React.FC<TaskDialogProps> = ({
       const payload = taskId ? updatePayload : createPayload;
 
       if (taskId) {
-        await plantService.updateStandaloneTask(taskId, payload);
+        await plantService.updateTask(taskId, payload);
       } else {
-        await plantService.createStandaloneTask(payload);
+        await plantService.createTask(payload);
       }
 
       onTaskSaved();

@@ -1,14 +1,20 @@
-import { apiFetch, getAuthHeaders } from './apiConfig';
+import { apiFetch } from './apiConfig';
 
 export interface Plant {
   id: string;
-  name: string;
+  name?: string;
   species?: string;
-  plantedDate?: string;
-  imageUrl?: string;
+  variety?: string;
+  catalogId?: string;
+  greenhouseId: string;
+  zone?: string;
   status?: string;
-  location?: string;
+  plantedAt?: string;
+  harvestAt?: string;
   notes?: string;
+  optimalTemp?: any;
+  optimalHumidity?: any;
+  optimalPh?: any;
   [key: string]: any;
 }
 
@@ -17,22 +23,64 @@ export interface PlantTask {
   plantId: string;
   type: string;
   description?: string;
+  notes?: string;
   dueDate?: string;
-  completed?: boolean;
+  priority?: string;
+  status?: string;
+  recurring?: boolean;
+  recurringInterval?: string;
+  source?: string;
   [key: string]: any;
 }
 
 export interface CreatePlantData {
-  name: string;
+  catalogId?: string;
+  name?: string;
   species?: string;
-  plantedDate?: string;
-  imageUrl?: string;
-  location?: string;
+  variety?: string;
+  greenhouseId: string;
+  zone?: string;
+  plantedAt?: string;
+  harvestAt?: string;
   notes?: string;
+  optimalTemp?: any;
+  optimalHumidity?: any;
+  optimalPh?: any;
 }
 
-export interface UpdatePlantData extends Partial<CreatePlantData> {
-  id: string;
+export interface UpdatePlantData {
+  name?: string;
+  variety?: string;
+  status?: string;
+  harvestAt?: string;
+  notes?: string;
+  optimalTemp?: any;
+  optimalHumidity?: any;
+  optimalPh?: any;
+}
+
+export interface HarvestData {
+  quantity: number;
+  unit?: string;
+  quality: string;
+  notes?: string;
+  harvestedAt?: string;
+}
+
+export interface CareEventData {
+  eventType: string;
+  amount?: number;
+  unit?: string;
+  notes?: string;
+  automatic?: boolean;
+}
+
+export interface GrowthLogData {
+  height?: number;
+  leafCount?: number;
+  fruitCount?: number;
+  notes?: string;
+  eventType?: string;
 }
 
 class PlantService {
@@ -40,17 +88,18 @@ class PlantService {
   // Plants CRUD
   // ==========================================
 
-  async getPlants(): Promise<Plant[]> {
-    const response = await apiFetch('/api/plants');
+  async getPlants(params?: { greenhouseId?: string; status?: string; species?: string }): Promise<{ success: boolean; data: Plant[]; count: number }> {
+    const query = params ? `?${new URLSearchParams(params as Record<string, string>)}` : '';
+    const response = await apiFetch(`/api/plants${query}`);
     return response.json();
   }
 
-  async getPlant(id: string): Promise<Plant> {
+  async getPlant(id: string): Promise<{ success: boolean; data: Plant }> {
     const response = await apiFetch(`/api/plants/${id}`);
     return response.json();
   }
 
-  async createPlant(data: CreatePlantData): Promise<Plant> {
+  async createPlant(data: CreatePlantData): Promise<{ success: boolean; data: Plant; message: string }> {
     const response = await apiFetch('/api/plants', {
       method: 'POST',
       body: JSON.stringify(data),
@@ -58,7 +107,7 @@ class PlantService {
     return response.json();
   }
 
-  async updatePlant(id: string, data: Partial<CreatePlantData>): Promise<Plant> {
+  async updatePlant(id: string, data: UpdatePlantData): Promise<{ success: boolean; data: Plant; message: string }> {
     const response = await apiFetch(`/api/plants/${id}`, {
       method: 'PUT',
       body: JSON.stringify(data),
@@ -66,59 +115,39 @@ class PlantService {
     return response.json();
   }
 
-  async deletePlant(id: string): Promise<void> {
-    await apiFetch(`/api/plants/${id}`, {
+  async deletePlant(id: string): Promise<{ success: boolean; message: string }> {
+    const response = await apiFetch(`/api/plants/${id}`, {
       method: 'DELETE',
     });
-  }
-
-  // ==========================================
-  // Plant Tasks (nested under /api/plants)
-  // ==========================================
-
-  async getPlantTasks(plantId: string): Promise<PlantTask[]> {
-    const response = await apiFetch(`/api/plants/${plantId}/tasks`);
     return response.json();
   }
 
-  async createTask(plantId: string, task: Partial<PlantTask>): Promise<PlantTask> {
-    const response = await apiFetch(`/api/plants/${plantId}/tasks`, {
-      method: 'POST',
-      body: JSON.stringify(task),
-    });
-    return response.json();
-  }
-
-  async updateTask(plantId: string, taskId: string, data: Partial<PlantTask>): Promise<PlantTask> {
-    const response = await apiFetch(`/api/plants/${plantId}/tasks/${taskId}`, {
-      method: 'PUT',
-      body: JSON.stringify(data),
-    });
-    return response.json();
-  }
-
-  async deleteTask(plantId: string, taskId: string): Promise<void> {
-    await apiFetch(`/api/plants/${plantId}/tasks/${taskId}`, {
-      method: 'DELETE',
-    });
-  }
-
   // ==========================================
-  // Standalone Tasks (/api/plant-tasks)
+  // Plant Tasks (/api/plant-tasks)
   // ==========================================
 
-  async getAllTasks(params?: Record<string, string>): Promise<any> {
+  async getAllTasks(params?: Record<string, string>): Promise<{ success: boolean; data: PlantTask[]; count: number }> {
     const query = params ? `?${new URLSearchParams(params)}` : '';
     const response = await apiFetch(`/api/plant-tasks${query}`);
     return response.json();
   }
 
-  async getTaskById(taskId: string): Promise<any> {
+  async getTaskById(taskId: string): Promise<{ success: boolean; data: PlantTask }> {
     const response = await apiFetch(`/api/plant-tasks/${taskId}`);
     return response.json();
   }
 
-  async createStandaloneTask(data: any): Promise<any> {
+  async createTask(data: {
+    plantId: string;
+    type: string;
+    description: string;
+    notes?: string;
+    dueDate?: string;
+    priority?: string;
+    recurring?: boolean;
+    recurringInterval?: string;
+    source?: string;
+  }): Promise<{ success: boolean; data: PlantTask }> {
     const response = await apiFetch('/api/plant-tasks', {
       method: 'POST',
       body: JSON.stringify(data),
@@ -126,7 +155,7 @@ class PlantService {
     return response.json();
   }
 
-  async updateStandaloneTask(taskId: string, data: any): Promise<any> {
+  async updateTask(taskId: string, data: Partial<PlantTask>): Promise<{ success: boolean; data: PlantTask }> {
     const response = await apiFetch(`/api/plant-tasks/${taskId}`, {
       method: 'PUT',
       body: JSON.stringify(data),
@@ -134,16 +163,25 @@ class PlantService {
     return response.json();
   }
 
-  async deleteStandaloneTask(taskId: string): Promise<void> {
-    await apiFetch(`/api/plant-tasks/${taskId}`, {
-      method: 'DELETE',
-    });
-  }
-
-  async toggleTaskStatus(taskId: string, endpoint: string): Promise<void> {
-    await apiFetch(`/api/plant-tasks/${taskId}/${endpoint}`, {
+  async completeTask(taskId: string): Promise<{ success: boolean; data: PlantTask }> {
+    const response = await apiFetch(`/api/plant-tasks/${taskId}/complete`, {
       method: 'PATCH',
     });
+    return response.json();
+  }
+
+  async uncompleteTask(taskId: string): Promise<{ success: boolean; data: PlantTask }> {
+    const response = await apiFetch(`/api/plant-tasks/${taskId}/uncomplete`, {
+      method: 'PATCH',
+    });
+    return response.json();
+  }
+
+  async deleteTask(taskId: string): Promise<{ success: boolean }> {
+    const response = await apiFetch(`/api/plant-tasks/${taskId}`, {
+      method: 'DELETE',
+    });
+    return response.json();
   }
 
   // ==========================================
@@ -156,17 +194,40 @@ class PlantService {
     return response.json();
   }
 
-  async getPlantCatalogItem(plantId: string): Promise<any> {
-    const response = await apiFetch(`/api/plant-catalog/${plantId}`);
+  async getPlantCatalogItem(identifier: string): Promise<{ success: boolean; plant: any }> {
+    const response = await apiFetch(`/api/plant-catalog/${identifier}`);
+    return response.json();
+  }
+
+  async getPlantCatalogCategories(): Promise<{ success: boolean; data: Array<{ name: string; count: number }> }> {
+    const response = await apiFetch('/api/plant-catalog/meta/categories');
     return response.json();
   }
 
   // ==========================================
-  // Plant Library (legacy endpoint)
+  // Plant Info (RAG)
   // ==========================================
 
-  async getPlantLibrary(): Promise<any[]> {
-    const response = await apiFetch('/api/plants/library');
+  async getPlantInfo(plantName: string): Promise<{ success: boolean; data: any; sources: any; method: string }> {
+    const response = await apiFetch(`/api/plants/plant-info?plantName=${encodeURIComponent(plantName)}`);
+    return response.json();
+  }
+
+  // ==========================================
+  // Plant Harvests (/api/plants/:id/harvest(s))
+  // ==========================================
+
+  async getHarvests(plantId: string, params?: { limit?: string; offset?: string }): Promise<any> {
+    const query = params ? `?${new URLSearchParams(params as Record<string, string>)}` : '';
+    const response = await apiFetch(`/api/plants/${plantId}/harvests${query}`);
+    return response.json();
+  }
+
+  async createHarvest(plantId: string, data: HarvestData): Promise<{ success: boolean; data: any; message: string }> {
+    const response = await apiFetch(`/api/plants/${plantId}/harvest`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
     return response.json();
   }
 
@@ -174,43 +235,41 @@ class PlantService {
   // Plant Advanced - Photos
   // ==========================================
 
-  async getPhotos(plantId: string): Promise<any> {
-    const response = await apiFetch(`/api/plant-advanced/${plantId}/photos`);
+  async getPhotos(plantId: string, params?: { limit?: string; offset?: string }): Promise<any> {
+    const query = params ? `?${new URLSearchParams(params as Record<string, string>)}` : '';
+    const response = await apiFetch(`/api/plant-advanced/${plantId}/photos${query}`);
     return response.json();
   }
 
-  async uploadPhoto(plantId: string, file: File): Promise<any> {
-    const formData = new FormData();
-    formData.append('photo', file);
-
+  async addPhotoByUrl(plantId: string, data: { url: string; caption?: string; height?: number; width?: number; takenAt?: string }): Promise<any> {
     const response = await apiFetch(`/api/plant-advanced/${plantId}/photos`, {
       method: 'POST',
-      body: formData,
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
+      body: JSON.stringify(data),
     });
     return response.json();
   }
 
-  async uploadPhotoLegacy(plantId: string, file: File): Promise<any> {
+  async uploadPhoto(plantId: string, file: File, caption?: string): Promise<any> {
     const formData = new FormData();
     formData.append('photo', file);
+    if (caption) formData.append('caption', caption);
 
+    const token = localStorage.getItem('virida_token');
     const response = await apiFetch(`/api/plant-advanced/${plantId}/photos/upload`, {
       method: 'POST',
       body: formData,
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        ...(token && { Authorization: `Bearer ${token}` }),
       },
     });
     return response.json();
   }
 
-  async deletePhoto(plantId: string, photoId: string): Promise<void> {
-    await apiFetch(`/api/plant-advanced/${plantId}/photos/${photoId}`, {
+  async deletePhoto(plantId: string, photoId: string): Promise<{ success: boolean; message: string }> {
+    const response = await apiFetch(`/api/plant-advanced/${plantId}/photos/${photoId}`, {
       method: 'DELETE',
     });
+    return response.json();
   }
 
   // ==========================================
@@ -223,7 +282,7 @@ class PlantService {
     return response.json();
   }
 
-  async createGrowthLog(plantId: string, data: any): Promise<any> {
+  async createGrowthLog(plantId: string, data: GrowthLogData): Promise<{ success: boolean; data: any; message: string }> {
     const response = await apiFetch(`/api/plant-advanced/${plantId}/growth-logs`, {
       method: 'POST',
       body: JSON.stringify(data),
@@ -231,41 +290,28 @@ class PlantService {
     return response.json();
   }
 
-  async deleteGrowthLog(plantId: string, logId: string): Promise<void> {
-    await apiFetch(`/api/plant-advanced/${plantId}/growth-logs/${logId}`, {
+  async deleteGrowthLog(plantId: string, logId: string): Promise<{ success: boolean; message: string }> {
+    const response = await apiFetch(`/api/plant-advanced/${plantId}/growth-logs/${logId}`, {
       method: 'DELETE',
     });
-  }
-
-  // ==========================================
-  // Plant Advanced - Harvests
-  // ==========================================
-
-  async getHarvests(plantId: string): Promise<any> {
-    const response = await apiFetch(`/api/plant-advanced/${plantId}/harvests`);
     return response.json();
   }
 
-  async createHarvest(plantId: string, data: any): Promise<any> {
-    const response = await apiFetch(`/api/plant-advanced/${plantId}/harvests`, {
+  // ==========================================
+  // Plant Advanced - Care Events
+  // ==========================================
+
+  async getCareEvents(plantId: string, params?: { limit?: string; offset?: string; eventType?: string }): Promise<any> {
+    const query = params ? `?${new URLSearchParams(params as Record<string, string>)}` : '';
+    const response = await apiFetch(`/api/plant-advanced/${plantId}/care-events${query}`);
+    return response.json();
+  }
+
+  async createCareEvent(plantId: string, data: CareEventData): Promise<{ success: boolean; data: any; message: string }> {
+    const response = await apiFetch(`/api/plant-advanced/${plantId}/care-events`, {
       method: 'POST',
       body: JSON.stringify(data),
     });
-    return response.json();
-  }
-
-  async deleteHarvest(plantId: string, harvestId: string): Promise<void> {
-    await apiFetch(`/api/plant-advanced/${plantId}/harvests/${harvestId}`, {
-      method: 'DELETE',
-    });
-  }
-
-  // ==========================================
-  // Care Events
-  // ==========================================
-
-  async getCareEvents(plantId: string): Promise<any> {
-    const response = await apiFetch(`/api/plant-advanced/${plantId}/care-events`);
     return response.json();
   }
 }

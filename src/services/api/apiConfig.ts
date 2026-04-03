@@ -11,7 +11,7 @@ export const API_CONFIG = {
  * Récupère les headers d'authentification
  */
 export const getAuthHeaders = (): HeadersInit => {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('virida_token');
   return {
     'Content-Type': 'application/json',
     ...(token && { Authorization: `Bearer ${token}` }),
@@ -42,7 +42,7 @@ export const apiFetch = async (
   options: RequestInit = {}
 ): Promise<Response> => {
   const url = `${API_CONFIG.BASE_URL}${endpoint}`;
-  
+
   const defaultOptions: RequestInit = {
     headers: getAuthHeaders(),
     ...options,
