@@ -5,9 +5,10 @@ import { NotificationMenu } from '../plants/ui/NotificationMenu';
 
 interface HeaderNewProps {
   currentView?: string;
+  onNotificationClick?: () => void;
 }
 
-const HeaderNew: React.FC<HeaderNewProps> = ({ currentView = 'dashboard' }) => {
+const HeaderNew: React.FC<HeaderNewProps> = ({ currentView = 'dashboard', onNotificationClick }) => {
   const { user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const [showUserMenu, setShowUserMenu] = useState(false);
@@ -55,7 +56,7 @@ const HeaderNew: React.FC<HeaderNewProps> = ({ currentView = 'dashboard' }) => {
         </button>
 
         {/* Notifications */}
-        <NotificationMenu />
+        <NotificationMenu onNotificationClick={onNotificationClick} />
 
         {/* Divider */}
         <div className="h-8 w-[1px] bg-[var(--border-color)]"></div>

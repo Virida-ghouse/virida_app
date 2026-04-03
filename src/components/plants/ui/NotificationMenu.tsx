@@ -1,26 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import {
-  IconButton,
-  Badge,
-  Menu,
-  MenuItem,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Typography,
-  Box,
-  Divider,
-  Chip,
-} from '@mui/material';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import OpacityIcon from '@mui/icons-material/Opacity';
-import SpaIcon from '@mui/icons-material/Spa';
-import ContentCutIcon from '@mui/icons-material/ContentCut';
-import BugReportIcon from '@mui/icons-material/BugReport';
-import AgricultureIcon from '@mui/icons-material/Agriculture';
-import LocalFloristIcon from '@mui/icons-material/LocalFlorist';
-import ScienceIcon from '@mui/icons-material/Science';
+import React, { useState, useEffect, useRef } from 'react';
 import { plantService } from '../../../services/api';
 
 interface TaskNotification {
@@ -36,371 +14,166 @@ interface TaskNotification {
   isTomorrow: boolean;
 }
 
-export const NotificationMenu: React.FC = () => {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+interface NotificationMenuProps {
+  onNotificationClick?: () => void;
+}
+
+export const NotificationMenu: React.FC<NotificationMenuProps> = ({ onNotificationClick }) => {
+  const [isOpen, setIsOpen] = useState(false);
   const [notifications, setNotifications] = useState<TaskNotification[]>([]);
   const [loading, setLoading] = useState(false);
-
-  const open = Boolean(anchorEl);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     fetchNotifications();
-    // Rafraîchir toutes les 5 minutes
     const interval = setInterval(fetchNotifications, 5 * 60 * 1000);
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) setIsOpen(false);
+    };
+    if (isOpen) document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isOpen]);
+
   const fetchNotifications = async () => {
     try {
       setLoading(true);
+      const today = new Date(); today.setHours(0, 0, 0, 0);
+      const tomorrow = new Date(today); tomorrow.setDate(tomorrow.getDate() + 1);
 
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-
-      const tomorrow = new Date(today);
-      tomorrow.setDate(tomorrow.getDate() + 1);
-
-      const twoDaysFromNow = new Date(today);
-      twoDaysFromNow.setDate(twoDaysFromNow.getDate() + 2);
-
-      const data = await plantService.getAllTasks({
-        completed: 'false',
-      });
+      const data = await plantService.getAllTasks({ completed: 'false' });
       const tasks = data.data || [];
 
-        const processedNotifications: TaskNotification[] = tasks.map((task: any) => {
-          const dueDate = new Date(task.dueDate);
-          dueDate.setHours(0, 0, 0, 0);
+      const processed: TaskNotification[] = tasks.map((task: any) => {
+        const d = new Date(task.dueDate); d.setHours(0, 0, 0, 0);
+        return {
+          id: task.id, plantName: task.plant?.name || 'Plante', plantId: task.plantId,
+          type: task.type, description: task.description, dueDate: task.dueDate,
+          priority: task.priority,
+          isOverdue: d < today, isToday: d.getTime() === today.getTime(), isTomorrow: d.getTime() === tomorrow.getTime(),
+        };
+      });
 
-          const isOverdue = dueDate < today;
-          const isToday = dueDate.getTime() === today.getTime();
-          const isTomorrow = dueDate.getTime() === tomorrow.getTime();
-
-          return {
-            id: task.id,
-            plantName: task.plant?.name || 'Plante inconnue',
-            plantId: task.plantId,
-            type: task.type,
-            description: task.description,
-            dueDate: task.dueDate,
-            priority: task.priority,
-            isOverdue,
-            isToday,
-            isTomorrow,
-          };
-        });
-
-        // Trier par priorité et date
-        processedNotifications.sort((a, b) => {
-          if (a.isOverdue && !b.isOverdue) return -1;
-          if (!a.isOverdue && b.isOverdue) return 1;
-          if (a.isToday && !b.isToday) return -1;
-          if (!a.isToday && b.isToday) return 1;
-
-          const priorityOrder: Record<string, number> = { HIGH: 0, MEDIUM: 1, LOW: 2 };
-          return priorityOrder[a.priority] - priorityOrder[b.priority];
-        });
-
-        setNotifications(processedNotifications);
+      processed.sort((a, b) => {
+        if (a.isOverdue !== b.isOverdue) return a.isOverdue ? -1 : 1;
+        if (a.isToday !== b.isToday) return a.isToday ? -1 : 1;
+        const p: Record<string, number> = { HIGH: 0, MEDIUM: 1, LOW: 2 };
+        return (p[a.priority] || 1) - (p[b.priority] || 1);
+      });
+      setNotifications(processed);
     } catch (error) {
-      console.error('Erreur lors du chargement des notifications:', error);
-    } finally {
-      setLoading(false);
-    }
+      console.error('Erreur notifications:', error);
+    } finally { setLoading(false); }
   };
 
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-    if (!open) {
-      fetchNotifications(); // Rafraîchir à l'ouverture
-    }
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const getTaskIcon = (type: string) => {
-    const size = 20;
-    switch (type) {
-      case 'WATERING':
-        return <OpacityIcon sx={{ fontSize: size, color: '#2196F3' }} />;
-      case 'FERTILIZING':
-        return <SpaIcon sx={{ fontSize: size, color: '#2AD368' }} />;
-      case 'PRUNING':
-        return <ContentCutIcon sx={{ fontSize: size, color: '#FF9800' }} />;
-      case 'PEST_CONTROL':
-        return <BugReportIcon sx={{ fontSize: size, color: '#F44336' }} />;
-      case 'HARVESTING':
-        return <AgricultureIcon sx={{ fontSize: size, color: '#8BC34A' }} />;
-      case 'REPOTTING':
-        return <LocalFloristIcon sx={{ fontSize: size, color: '#9C27B0' }} />;
-      case 'PH_ADJUSTMENT':
-        return <ScienceIcon sx={{ fontSize: size, color: '#00BCD4' }} />;
-      default:
-        return <OpacityIcon sx={{ fontSize: size, color: '#2196F3' }} />;
-    }
-  };
-
-  const getTaskLabel = (type: string): string => {
-    const labels: Record<string, string> = {
-      'WATERING': 'Arrosage',
-      'FERTILIZING': 'Fertilisation',
-      'PRUNING': 'Taille',
-      'PEST_CONTROL': 'Contrôle parasites',
-      'HARVESTING': 'Récolte',
-      'REPOTTING': 'Rempotage',
-      'PH_ADJUSTMENT': 'Ajustement pH',
+  const getIcon = (type: string) => {
+    const m: Record<string, [string, string]> = {
+      WATERING: ['water_drop', 'text-blue-400'], FERTILIZING: ['grass', 'text-[#2AD368]'],
+      PRUNING: ['content_cut', 'text-orange-400'], PEST_CONTROL: ['bug_report', 'text-red-400'],
+      HARVESTING: ['agriculture', 'text-[#CBED62]'], REPOTTING: ['potted_plant', 'text-purple-400'],
+      PH_ADJUSTMENT: ['science', 'text-cyan-400'],
     };
-    return labels[type] || type;
+    const [icon, color] = m[type] || m.WATERING;
+    return <span className={`material-symbols-outlined text-base ${color}`}>{icon}</span>;
   };
 
-  const getNotificationChip = (notification: TaskNotification) => {
-    if (notification.isOverdue) {
-      return <Chip label="En retard" size="small" sx={{ bgcolor: '#FFEBEE', color: '#C62828' }} />;
-    }
-    if (notification.isToday) {
-      return <Chip label="Aujourd'hui" size="small" sx={{ bgcolor: '#E3F2FD', color: '#1976d2' }} />;
-    }
-    if (notification.isTomorrow) {
-      return <Chip label="Demain" size="small" sx={{ bgcolor: '#FFF3E0', color: '#F57C00' }} />;
-    }
+  const getLabel = (type: string) => {
+    const l: Record<string, string> = {
+      WATERING: 'Arrosage', FERTILIZING: 'Fertilisation', PRUNING: 'Taille',
+      PEST_CONTROL: 'Parasites', HARVESTING: 'Récolte', REPOTTING: 'Rempotage', PH_ADJUSTMENT: 'pH',
+    };
+    return l[type] || type;
+  };
+
+  const getBadge = (n: TaskNotification) => {
+    if (n.isOverdue) return <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-red-500/15 text-red-500">Retard</span>;
+    if (n.isToday) return <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-blue-500/15 text-blue-500">Auj.</span>;
+    if (n.isTomorrow) return <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-orange-500/15 text-orange-400">Demain</span>;
     return null;
   };
 
-  const urgentNotificationsCount = notifications.filter(
-    n => n.isOverdue || n.isToday
-  ).length;
-
-  // Grouper et limiter les notifications
-  const overdueNotifications = notifications.filter(n => n.isOverdue).slice(0, 5);
-  const todayNotifications = notifications.filter(n => n.isToday && !n.isOverdue).slice(0, 3);
-  const upcomingNotifications = notifications.filter(n => n.isTomorrow && !n.isToday && !n.isOverdue).slice(0, 2);
-
-  const displayedNotifications = [
-    ...overdueNotifications,
-    ...todayNotifications,
-    ...upcomingNotifications,
-  ];
-
-  const hasMoreNotifications = notifications.length > displayedNotifications.length;
+  const urgentCount = notifications.filter((n) => n.isOverdue || n.isToday).length;
+  const displayed = notifications.slice(0, 8);
+  const remaining = notifications.length - displayed.length;
 
   return (
-    <>
-      <IconButton
-        onClick={handleClick}
-        sx={{
-          color: 'var(--text-primary)',
-          '&:hover': { bgcolor: 'rgba(0, 0, 0, 0.05)' },
-          '.dark &': {
-            color: '#FFFFFF',
-            '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.1)' },
-          },
-        }}
+    <div className="relative" ref={menuRef}>
+      {/* Button — same style as theme toggle in header */}
+      <button
+        onClick={() => { setIsOpen(!isOpen); if (!isOpen) fetchNotifications(); }}
+        className="size-9 md:size-10 rounded-xl glass-card backdrop-blur-xl border border-[var(--border-color)] flex items-center justify-center hover:border-[#2AD368]/30 transition-all group relative"
       >
-        <Badge badgeContent={urgentNotificationsCount} color="error">
-          <NotificationsIcon />
-        </Badge>
-      </IconButton>
-
-      <Menu
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        slotProps={{
-          paper: {
-            sx: {
-              width: 400,
-              maxHeight: 500,
-              backgroundColor: '#ffffff',
-              boxShadow: '0 8px 32px rgba(0,0,0,0.08)',
-            },
-          },
-        }}
-        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-      >
-        <Box sx={{ px: 2, py: 1.5, borderBottom: '1px solid #e0e0e0' }}>
-          <Typography variant="h6" sx={{ fontWeight: 600, color: '#121A21' }}>
-            Notifications
-          </Typography>
-          <Typography variant="caption" sx={{ color: '#757575' }}>
-            {notifications.length} tâche{notifications.length > 1 ? 's' : ''} à venir
-          </Typography>
-        </Box>
-
-        {loading ? (
-          <Box sx={{ p: 3, textAlign: 'center' }}>
-            <Typography variant="body2" color="text.secondary">
-              Chargement...
-            </Typography>
-          </Box>
-        ) : notifications.length === 0 ? (
-          <Box sx={{ p: 3, textAlign: 'center' }}>
-            <NotificationsIcon sx={{ fontSize: 48, color: '#bdbdbd', mb: 1 }} />
-            <Typography variant="body2" color="text.secondary">
-              Aucune notification
-            </Typography>
-            <Typography variant="caption" color="text.secondary">
-              Vous êtes à jour avec vos tâches !
-            </Typography>
-          </Box>
-        ) : (
-          <>
-            <List sx={{ p: 0, maxHeight: 400, overflow: 'auto' }}>
-              {/* Tâches en retard */}
-              {overdueNotifications.length > 0 && (
-                <>
-                  <Box sx={{ px: 2, py: 1, bgcolor: '#FFEBEE' }}>
-                    <Typography variant="caption" sx={{ fontWeight: 600, color: '#C62828' }}>
-                      EN RETARD ({overdueNotifications.length})
-                    </Typography>
-                  </Box>
-                  {overdueNotifications.map((notification) => (
-                    <React.Fragment key={notification.id}>
-                      <ListItem
-                        sx={{
-                          py: 1.5,
-                          px: 2,
-                          '&:hover': { bgcolor: '#f5f5f5' },
-                          cursor: 'pointer',
-                          display: 'block',
-                        }}
-                      >
-                        <Box sx={{ display: 'flex', gap: 1.5 }}>
-                          <Box sx={{ mt: 0.5 }}>
-                            {getTaskIcon(notification.type)}
-                          </Box>
-                          <Box sx={{ flex: 1 }}>
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
-                              <Typography variant="body2" sx={{ fontWeight: 600, color: '#121A21' }}>
-                                {notification.plantName}
-                              </Typography>
-                              {getNotificationChip(notification)}
-                            </Box>
-                            <Typography variant="caption" sx={{ color: '#757575', display: 'block' }}>
-                              {getTaskLabel(notification.type)}
-                            </Typography>
-                            <Typography variant="caption" sx={{ color: '#999' }}>
-                              {notification.description}
-                            </Typography>
-                          </Box>
-                        </Box>
-                      </ListItem>
-                      <Divider />
-                    </React.Fragment>
-                  ))}
-                </>
-              )}
-
-              {/* Tâches d'aujourd'hui */}
-              {todayNotifications.length > 0 && (
-                <>
-                  <Box sx={{ px: 2, py: 1, bgcolor: '#E3F2FD' }}>
-                    <Typography variant="caption" sx={{ fontWeight: 600, color: '#1976d2' }}>
-                      AUJOURD'HUI ({todayNotifications.length})
-                    </Typography>
-                  </Box>
-                  {todayNotifications.map((notification) => (
-                    <React.Fragment key={notification.id}>
-                      <ListItem
-                        sx={{
-                          py: 1.5,
-                          px: 2,
-                          '&:hover': { bgcolor: '#f5f5f5' },
-                          cursor: 'pointer',
-                          display: 'block',
-                        }}
-                      >
-                        <Box sx={{ display: 'flex', gap: 1.5 }}>
-                          <Box sx={{ mt: 0.5 }}>
-                            {getTaskIcon(notification.type)}
-                          </Box>
-                          <Box sx={{ flex: 1 }}>
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
-                              <Typography variant="body2" sx={{ fontWeight: 600, color: '#121A21' }}>
-                                {notification.plantName}
-                              </Typography>
-                              {getNotificationChip(notification)}
-                            </Box>
-                            <Typography variant="caption" sx={{ color: '#757575', display: 'block' }}>
-                              {getTaskLabel(notification.type)}
-                            </Typography>
-                            <Typography variant="caption" sx={{ color: '#999' }}>
-                              {notification.description}
-                            </Typography>
-                          </Box>
-                        </Box>
-                      </ListItem>
-                      <Divider />
-                    </React.Fragment>
-                  ))}
-                </>
-              )}
-
-              {/* Tâches de demain */}
-              {upcomingNotifications.length > 0 && (
-                <>
-                  <Box sx={{ px: 2, py: 1, bgcolor: '#FFF3E0' }}>
-                    <Typography variant="caption" sx={{ fontWeight: 600, color: '#F57C00' }}>
-                      DEMAIN ({upcomingNotifications.length})
-                    </Typography>
-                  </Box>
-                  {upcomingNotifications.map((notification, index) => (
-                    <React.Fragment key={notification.id}>
-                      <ListItem
-                        sx={{
-                          py: 1.5,
-                          px: 2,
-                          '&:hover': { bgcolor: '#f5f5f5' },
-                          cursor: 'pointer',
-                          display: 'block',
-                        }}
-                      >
-                        <Box sx={{ display: 'flex', gap: 1.5 }}>
-                          <Box sx={{ mt: 0.5 }}>
-                            {getTaskIcon(notification.type)}
-                          </Box>
-                          <Box sx={{ flex: 1 }}>
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
-                              <Typography variant="body2" sx={{ fontWeight: 600, color: '#121A21' }}>
-                                {notification.plantName}
-                              </Typography>
-                              {getNotificationChip(notification)}
-                            </Box>
-                            <Typography variant="caption" sx={{ color: '#757575', display: 'block' }}>
-                              {getTaskLabel(notification.type)}
-                            </Typography>
-                            <Typography variant="caption" sx={{ color: '#999' }}>
-                              {notification.description}
-                            </Typography>
-                          </Box>
-                        </Box>
-                      </ListItem>
-                      {index < upcomingNotifications.length - 1 && <Divider />}
-                    </React.Fragment>
-                  ))}
-                </>
-              )}
-            </List>
-
-            {/* Message "plus de tâches" */}
-            {hasMoreNotifications && (
-              <>
-                <Divider />
-                <Box sx={{ px: 2, py: 1.5, textAlign: 'center', bgcolor: '#f5f5f5' }}>
-                  <Typography variant="caption" sx={{ color: '#666' }}>
-                    + {notifications.length - displayedNotifications.length} autre{notifications.length - displayedNotifications.length > 1 ? 's' : ''} tâche{notifications.length - displayedNotifications.length > 1 ? 's' : ''}
-                  </Typography>
-                  <Typography variant="caption" sx={{ color: '#052E1C', display: 'block', mt: 0.5, fontWeight: 600, cursor: 'pointer' }}>
-                    Voir le calendrier complet
-                  </Typography>
-                </Box>
-              </>
-            )}
-          </>
+        <span className="material-symbols-outlined text-lg md:text-xl text-[var(--text-secondary)] group-hover:text-[#2AD368] transition-colors">
+          notifications
+        </span>
+        {urgentCount > 0 && (
+          <span className="absolute -top-1 -right-1 size-[18px] rounded-full bg-red-500 text-white text-[9px] font-bold flex items-center justify-center ring-2 ring-[var(--bg-secondary)]">
+            {urgentCount > 9 ? '9+' : urgentCount}
+          </span>
         )}
-      </Menu>
-    </>
+      </button>
+
+      {/* Dropdown — matches user menu style */}
+      {isOpen && (
+        <>
+          <div className="fixed inset-0 z-[100]" onClick={() => setIsOpen(false)} />
+          <div className="absolute right-0 top-full mt-2 w-80 rounded-2xl z-[101] bg-[var(--bg-secondary)] backdrop-blur-xl border border-[var(--border-color)] shadow-2xl overflow-hidden">
+            {/* Header */}
+            <div className="px-4 py-3 border-b border-[var(--border-color)] flex items-center justify-between">
+              <div>
+                <h3 className="text-sm font-bold text-[var(--text-primary)]">Notifications</h3>
+                <p className="text-[11px] text-[var(--text-secondary)]">{notifications.length} tâche{notifications.length !== 1 ? 's' : ''} en attente</p>
+              </div>
+              {urgentCount > 0 && (
+                <span className="px-2 py-1 rounded-lg bg-red-500/10 text-red-500 text-[11px] font-bold">{urgentCount} urgent{urgentCount > 1 ? 'es' : 'e'}</span>
+              )}
+            </div>
+
+            {/* List */}
+            <div className="max-h-[340px] overflow-y-auto custom-scrollbar">
+              {loading ? (
+                <div className="flex justify-center py-8">
+                  <div className="size-6 border-2 border-[var(--border-color)] border-t-[#2AD368] rounded-full animate-spin" />
+                </div>
+              ) : notifications.length === 0 ? (
+                <div className="py-8 text-center">
+                  <span className="material-symbols-outlined text-3xl text-[var(--text-secondary)] opacity-30 mb-1 block">check_circle</span>
+                  <p className="text-sm text-[var(--text-secondary)]">Tout est à jour</p>
+                </div>
+              ) : (
+                <div className="py-1">
+                  {displayed.map((n) => (
+                    <div key={n.id} onClick={() => { onNotificationClick?.(); setIsOpen(false); }} className="flex items-center gap-2.5 px-4 py-2.5 hover:bg-[var(--bg-primary)] transition-colors cursor-pointer group/item">
+                      <div className="size-8 rounded-lg bg-[var(--bg-primary)] border border-[var(--border-color)] flex items-center justify-center flex-shrink-0 group-hover/item:border-[#2AD368]/30 transition-colors">
+                        {getIcon(n.type)}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-[13px] font-semibold text-[var(--text-primary)] truncate">{n.plantName}</span>
+                          {getBadge(n)}
+                        </div>
+                        <p className="text-[11px] text-[var(--text-secondary)] truncate">{getLabel(n.type)} — {n.description}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Footer */}
+            {remaining > 0 && (
+              <div className="px-4 py-2.5 border-t border-[var(--border-color)] text-center">
+                <p className="text-[11px] text-[var(--text-secondary)]">
+                  + {remaining} autre{remaining > 1 ? 's' : ''} tâche{remaining > 1 ? 's' : ''}
+                </p>
+              </div>
+            )}
+          </div>
+        </>
+      )}
+    </div>
   );
 };

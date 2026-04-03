@@ -297,7 +297,7 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
       case 'FERTILIZING': return 'text-[#CBED62]';
       case 'PRUNING': return 'text-orange-400';
       case 'PEST_CONTROL': return 'text-red-400';
-      default: return 'text-gray-400';
+      default: return 'text-[var(--text-secondary)]';
     }
   };
 
@@ -364,7 +364,7 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                   className={`flex items-center gap-2 px-4 md:px-6 py-3 md:py-4 font-semibold text-sm md:text-base whitespace-nowrap transition-all border-b-2 flex-shrink-0 ${
                     currentTab === tab.id
                       ? 'text-[#2AD368] border-[#2AD368]'
-                      : 'text-gray-400 border-transparent hover:text-[var(--text-primary)]'
+                      : 'text-[var(--text-secondary)] border-transparent hover:text-[var(--text-primary)]'
                   }`}
                 >
                   <span className="material-symbols-outlined text-lg md:text-xl">
@@ -409,7 +409,7 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                           </button>
                           <button
                             onClick={() => setIsEditing(false)}
-                            className="px-4 py-2 rounded-xl glass-card backdrop-blur-xl border border-[var(--border-color)] text-gray-300 font-semibold hover:text-[var(--text-primary)] transition-all"
+                            className="px-4 py-2 rounded-xl glass-card backdrop-blur-xl border border-[var(--border-color)] text-[var(--text-secondary)] font-semibold hover:text-[var(--text-primary)] transition-all"
                           >
                             Annuler
                           </button>
@@ -420,13 +420,13 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {/* Nom */}
                       <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-[var(--border-color)]">
-                        <label className="text-xs text-gray-400 mb-2 block">Nom</label>
+                        <label className="text-xs text-[var(--text-secondary)] font-semibold mb-2 block">Nom</label>
                         {isEditing ? (
                           <input
                             type="text"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
-                            className="w-full bg-white/5 border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368]"
+                            className="w-full bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368]"
                           />
                         ) : (
                           <p className="text-[var(--text-primary)] font-semibold">{name}</p>
@@ -435,18 +435,18 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
 
                       {/* Zone (lecture seule) */}
                       <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-[var(--border-color)]">
-                        <label className="text-xs text-gray-400 mb-2 block">Zone</label>
+                        <label className="text-xs text-[var(--text-secondary)] font-semibold mb-2 block">Zone</label>
                         <p className="text-[var(--text-primary)] font-semibold">{zone || 'Non défini'}</p>
                       </div>
 
                       {/* Statut */}
                       <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-[var(--border-color)]">
-                        <label className="text-xs text-gray-400 mb-2 block">Statut</label>
+                        <label className="text-xs text-[var(--text-secondary)] font-semibold mb-2 block">Statut</label>
                         {isEditing ? (
                           <select
                             value={status}
                             onChange={(e) => setStatus(e.target.value)}
-                            className="w-full bg-white/5 border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368]"
+                            className="w-full bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368]"
                           >
                             <option value="PLANTED">Planté</option>
                             <option value="GROWING">En croissance</option>
@@ -463,13 +463,13 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
 
                       {/* Serre (lecture seule) */}
                       <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-[var(--border-color)]">
-                        <label className="text-xs text-gray-400 mb-2 block">Serre</label>
+                        <label className="text-xs text-[var(--text-secondary)] font-semibold mb-2 block">Serre</label>
                         <p className="text-[var(--text-primary)] font-semibold">{greenhouseName || 'Non défini'}</p>
                       </div>
 
                       {/* Date de plantation (lecture seule) */}
                       <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-[var(--border-color)]">
-                        <label className="text-xs text-gray-400 mb-2 block">Date de plantation</label>
+                        <label className="text-xs text-[var(--text-secondary)] font-semibold mb-2 block">Date de plantation</label>
                         <p className="text-[var(--text-primary)] font-semibold">
                           {plantedAt ? new Date(plantedAt).toLocaleDateString('fr-FR') : 'Non défini'}
                         </p>
@@ -478,13 +478,13 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
 
                     {/* Notes */}
                     <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-[var(--border-color)]">
-                      <label className="text-xs text-gray-400 mb-2 block">Notes</label>
+                      <label className="text-xs text-[var(--text-secondary)] font-semibold mb-2 block">Notes</label>
                       {isEditing ? (
                         <textarea
                           value={notes}
                           onChange={(e) => setNotes(e.target.value)}
                           rows={3}
-                          className="w-full bg-white/5 border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368] resize-none"
+                          className="w-full bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368] resize-none"
                         />
                       ) : (
                         <p className="text-[var(--text-primary)]">{notes || 'Aucune note'}</p>
@@ -502,25 +502,25 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                           {plant.optimalWatering && (
                             <div className="flex items-center gap-2">
                               <span className="material-symbols-outlined text-blue-400">water_drop</span>
-                              <span className="text-sm text-gray-300">Arrosage: {plant.optimalWatering}</span>
+                              <span className="text-sm text-[var(--text-secondary)]">Arrosage: {plant.optimalWatering}</span>
                             </div>
                           )}
                           {plant.optimalLight && (
                             <div className="flex items-center gap-2">
                               <span className="material-symbols-outlined text-orange-400">light_mode</span>
-                              <span className="text-sm text-gray-300">Lumière: {plant.optimalLight}</span>
+                              <span className="text-sm text-[var(--text-secondary)]">Lumière: {plant.optimalLight}</span>
                             </div>
                           )}
                           {plant.optimalTemp && (
                             <div className="flex items-center gap-2">
                               <span className="material-symbols-outlined text-red-400">thermostat</span>
-                              <span className="text-sm text-gray-300">Température: {plant.optimalTemp}</span>
+                              <span className="text-sm text-[var(--text-secondary)]">Température: {plant.optimalTemp}</span>
                             </div>
                           )}
                           {plant.optimalPH && (
                             <div className="flex items-center gap-2">
                               <span className="material-symbols-outlined text-purple-400">science</span>
-                              <span className="text-sm text-gray-300">pH: {plant.optimalPH}</span>
+                              <span className="text-sm text-[var(--text-secondary)]">pH: {plant.optimalPH}</span>
                             </div>
                           )}
                         </div>
@@ -549,7 +549,7 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                     {tasks.length === 0 ? (
                       <div className="text-center py-12">
                         <span className="material-symbols-outlined text-[var(--text-tertiary)] text-6xl mb-4">task</span>
-                        <p className="text-gray-400">Aucune tâche pour cette plante</p>
+                        <p className="text-[var(--text-secondary)]">Aucune tâche pour cette plante</p>
                       </div>
                     ) : (
                       <div className="space-y-3">
@@ -578,7 +578,7 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                                   </span>
                                   <h4 className="text-[var(--text-primary)] font-semibold">{task.description}</h4>
                                 </div>
-                                <p className="text-xs text-gray-400">
+                                <p className="text-xs text-[var(--text-secondary)]">
                                   {new Date(task.dueDate).toLocaleDateString('fr-FR')}
                                 </p>
                               </div>
@@ -617,7 +617,7 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                         
                         {/* Upload photo */}
                         <div>
-                          <label className="text-xs text-gray-400 mb-1 block">Photo</label>
+                          <label className="text-xs text-[var(--text-secondary)] font-semibold mb-1 block">Photo</label>
                           <input
                             type="file"
                             accept="image/*"
@@ -625,7 +625,7 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                               const file = e.target.files?.[0];
                               if (file) setSelectedPhotoFile(file);
                             }}
-                            className="w-full bg-white/5 border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-[#2AD368] file:text-[var(--btn-primary-text)] file:font-semibold file:shadow-[0_4px_10px_rgba(42,211,104,0.3)] hover:file:shadow-[0_6px_15px_rgba(42,211,104,0.5)]"
+                            className="w-full bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-[#2AD368] file:text-[var(--btn-primary-text)] file:font-semibold file:shadow-[0_4px_10px_rgba(42,211,104,0.3)] hover:file:shadow-[0_6px_15px_rgba(42,211,104,0.5)]"
                           />
                           {selectedPhotoFile && (
                             <p className="text-xs text-[var(--text-secondary)] mt-1">
@@ -636,12 +636,12 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
 
                         {/* Légende */}
                         <div>
-                          <label className="text-xs text-gray-400 mb-1 block">Légende de la photo</label>
+                          <label className="text-xs text-[var(--text-secondary)] font-semibold mb-1 block">Légende de la photo</label>
                           <input
                             type="text"
                             value={newPhotoCaption}
                             onChange={(e) => setNewPhotoCaption(e.target.value)}
-                            className="w-full bg-white/5 border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368]"
+                            className="w-full bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368]"
                             placeholder="Description..."
                           />
                         </div>
@@ -649,12 +649,12 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                           {/* Hauteur */}
                           <div>
-                            <label className="text-xs text-gray-400 mb-1 block">Hauteur (cm)</label>
+                            <label className="text-xs text-[var(--text-secondary)] font-semibold mb-1 block">Hauteur (cm)</label>
                             <input
                               type="number"
                               value={newLogHeight}
                               onChange={(e) => setNewLogHeight(e.target.value)}
-                              className="w-full bg-white/5 border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368]"
+                              className="w-full bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368]"
                               placeholder="0"
                               min="0"
                               step="0.1"
@@ -663,12 +663,12 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
 
                           {/* Nombre de feuilles */}
                           <div>
-                            <label className="text-xs text-gray-400 mb-1 block">Nombre de feuilles</label>
+                            <label className="text-xs text-[var(--text-secondary)] font-semibold mb-1 block">Nombre de feuilles</label>
                             <input
                               type="number"
                               value={newLogLeafCount}
                               onChange={(e) => setNewLogLeafCount(e.target.value)}
-                              className="w-full bg-white/5 border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368]"
+                              className="w-full bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368]"
                               placeholder="0"
                               min="0"
                             />
@@ -677,12 +677,12 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
 
                         {/* Notes */}
                         <div>
-                          <label className="text-xs text-gray-400 mb-1 block">Notes</label>
+                          <label className="text-xs text-[var(--text-secondary)] font-semibold mb-1 block">Notes</label>
                           <textarea
                             value={newLogNotes}
                             onChange={(e) => setNewLogNotes(e.target.value)}
                             rows={2}
-                            className="w-full bg-white/5 border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368] resize-none"
+                            className="w-full bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368] resize-none"
                             placeholder="Observations..."
                           />
                         </div>
@@ -697,7 +697,7 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                               setNewLogLeafCount('');
                               setNewLogNotes('');
                             }}
-                            className="px-4 py-2 rounded-xl glass-card backdrop-blur-xl border border-[var(--border-color)] text-gray-300 font-semibold hover:text-[var(--text-primary)] transition-all"
+                            className="px-4 py-2 rounded-xl glass-card backdrop-blur-xl border border-[var(--border-color)] text-[var(--text-secondary)] font-semibold hover:text-[var(--text-primary)] transition-all"
                           >
                             Annuler
                           </button>
@@ -752,7 +752,7 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                           {growthLogs.map((log: any) => (
                             <div key={log.id} className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-[var(--border-color)]">
                               <div className="flex justify-between items-start mb-2">
-                                <p className="text-xs text-gray-400">
+                                <p className="text-xs text-[var(--text-secondary)]">
                                   {new Date(log.createdAt).toLocaleDateString('fr-FR', {
                                     year: 'numeric',
                                     month: 'long',
@@ -763,19 +763,19 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                               <div className="grid grid-cols-2 gap-3 mb-2">
                                 {log.height && (
                                   <div>
-                                    <p className="text-xs text-gray-400">Hauteur</p>
+                                    <p className="text-xs text-[var(--text-secondary)]">Hauteur</p>
                                     <p className="text-[var(--text-primary)] font-semibold">{log.height} cm</p>
                                   </div>
                                 )}
                                 {log.leafCount && (
                                   <div>
-                                    <p className="text-xs text-gray-400">Feuilles</p>
+                                    <p className="text-xs text-[var(--text-secondary)]">Feuilles</p>
                                     <p className="text-[var(--text-primary)] font-semibold">{log.leafCount}</p>
                                   </div>
                                 )}
                               </div>
                               {log.notes && (
-                                <p className="text-sm text-gray-300">{log.notes}</p>
+                                <p className="text-sm text-[var(--text-secondary)]">{log.notes}</p>
                               )}
                             </div>
                           ))}
@@ -787,7 +787,7 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                     {photos.length === 0 && growthLogs.length === 0 && !showAddHistory && (
                       <div className="text-center py-12">
                         <span className="material-symbols-outlined text-[var(--text-tertiary)] text-6xl mb-4">history</span>
-                        <p className="text-gray-400">Aucune entrée d'historique</p>
+                        <p className="text-[var(--text-secondary)]">Aucune entrée d'historique</p>
                         <p className="text-xs text-white/80 mb-1 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">Commencez à documenter la croissance de votre plante</p>
                       </div>
                     )}
@@ -814,23 +814,23 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                         <h4 className="font-bold text-[var(--text-primary)]">Nouvelle récolte</h4>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                           <div>
-                            <label className="text-xs text-gray-400 mb-1 block">Quantité</label>
+                            <label className="text-xs text-[var(--text-secondary)] font-semibold mb-1 block">Quantité</label>
                             <input
                               type="number"
                               value={newHarvestQuantity}
                               onChange={(e) => setNewHarvestQuantity(e.target.value)}
-                              className="w-full bg-white/5 border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368]"
+                              className="w-full bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368]"
                               placeholder="0"
                               min="0"
                               step="0.1"
                             />
                           </div>
                           <div>
-                            <label className="text-xs text-gray-400 mb-1 block">Unité</label>
+                            <label className="text-xs text-[var(--text-secondary)] font-semibold mb-1 block">Unité</label>
                             <select
                               value={newHarvestUnit}
                               onChange={(e) => setNewHarvestUnit(e.target.value)}
-                              className="w-full bg-white/5 border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368]"
+                              className="w-full bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368]"
                             >
                               <option value="kg">Kilogrammes (kg)</option>
                               <option value="g">Grammes (g)</option>
@@ -840,11 +840,11 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                             </select>
                           </div>
                           <div>
-                            <label className="text-xs text-gray-400 mb-1 block">Qualité</label>
+                            <label className="text-xs text-[var(--text-secondary)] font-semibold mb-1 block">Qualité</label>
                             <select
                               value={newHarvestQuality}
                               onChange={(e) => setNewHarvestQuality(e.target.value)}
-                              className="w-full bg-white/5 border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368]"
+                              className="w-full bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368]"
                             >
                               <option value="EXCELLENT">Excellente</option>
                               <option value="GOOD">Bonne</option>
@@ -853,29 +853,29 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                             </select>
                           </div>
                           <div>
-                            <label className="text-xs text-gray-400 mb-1 block">Date</label>
+                            <label className="text-xs text-[var(--text-secondary)] font-semibold mb-1 block">Date</label>
                             <input
                               type="date"
                               value={newHarvestDate}
                               onChange={(e) => setNewHarvestDate(e.target.value)}
-                              className="w-full bg-white/5 border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368]"
+                              className="w-full bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368]"
                             />
                           </div>
                         </div>
                         <div>
-                          <label className="text-xs text-gray-400 mb-1 block">Notes</label>
+                          <label className="text-xs text-[var(--text-secondary)] font-semibold mb-1 block">Notes</label>
                           <textarea
                             value={newHarvestNotes}
                             onChange={(e) => setNewHarvestNotes(e.target.value)}
                             rows={2}
-                            className="w-full bg-white/5 border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368] resize-none"
+                            className="w-full bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368] resize-none"
                             placeholder="Observations..."
                           />
                         </div>
                         <div className="flex gap-2 justify-end">
                           <button
                             onClick={() => setShowAddHarvest(false)}
-                            className="px-4 py-2 rounded-xl glass-card backdrop-blur-xl border border-[var(--border-color)] text-gray-300 font-semibold hover:text-[var(--text-primary)] transition-all"
+                            className="px-4 py-2 rounded-xl glass-card backdrop-blur-xl border border-[var(--border-color)] text-[var(--text-secondary)] font-semibold hover:text-[var(--text-primary)] transition-all"
                           >
                             Annuler
                           </button>
@@ -894,7 +894,7 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                     {harvests.length === 0 ? (
                       <div className="text-center py-12">
                         <span className="material-symbols-outlined text-[var(--text-tertiary)] text-6xl mb-4">agriculture</span>
-                        <p className="text-gray-400">Aucune récolte enregistrée</p>
+                        <p className="text-[var(--text-secondary)]">Aucune récolte enregistrée</p>
                       </div>
                     ) : (
                       <div className="space-y-3">
@@ -908,7 +908,7 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                                 <h4 className="text-[var(--text-primary)] font-bold text-lg">
                                   {harvest.quantity} {harvest.unit}
                                 </h4>
-                                <p className="text-xs text-gray-400">
+                                <p className="text-xs text-[var(--text-secondary)]">
                                   {new Date(harvest.harvestedAt).toLocaleDateString('fr-FR', {
                                     year: 'numeric',
                                     month: 'long',
@@ -916,7 +916,7 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                                   })}
                                 </p>
                                 {harvest.notes && (
-                                  <p className="text-sm text-gray-300 mt-2">{harvest.notes}</p>
+                                  <p className="text-sm text-[var(--text-secondary)] mt-2">{harvest.notes}</p>
                                 )}
                               </div>
                               <div className="flex items-center gap-2">
@@ -954,7 +954,7 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
             
             <button
               onClick={onClose}
-              className="px-4 md:px-6 py-2.5 rounded-xl glass-card backdrop-blur-xl border border-[var(--border-color)] text-gray-300 font-semibold hover:text-[var(--text-primary)] transition-all"
+              className="px-4 md:px-6 py-2.5 rounded-xl glass-card backdrop-blur-xl border border-[var(--border-color)] text-[var(--text-secondary)] font-semibold hover:text-[var(--text-primary)] transition-all"
             >
               Fermer
             </button>

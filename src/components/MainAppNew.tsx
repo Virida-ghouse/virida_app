@@ -16,6 +16,12 @@ const MainAppNew: React.FC = () => {
   const { user } = useAuth();
   const [currentView, setCurrentView] = React.useState('dashboard');
   const [sidebarOpen] = React.useState(true);
+  const [plantsDefaultTab, setPlantsDefaultTab] = React.useState(0);
+
+  const handleNavigatePlantsCare = () => {
+    setPlantsDefaultTab(2); // Onglet Soins
+    setCurrentView('plants');
+  };
   
   // Données des capteurs simulées pour EVE
   const [sensorData] = React.useState({
@@ -30,7 +36,7 @@ const MainAppNew: React.FC = () => {
       case 'dashboard':
         return <DashboardNew />;
       case 'plants':
-        return <PlantsLayoutNew />;
+        return <PlantsLayoutNew defaultTab={plantsDefaultTab} onTabConsumed={() => setPlantsDefaultTab(0)} />;
       case 'irrigation':
         return <IrrigationScheduleNew />;
       case 'automation':
@@ -65,7 +71,7 @@ const MainAppNew: React.FC = () => {
       {/* Main Content Area */}
       <main className="flex-1 flex flex-col overflow-hidden lg:ml-64">
         {/* Header */}
-        <HeaderNew currentView={currentView} />
+        <HeaderNew currentView={currentView} onNotificationClick={handleNavigatePlantsCare} />
 
         {/* Dashboard Content */}
         {renderView()}

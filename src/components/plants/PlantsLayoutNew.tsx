@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import MyGardenNew from './MyGardenNew';
 import PlantLibraryNew from './PlantLibraryNew';
 import PlantCareNew from './PlantCareNew';
@@ -19,8 +19,20 @@ function TabPanel(props: TabPanelProps) {
   );
 }
 
-const PlantsLayoutNew: React.FC = () => {
+interface PlantsLayoutNewProps {
+  defaultTab?: number;
+  onTabConsumed?: () => void;
+}
+
+const PlantsLayoutNew: React.FC<PlantsLayoutNewProps> = ({ defaultTab, onTabConsumed }) => {
   const [currentTab, setCurrentTab] = useState(0);
+
+  useEffect(() => {
+    if (defaultTab && defaultTab !== 0) {
+      setCurrentTab(defaultTab);
+      onTabConsumed?.();
+    }
+  }, [defaultTab]);
 
   const tabs = [
     { id: 0, label: 'Mon Jardin', icon: 'yard' },
@@ -30,7 +42,7 @@ const PlantsLayoutNew: React.FC = () => {
   ];
 
   return (
-    <div className="flex-1 overflow-y-auto overflow-x-hidden bg-[var(--bg-primary)] dark:bg-background-dark text-[var(--text-primary)] p-4 md:p-6 lg:p-8 pb-20 lg:pb-8">
+    <div className="flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar bg-[var(--bg-primary)] dark:bg-background-dark text-[var(--text-primary)] p-4 md:p-6 lg:p-8 pb-20 lg:pb-8">
       {/* Header */}
       <div className="mb-6 md:mb-8">
         <div className="flex items-center gap-3 md:gap-4 mb-4 md:mb-6">
