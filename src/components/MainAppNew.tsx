@@ -11,6 +11,7 @@ import SettingsPanelNew from './settings/SettingsPanelNew';
 import ChatBotNew from './chatbot/ChatBotNew';
 import AdminPage from './admin/AdminPage';
 import { useAuth } from '../contexts/AuthContext';
+import { useViridaSensors } from '../hooks/useViridaSensors';
 
 const MainAppNew: React.FC = () => {
   const { user } = useAuth();
@@ -22,14 +23,17 @@ const MainAppNew: React.FC = () => {
     setPlantsDefaultTab(2); // Onglet Soins
     setCurrentView('plants');
   };
-  
-  // Données des capteurs simulées pour EVE
-  const [sensorData] = React.useState({
-    temperature: 24.5,
-    humidity: 65,
-    light: 850,
-    soilMoisture: 45
-  });
+
+  // Vraies données capteurs pour EVE
+  const { map } = useViridaSensors(10000);
+  const sensorData = React.useMemo(() => ({
+    temperature: map.temperature ?? 0,
+    humidity:    map.humidity    ?? 0,
+    light:       map.light       ?? 0,
+    soilMoisture: map.soil_moisture ?? 0,
+    ph:          map.ph          ?? 0,
+    tds:         map.tds         ?? 0,
+  }), [map]);
 
   const renderView = () => {
     switch (currentView) {
