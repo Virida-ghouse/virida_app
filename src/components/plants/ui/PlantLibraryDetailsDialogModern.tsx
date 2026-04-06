@@ -1,12 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { plantService } from '../../../services/api';
-
-interface PlantLibraryDetailsDialogModernProps {
-  open: boolean;
-  onClose: () => void;
-  plantId: string;
-  plantName: string;
-}
+import { apiFetch } from '../../../services/api/apiConfig';
 
 interface CatalogData {
   id: string;
@@ -42,16 +36,33 @@ interface CatalogData {
   tags?: string[];
 }
 
+interface PlantLibraryDetailsDialogModernProps {
+  open: boolean;
+  onClose: () => void;
+  plantId: string;
+  plantName: string;
+  onPlantAdded?: () => void;
+}
+
 export const PlantLibraryDetailsDialogModern: React.FC<PlantLibraryDetailsDialogModernProps> = ({
   open,
   onClose,
   plantId,
   plantName,
+  onPlantAdded,
 }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [catalogData, setCatalogData] = useState<CatalogData | null>(null);
   const [currentTab, setCurrentTab] = useState(0);
+
+  // Ajout à la serre
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [greenhouses, setGreenhouses] = useState<{ id: string; name: string }[]>([]);
+  const [selectedGreenhouse, setSelectedGreenhouse] = useState('');
+  const [customName, setCustomName] = useState('');
+  const [adding, setAdding] = useState(false);
+  const [addSuccess, setAddSuccess] = useState(false);
 
   useEffect(() => {
     if (open && plantId) {
@@ -64,12 +75,47 @@ export const PlantLibraryDetailsDialogModern: React.FC<PlantLibraryDetailsDialog
       setLoading(true);
       setError(null);
       const data = await plantService.getPlantCatalogItem(plantId);
-      setCatalogData(data.plant || data || {});
+      const plant = data.plant || data || {};
+      setCatalogData(plant);
+      setCustomName(plant.commonName || plantName || '');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erreur inconnue');
     } finally {
       setLoading(false);
     }
+  };
+
+  useEffect(() => {
+    if (open) {
+      apiFetch('/api/greenhouses').then(r => r.json()).then(d => {
+        const list: { id: string; name: string }[] = d.data || d || [];
+        setGreenhouses(list);
+        if (list.length > 0) setSelectedGreenhouse(list[0].id);
+      }).catch(() => {});
+    }
+  }, [open]);
+
+  const handleAdd = async () => {
+    if (!selectedGreenhouse) return;
+    setAdding(true);
+    try {
+      await plantService.createPlant({
+        catalogId: plantId,
+        name: customName || catalogData?.commonName || plantName,
+        species: catalogData?.species || catalogData?.scientificName,
+        greenhouseId: selectedGreenhouse,
+      });
+      setAddSuccess(true);
+      setTimeout(() => {
+        setAddSuccess(false);
+        setShowAddForm(false);
+        onPlantAdded?.();
+        onClose();
+      }, 1200);
+    } catch (e) {
+      console.error('Erreur ajout plante:', e);
+    }
+    setAdding(false);
   };
 
   const formatYield = (yieldMin?: number, yieldMax?: number, yieldUnit?: string): string | null => {
@@ -199,6 +245,69 @@ export const PlantLibraryDetailsDialogModern: React.FC<PlantLibraryDetailsDialog
             ))}
           </div>
         </div>
+
+        {/* ── Footer CTA "Ajouter dans ma serre" ── */}
+        {!showAddForm ? (
+          <div className="px-4 md:px-6 py-3 border-t border-[var(--border-color)] bg-[var(--bg-primary)] flex items-center justify-between gap-3 flex-shrink-0">
+            <p className="text-xs text-[var(--text-secondary)]">
+              {catalogData?.totalGrowthDays ? `🌱 Récolte en ${catalogData.totalGrowthDays} jours` : ''}
+            </p>
+            <button
+              onClick={() => setShowAddForm(true)}
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#2AD368] text-[#052E1C] font-bold shadow-[0_6px_20px_rgba(42,211,104,0.4)] hover:shadow-[0_8px_28px_rgba(42,211,104,0.6)] hover:scale-105 transition-all text-sm"
+            >
+              <span className="material-symbols-outlined text-base">add</span>
+              Ajouter dans ma serre
+            </button>
+          </div>
+        ) : (
+          <div className="px-4 md:px-6 py-4 border-t border-[var(--border-color)] bg-[var(--bg-primary)] flex-shrink-0 space-y-3">
+            <p className="text-sm font-bold text-[var(--text-primary)]">Ajouter dans ma serre</p>
+            <div className="flex gap-3">
+              {/* Nom personnalisé */}
+              <input
+                type="text"
+                value={customName}
+                onChange={e => setCustomName(e.target.value)}
+                placeholder="Nom de la plante..."
+                className="flex-1 px-3 py-2 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] text-sm focus:outline-none focus:border-[#2AD368]"
+              />
+              {/* Sélecteur serre */}
+              {greenhouses.length > 1 && (
+                <select
+                  value={selectedGreenhouse}
+                  onChange={e => setSelectedGreenhouse(e.target.value)}
+                  className="px-3 py-2 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] text-sm focus:outline-none focus:border-[#2AD368]"
+                >
+                  {greenhouses.map(gh => (
+                    <option key={gh.id} value={gh.id}>{gh.name}</option>
+                  ))}
+                </select>
+              )}
+            </div>
+            <div className="flex gap-2 justify-end">
+              <button
+                onClick={() => setShowAddForm(false)}
+                className="px-4 py-2 rounded-xl text-sm text-[var(--text-secondary)] border border-[var(--border-color)] hover:border-[var(--text-secondary)] transition-all"
+              >
+                Annuler
+              </button>
+              <button
+                onClick={handleAdd}
+                disabled={adding || addSuccess}
+                className={`flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-bold transition-all ${addSuccess ? 'bg-[#2AD368]/20 text-[#2AD368] border border-[#2AD368]/40' : 'bg-[#2AD368] text-[#052E1C] shadow-[0_4px_14px_rgba(42,211,104,0.4)] hover:scale-105'} disabled:opacity-70`}
+              >
+                {addSuccess ? (
+                  <><span className="material-symbols-outlined text-base">check_circle</span> Ajoutée !</>
+                ) : adding ? (
+                  <><svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeDasharray="40" strokeDashoffset="10" /></svg> Ajout...</>
+                ) : (
+                  <><span className="material-symbols-outlined text-base">add</span> Confirmer</>
+                )}
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Content */}
         <div className="flex-1 overflow-y-auto custom-scrollbar p-4 md:p-6">

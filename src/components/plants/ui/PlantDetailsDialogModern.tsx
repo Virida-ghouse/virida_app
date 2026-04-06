@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { TaskDialogModern } from './TaskDialogModern';
 import { plantService } from '../../../services/api';
 
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
 interface PlantDetailsDialogModernProps {
   open: boolean;
   onClose: () => void;
@@ -41,7 +43,10 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
   const [growthLogs, setGrowthLogs] = useState<any[]>([]);
   const [showAddHistory, setShowAddHistory] = useState(false);
   const [selectedPhotoFile, setSelectedPhotoFile] = useState<File | null>(null);
+  const [photoPreviewUrl, setPhotoPreviewUrl] = useState<string | null>(null);
   const [newPhotoCaption, setNewPhotoCaption] = useState('');
+  const [camInfo, setCamInfo] = useState<{ stream?: string; online?: boolean } | null>(null);
+  const [capturing, setCapturing] = useState(false);
   const [newLogHeight, setNewLogHeight] = useState('');
   const [newLogLeafCount, setNewLogLeafCount] = useState('');
   const [newLogNotes, setNewLogNotes] = useState('');
@@ -215,30 +220,56 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
   };
 
 
+  const captureFromCam = async () => {
+    setCapturing(true);
+    try {
+      const token = localStorage.getItem('virida_token');
+      // Utilise le proxy API (évite CORS — le Pi fetche directement l'ESP32-CAM)
+      const res = await fetch(`${API_BASE}/api/cameras/espcam-1/snapshot`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (!res.ok) throw new Error('Snapshot impossible');
+      const blob = await res.blob();
+      const file = new File([blob], `capture_${Date.now()}.jpg`, { type: 'image/jpeg' });
+      setSelectedPhotoFile(file);
+      if (photoPreviewUrl) URL.revokeObjectURL(photoPreviewUrl);
+      setPhotoPreviewUrl(URL.createObjectURL(blob));
+    } catch (e) {
+      console.error('Capture échouée:', e);
+    }
+    setCapturing(false);
+  };
+
   const handleAddHistory = async () => {
     if (!plantId) return;
     setLoading(true);
     try {
-      // Upload photo si présente
-      if (selectedPhotoFile) {
-        await plantService.uploadPhoto(plantId, selectedPhotoFile);
-      }
-
-      // Ajouter log de croissance si des données sont présentes
+      // 1. Créer le log en premier pour obtenir son ID
+      let logId: string | undefined;
       if (newLogHeight || newLogLeafCount || newLogNotes) {
         const logPayload: any = {};
         if (newLogHeight) logPayload.height = parseFloat(newLogHeight);
         if (newLogLeafCount) logPayload.leafCount = parseInt(newLogLeafCount);
         if (newLogNotes) logPayload.notes = newLogNotes;
-        await plantService.createGrowthLog(plantId, logPayload);
+        const logRes = await plantService.createGrowthLog(plantId, logPayload);
+        logId = logRes.data?.id;
       }
 
-      // Rafraîchir les données
+      // 2. Upload photo liée au log (growthLogId → relation DB persistante)
+      let uploadedPhoto: any = null;
+      if (selectedPhotoFile) {
+        const caption = newPhotoCaption.trim() || newLogNotes.trim() || undefined;
+        const photoRes = await plantService.uploadPhoto(plantId, selectedPhotoFile, caption, logId);
+        uploadedPhoto = photoRes.data || photoRes;
+      }
+
+      // 3. Rafraîchir les listes
       fetchPhotos();
       fetchGrowthLogs();
 
       // Réinitialiser le formulaire
       setSelectedPhotoFile(null);
+      if (photoPreviewUrl) { URL.revokeObjectURL(photoPreviewUrl); setPhotoPreviewUrl(null); }
       setNewPhotoCaption('');
       setNewLogHeight('');
       setNewLogLeafCount('');
@@ -602,7 +633,20 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                     <div className="flex justify-between items-center">
                       <h3 className="text-xl font-bold text-[var(--text-primary)]">Historique de croissance</h3>
                       <button
-                        onClick={() => setShowAddHistory(!showAddHistory)}
+                        onClick={async () => {
+                          setShowAddHistory(!showAddHistory);
+                          if (!showAddHistory) {
+                            // Charger info caméra à l'ouverture du formulaire
+                            try {
+                              const token = localStorage.getItem('virida_token');
+                              const r = await fetch(`${API_BASE}/api/cameras/espcam-1`, {
+                                headers: { Authorization: `Bearer ${token}` }
+                              });
+                              const d = await r.json();
+                              setCamInfo(d.data || null);
+                            } catch { setCamInfo(null); }
+                          }
+                        }}
                         className="px-4 py-2 rounded-xl bg-[#2AD368] text-[var(--btn-primary-text)] font-semibold shadow-[0_8px_20px_rgba(42,211,104,0.5)] hover:shadow-[0_12px_30px_rgba(42,211,104,0.8)] hover:scale-105 transition-all flex items-center gap-2"
                       >
                         <span className="material-symbols-outlined text-lg">add</span>
@@ -615,35 +659,127 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                       <div className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-[var(--border-color)] space-y-3">
                         <h4 className="font-bold text-[var(--text-primary)]">Nouvelle entrée d'historique</h4>
                         
-                        {/* Upload photo */}
+                        {/* Vue caméra serre */}
                         <div>
-                          <label className="text-xs text-[var(--text-secondary)] font-semibold mb-1 block">Photo</label>
-                          <input
-                            type="file"
-                            accept="image/*"
-                            onChange={(e) => {
-                              const file = e.target.files?.[0];
-                              if (file) setSelectedPhotoFile(file);
-                            }}
-                            className="w-full bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-[#2AD368] file:text-[var(--btn-primary-text)] file:font-semibold file:shadow-[0_4px_10px_rgba(42,211,104,0.3)] hover:file:shadow-[0_6px_15px_rgba(42,211,104,0.5)]"
-                          />
-                          {selectedPhotoFile && (
-                            <p className="text-xs text-[var(--text-secondary)] mt-1">
-                              {selectedPhotoFile.name} ({(selectedPhotoFile.size / 1024 / 1024).toFixed(2)} MB)
-                            </p>
-                          )}
+                          <div className="flex items-center justify-between mb-2">
+                            <label className="text-xs text-[var(--text-secondary)] font-semibold">
+                              📹 Caméra serre
+                            </label>
+                            {camInfo?.online ? (
+                              <span className="text-xs text-[#2AD368] font-semibold flex items-center gap-1">
+                                <span className="w-2 h-2 rounded-full bg-[#2AD368] inline-block animate-pulse" />
+                                Live
+                              </span>
+                            ) : (
+                              <span className="text-xs text-red-400 font-semibold flex items-center gap-1">
+                                <span className="w-2 h-2 rounded-full bg-red-400 inline-block" />
+                                Hors ligne
+                              </span>
+                            )}
+                          </div>
+                          <div className="relative rounded-2xl overflow-hidden border border-[var(--border-color)] bg-black/40 h-48 flex items-center justify-center">
+                            {camInfo?.online && camInfo?.stream ? (
+                              <img
+                                src={camInfo.stream}
+                                alt="live"
+                                className="w-full h-full object-cover"
+                                onError={() => setCamInfo(prev => prev ? { ...prev, online: false } : null)}
+                              />
+                            ) : (
+                              <div className="flex flex-col items-center gap-2 opacity-40">
+                                <span className="material-symbols-outlined text-4xl text-white">videocam_off</span>
+                                <span className="text-xs text-white">Caméra indisponible</span>
+                              </div>
+                            )}
+                            {/* Bouton capture en bas à droite */}
+                            {camInfo?.online && (
+                              <button
+                                type="button"
+                                onClick={captureFromCam}
+                                disabled={capturing}
+                                className="absolute bottom-3 right-3 flex items-center gap-2 px-3 py-2 rounded-xl bg-[#2AD368]/90 hover:bg-[#2AD368] text-[#052E1C] font-semibold text-sm transition-all disabled:opacity-60 shadow-lg"
+                              >
+                                {capturing ? (
+                                  <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
+                                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeDasharray="40" strokeDashoffset="10" />
+                                  </svg>
+                                ) : (
+                                  <span className="material-symbols-outlined text-base">photo_camera</span>
+                                )}
+                                {capturing ? 'Capture...' : 'Capturer'}
+                              </button>
+                            )}
+                            {/* Indicateur snapshot pris */}
+                            {selectedPhotoFile && !capturing && (
+                              <div className="absolute top-3 left-3 flex items-center gap-1 px-2 py-1 rounded-lg bg-black/60">
+                                <span className="material-symbols-outlined text-[#2AD368] text-sm">check_circle</span>
+                                <span className="text-xs text-white font-medium">Photo capturée</span>
+                              </div>
+                            )}
+                          </div>
                         </div>
 
-                        {/* Légende */}
+                        {/* Upload photo — zone cliquable avec preview */}
                         <div>
-                          <label className="text-xs text-[var(--text-secondary)] font-semibold mb-1 block">Légende de la photo</label>
+                          <label className="text-xs text-[var(--text-secondary)] font-semibold mb-2 block">
+                            📷 Photo de la note <span className="font-normal opacity-60">(optionnel)</span>
+                          </label>
                           <input
-                            type="text"
-                            value={newPhotoCaption}
-                            onChange={(e) => setNewPhotoCaption(e.target.value)}
-                            className="w-full bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[#2AD368]"
-                            placeholder="Description..."
+                            id="log-photo-input"
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (!file) return;
+                              setSelectedPhotoFile(file);
+                              const url = URL.createObjectURL(file);
+                              setPhotoPreviewUrl(url);
+                              e.target.value = '';
+                            }}
                           />
+                          {photoPreviewUrl ? (
+                            <div className="relative rounded-2xl overflow-hidden border border-[var(--border-color)] h-48 group cursor-pointer"
+                              onClick={() => document.getElementById('log-photo-input')?.click()}>
+                              <img src={photoPreviewUrl} alt="preview" className="w-full h-full object-cover" />
+                              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2">
+                                <span className="material-symbols-outlined text-white text-3xl">photo_camera</span>
+                                <span className="text-white text-sm font-semibold">Changer la photo</span>
+                              </div>
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  URL.revokeObjectURL(photoPreviewUrl);
+                                  setSelectedPhotoFile(null);
+                                  setPhotoPreviewUrl(null);
+                                }}
+                                className="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/60 flex items-center justify-center hover:bg-red-500/80 transition-colors"
+                              >
+                                <span className="material-symbols-outlined text-white text-sm">close</span>
+                              </button>
+                              <div className="absolute bottom-0 left-0 right-0 px-3 py-2 bg-gradient-to-t from-black/70 to-transparent">
+                                <p className="text-white text-xs truncate">{selectedPhotoFile?.name}</p>
+                              </div>
+                            </div>
+                          ) : (
+                            <label htmlFor="log-photo-input"
+                              className="flex flex-col items-center justify-center gap-2 h-32 rounded-2xl border-2 border-dashed border-[var(--border-color)] hover:border-[#2AD368]/60 hover:bg-[#2AD368]/5 transition-all cursor-pointer">
+                              <span className="material-symbols-outlined text-[var(--text-tertiary)] text-3xl">add_photo_alternate</span>
+                              <span className="text-xs text-[var(--text-secondary)]">Cliquer pour ajouter une photo</span>
+                            </label>
+                          )}
+
+                          {/* Légende — visible seulement si photo sélectionnée */}
+                          {selectedPhotoFile && (
+                            <input
+                              type="text"
+                              value={newPhotoCaption}
+                              onChange={(e) => setNewPhotoCaption(e.target.value)}
+                              className="mt-2 w-full bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-xl px-3 py-2 text-[var(--text-primary)] text-sm focus:outline-none focus:border-[#2AD368]"
+                              placeholder="Légende (optionnel)..."
+                            />
+                          )}
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -692,6 +828,7 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                             onClick={() => {
                               setShowAddHistory(false);
                               setSelectedPhotoFile(null);
+                              if (photoPreviewUrl) { URL.revokeObjectURL(photoPreviewUrl); setPhotoPreviewUrl(null); }
                               setNewPhotoCaption('');
                               setNewLogHeight('');
                               setNewLogLeafCount('');
@@ -749,36 +886,70 @@ export const PlantDetailsDialogModern: React.FC<PlantDetailsDialogModernProps> =
                           Logs de croissance
                         </h4>
                         <div className="space-y-3">
-                          {growthLogs.map((log: any) => (
-                            <div key={log.id} className="glass-card backdrop-blur-xl rounded-2xl p-4 border border-[var(--border-color)]">
-                              <div className="flex justify-between items-start mb-2">
-                                <p className="text-xs text-[var(--text-secondary)]">
-                                  {new Date(log.createdAt).toLocaleDateString('fr-FR', {
-                                    year: 'numeric',
-                                    month: 'long',
-                                    day: 'numeric',
-                                  })}
-                                </p>
-                              </div>
-                              <div className="grid grid-cols-2 gap-3 mb-2">
-                                {log.height && (
-                                  <div>
-                                    <p className="text-xs text-[var(--text-secondary)]">Hauteur</p>
-                                    <p className="text-[var(--text-primary)] font-semibold">{log.height} cm</p>
+                          {growthLogs.map((log: any) => {
+                            const logDate = log.timestamp || log.recordedAt || log.createdAt
+                            const linkedPhoto = log.plant_photos?.[0]
+                            return (
+                              <div key={log.id} className="glass-card backdrop-blur-xl rounded-2xl border border-[var(--border-color)] overflow-hidden">
+                                {/* Photo liée au log */}
+                                {linkedPhoto && (
+                                  <div className="relative h-40 bg-black/30">
+                                    <img
+                                      src={`${API_BASE}${linkedPhoto.url}`}
+                                      alt={linkedPhoto.caption || 'Photo'}
+                                      className="w-full h-full object-cover"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                                    <span className="absolute bottom-2 left-3 text-xs text-white/70 font-medium">📷 Photo serre</span>
                                   </div>
                                 )}
-                                {log.leafCount && (
-                                  <div>
-                                    <p className="text-xs text-[var(--text-secondary)]">Feuilles</p>
-                                    <p className="text-[var(--text-primary)] font-semibold">{log.leafCount}</p>
+                                <div className="p-4">
+                                  <div className="flex justify-between items-start mb-3">
+                                    <p className="text-xs text-[var(--text-secondary)]">
+                                      {logDate ? new Date(logDate).toLocaleDateString('fr-FR', {
+                                        year: 'numeric', month: 'long', day: 'numeric',
+                                      }) : '—'}
+                                    </p>
+                                    <button
+                                      onClick={async () => {
+                                        await plantService.deleteGrowthLog(plantId!, log.id)
+                                        setGrowthLogs(prev => prev.filter((l: any) => l.id !== log.id))
+                                      }}
+                                      className="text-red-400 hover:text-red-300 transition-colors"
+                                      title="Supprimer"
+                                    >
+                                      <span className="material-symbols-outlined text-base">delete</span>
+                                    </button>
                                   </div>
-                                )}
+                                  <div className="flex flex-wrap gap-2 mb-2">
+                                    {log.height != null && (
+                                      <span className="px-2 py-1 rounded-lg bg-[#CBED62]/10 border border-[#CBED62]/30 text-[#CBED62] text-xs font-semibold">
+                                        ↕ {log.height} cm
+                                      </span>
+                                    )}
+                                    {log.leafCount != null && (
+                                      <span className="px-2 py-1 rounded-lg bg-[#2AD368]/10 border border-[#2AD368]/30 text-[#2AD368] text-xs font-semibold">
+                                        🌿 {log.leafCount} feuilles
+                                      </span>
+                                    )}
+                                    {log.fruitCount != null && (
+                                      <span className="px-2 py-1 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-semibold">
+                                        🍅 {log.fruitCount} fruits
+                                      </span>
+                                    )}
+                                    {log.eventType && (
+                                      <span className="px-2 py-1 rounded-lg bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-semibold">
+                                        {log.eventType}
+                                      </span>
+                                    )}
+                                  </div>
+                                  {log.notes && (
+                                    <p className="text-sm text-[var(--text-secondary)] italic">{log.notes}</p>
+                                  )}
+                                </div>
                               </div>
-                              {log.notes && (
-                                <p className="text-sm text-[var(--text-secondary)]">{log.notes}</p>
-                              )}
-                            </div>
-                          ))}
+                            )
+                          })}
                         </div>
                       </div>
                     )}

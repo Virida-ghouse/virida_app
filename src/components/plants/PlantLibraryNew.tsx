@@ -227,6 +227,7 @@ const PlantLibraryNew: React.FC = () => {
           onClose={handleCloseDetails}
           plantId={selectedPlant.id}
           plantName={selectedPlant.commonName || selectedPlant.species || ''}
+          onPlantAdded={handleCloseDetails}
         />
       )}
     </div>

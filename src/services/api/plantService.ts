@@ -249,10 +249,11 @@ class PlantService {
     return response.json();
   }
 
-  async uploadPhoto(plantId: string, file: File, caption?: string): Promise<any> {
+  async uploadPhoto(plantId: string, file: File, caption?: string, growthLogId?: string): Promise<any> {
     const formData = new FormData();
     formData.append('photo', file);
     if (caption) formData.append('caption', caption);
+    if (growthLogId) formData.append('growthLogId', growthLogId);
 
     const token = localStorage.getItem('virida_token');
     const response = await apiFetch(`/api/plant-advanced/${plantId}/photos/upload`, {
