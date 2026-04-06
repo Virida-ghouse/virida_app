@@ -84,7 +84,7 @@ const ChatBotNew: React.FC<ChatBotProps> = ({ sensorData }) => {
 
   const callEveAPI = async (message: string) => {
     try {
-      const data = await chatService.sendMessage(message, conversationId || undefined);
+      const data = await chatService.sendMessage(message, conversationId || undefined, undefined, sensorData);
 
       if (data.conversationId && !conversationId) {
         setConversationId(data.conversationId);

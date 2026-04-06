@@ -34,11 +34,12 @@ class ChatService {
   async sendMessage(
     message: string,
     conversationId?: string,
-    greenhouseId?: string
+    greenhouseId?: string,
+    sensorData?: Record<string, any>
   ): Promise<ChatResponseData> {
     const response = await apiFetch('/api/eve/chat', {
       method: 'POST',
-      body: JSON.stringify({ message, conversationId, greenhouseId }),
+      body: JSON.stringify({ message, conversationId, greenhouseId, sensorData }),
     });
     const json = await response.json();
     return json.data;
