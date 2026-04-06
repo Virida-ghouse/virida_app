@@ -12,7 +12,8 @@ export interface LiveSensor {
   value: number | null;
   unit: string;
   status: 'online' | 'offline' | 'error';
-  lastReading: string | null;
+  lastReading: any | null;
+  lastReadingTs: string | null;
   greenhouseId?: string;
 }
 
@@ -43,6 +44,7 @@ function parseSensors(raw: any[]): LiveSensor[] {
     unit: s.unit || '',
     status: s.status === 'online' ? 'online' : 'offline',
     lastReading: s.last_reading || s.lastReading || null,
+    lastReadingTs: s.last_reading?.timestamp || s.lastReading?.timestamp || s.updatedAt || null,
     greenhouseId: s.greenhouse_id || s.greenhouseId,
   }));
 }
@@ -52,9 +54,15 @@ function buildMap(sensors: LiveSensor[]): SensorMap {
     ph: null, light: null, soil_moisture: null,
     tds: null, temperature: null, humidity: null,
   };
+  // When multiple sensors share a type, keep the one with the most recent reading
+  const best: Record<string, { value: number; ts: number }> = {};
   sensors.forEach(s => {
-    if (s.status === 'online' && s.value != null) map[s.type] = s.value;
+    if (s.status !== 'online' || s.value == null) return;
+    const ts = s.lastReadingTs ? new Date(s.lastReadingTs).getTime() : 0;
+    const prev = best[s.type];
+    if (!prev || ts > prev.ts) best[s.type] = { value: s.value, ts };
   });
+  Object.entries(best).forEach(([type, { value }]) => { map[type] = value; });
   return map;
 }
 
