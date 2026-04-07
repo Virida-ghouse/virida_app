@@ -4,7 +4,11 @@ import StatCard from '../ui/StatCard';
 import GreenhouseModel from '../3d/GreenhouseModel';
 import { useViridaSensors } from '../../hooks/useViridaSensors';
 
-const DashboardNew: React.FC = () => {
+interface DashboardNewProps {
+  greenhouseName?: string;
+}
+
+const DashboardNew: React.FC<DashboardNewProps> = ({ greenhouseName }) => {
   const [isFullscreen, setIsFullscreen] = React.useState(false);
   const [irrigationEnabled, setIrrigationEnabled] = React.useState(true);
   const [lightEnabled, setLightEnabled] = React.useState(true);
@@ -43,8 +47,11 @@ const DashboardNew: React.FC = () => {
         <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between mb-8 gap-4">
           <div>
             <h2 className="text-3xl md:text-4xl font-black mb-2 leading-tight">
-              <span className="text-[var(--text-primary)]">Serre </span>
-              <span className="text-[#CBED62] text-4xl md:text-5xl">Alpha-1</span>
+              {greenhouseName ? (
+                <span className="text-[#CBED62] text-4xl md:text-5xl">{greenhouseName}</span>
+              ) : (
+                <><span className="text-[var(--text-primary)]">Serre </span><span className="text-[#CBED62] text-4xl md:text-5xl">—</span></>
+              )}
             </h2>
             <p className="text-[var(--text-secondary)] flex items-center gap-2 text-sm md:text-base">
               <span className={`flex h-2 w-2 rounded-full animate-pulse shadow-[0_0_8px_rgba(42,211,104,0.6)] ${connected ? 'bg-[#2AD368]' : 'bg-red-400'}`}></span>

@@ -24,8 +24,8 @@ const MainAppNew: React.FC = () => {
     setCurrentView('plants');
   };
 
-  // Vraies données capteurs pour EVE
-  const { map } = useViridaSensors(10000);
+  // Vraies données capteurs pour EVE + nom serre primaire
+  const { map, primaryGreenhouse } = useViridaSensors(10000);
   const sensorData = React.useMemo(() => ({
     temperature: map.temperature ?? 0,
     humidity:    map.humidity    ?? 0,
@@ -38,7 +38,7 @@ const MainAppNew: React.FC = () => {
   const renderView = () => {
     switch (currentView) {
       case 'dashboard':
-        return <DashboardNew />;
+        return <DashboardNew greenhouseName={primaryGreenhouse?.name} />;
       case 'plants':
         return <PlantsLayoutNew defaultTab={plantsDefaultTab} onTabConsumed={() => setPlantsDefaultTab(0)} />;
       case 'irrigation':
@@ -50,7 +50,7 @@ const MainAppNew: React.FC = () => {
       case 'settings':
         return <SettingsPanelNew />;
       case 'admin':
-        return user?.role === 'ADMIN' ? <AdminPage /> : <DashboardNew />;
+        return user?.role === 'ADMIN' ? <AdminPage /> : <DashboardNew greenhouseName={primaryGreenhouse?.name} />;
       case 'reports':
         return (
           <div className="p-8 text-[var(--text-primary)]">
@@ -58,7 +58,7 @@ const MainAppNew: React.FC = () => {
           </div>
         );
       default:
-        return <DashboardNew />;
+        return <DashboardNew greenhouseName={primaryGreenhouse?.name} />;
     }
   };
 
@@ -75,7 +75,7 @@ const MainAppNew: React.FC = () => {
       {/* Main Content Area */}
       <main className="flex-1 flex flex-col overflow-hidden lg:ml-64">
         {/* Header */}
-        <HeaderNew currentView={currentView} onNotificationClick={handleNavigatePlantsCare} />
+        <HeaderNew currentView={currentView} onNotificationClick={handleNavigatePlantsCare} greenhouseName={primaryGreenhouse?.name} />
 
         {/* Dashboard Content */}
         {renderView()}

@@ -15,6 +15,7 @@ export interface LiveSensor {
   lastReading: any | null;
   lastReadingTs: string | null;
   greenhouseId?: string;
+  greenhouseName?: string;
 }
 
 export interface SensorMap {
@@ -46,24 +47,31 @@ function parseSensors(raw: any[]): LiveSensor[] {
     lastReading: s.last_reading || s.lastReading || null,
     lastReadingTs: s.last_reading?.timestamp || s.lastReading?.timestamp || s.updatedAt || null,
     greenhouseId: s.greenhouse_id || s.greenhouseId,
+    greenhouseName: s.greenhouses?.name || '',
   }));
 }
 
-function buildMap(sensors: LiveSensor[]): SensorMap {
+function buildMap(sensors: LiveSensor[]): { map: SensorMap; primaryGreenhouse: { id: string; name: string } | null } {
   const map: SensorMap = {
     ph: null, light: null, soil_moisture: null,
     tds: null, temperature: null, humidity: null,
   };
   // When multiple sensors share a type, keep the one with the most recent reading
   const best: Record<string, { value: number; ts: number }> = {};
+  let latestTs = 0;
+  let primaryGreenhouse: { id: string; name: string } | null = null;
   sensors.forEach(s => {
     if (s.status !== 'online' || s.value == null) return;
     const ts = s.lastReadingTs ? new Date(s.lastReadingTs).getTime() : 0;
     const prev = best[s.type];
     if (!prev || ts > prev.ts) best[s.type] = { value: s.value, ts };
+    if (ts > latestTs && s.greenhouseId) {
+      latestTs = ts;
+      primaryGreenhouse = { id: s.greenhouseId, name: s.greenhouseName || s.greenhouseId };
+    }
   });
   Object.entries(best).forEach(([type, { value }]) => { map[type] = value; });
-  return map;
+  return { map, primaryGreenhouse };
 }
 
 function buildAlerts(map: SensorMap): SensorAlert[] {
@@ -108,6 +116,7 @@ export function useViridaSensors(pollInterval = 5000) {
   const [loading, setLoading] = useState(true);
   const [lastSync, setLastSync] = useState<Date | null>(null);
   const [connected, setConnected] = useState(false);
+  const [primaryGreenhouse, setPrimaryGreenhouse] = useState<{ id: string; name: string } | null>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const fetchSensors = useCallback(async () => {
@@ -117,10 +126,11 @@ export function useViridaSensors(pollInterval = 5000) {
       const json = await res.json();
       const raw: any[] = Array.isArray(json?.data) ? json.data : Array.isArray(json) ? json : [];
       const parsed = parseSensors(raw);
-      const sensorMap = buildMap(parsed);
+      const { map: sensorMap, primaryGreenhouse: gh } = buildMap(parsed);
       setSensors(parsed);
       setMap(sensorMap);
       setAlerts(buildAlerts(sensorMap));
+      setPrimaryGreenhouse(gh);
       setLastSync(new Date());
       setConnected(true);
     } catch {
@@ -139,5 +149,5 @@ export function useViridaSensors(pollInterval = 5000) {
   const onlineSensors  = sensors.filter(s => s.status === 'online');
   const offlineSensors = sensors.filter(s => s.status === 'offline');
 
-  return { sensors, map, alerts, loading, lastSync, connected, onlineSensors, offlineSensors, refetch: fetchSensors };
+  return { sensors, map, alerts, loading, lastSync, connected, onlineSensors, offlineSensors, primaryGreenhouse, refetch: fetchSensors };
 }

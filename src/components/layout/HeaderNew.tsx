@@ -6,9 +6,10 @@ import { NotificationMenu } from '../plants/ui/NotificationMenu';
 interface HeaderNewProps {
   currentView?: string;
   onNotificationClick?: () => void;
+  greenhouseName?: string;
 }
 
-const HeaderNew: React.FC<HeaderNewProps> = ({ currentView = 'dashboard', onNotificationClick }) => {
+const HeaderNew: React.FC<HeaderNewProps> = ({ currentView = 'dashboard', onNotificationClick, greenhouseName }) => {
   const { user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const [showUserMenu, setShowUserMenu] = useState(false);
@@ -36,7 +37,7 @@ const HeaderNew: React.FC<HeaderNewProps> = ({ currentView = 'dashboard', onNoti
         <div className="flex items-center gap-1 md:gap-2 text-xs md:text-sm text-[var(--text-secondary)]">
           <span className="hidden md:inline">Organisation</span>
           <span className="material-symbols-outlined text-xs hidden md:inline">chevron_right</span>
-          <span className="text-[var(--text-primary)] font-medium hidden sm:inline">Serre Alpha-1</span>
+          <span className="text-[var(--text-primary)] font-medium hidden sm:inline">{greenhouseName || 'Serre'}</span>
           <span className="material-symbols-outlined text-xs hidden sm:inline">chevron_right</span>
           <span className="text-[#2AD368] font-medium">{viewTitles[currentView] || 'Dashboard'}</span>
         </div>
