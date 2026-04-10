@@ -141,9 +141,9 @@ export const WithPermission = <P extends WithPermissionProps>(
     const { checkPermission } = useRBAC(props.user);
 
     if (!checkPermission(props.permissionId)) {
-      return props.fallback || <div>Access Denied</div>;
+      return props.fallback ?? React.createElement('div', null, 'Access Denied');
     }
 
-    return <Component {...props} />;
+    return React.createElement(Component, props);
   };
 };
