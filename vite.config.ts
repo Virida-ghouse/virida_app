@@ -32,5 +32,15 @@ export default defineConfig({
   server: {
     host: true,
     port: 5173
+  },
+  test: {
+    environment: 'jsdom',
+    globals: true,
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'html', 'lcov'],
+      include: ['src/**/*.ts', 'src/**/*.tsx'],
+      exclude: ['src/**/*.d.ts', 'src/main.tsx', 'src/vite-env.d.ts']
+    }
   }
 })
