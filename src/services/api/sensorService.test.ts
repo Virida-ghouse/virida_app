@@ -23,6 +23,12 @@ describe("sensorService", () => {
     expect(apiFetchMock).toHaveBeenCalledWith("/api/sensors?greenhouseId=g1&type=temp&active=true");
   });
 
+  it("uses base sensors endpoint when no filters are provided", async () => {
+    await sensorService.getSensors();
+
+    expect(apiFetchMock).toHaveBeenCalledWith("/api/sensors");
+  });
+
   it("creates a sensor via POST", async () => {
     const data = { name: "T1", type: "temperature", unit: "C", greenhouseId: "g1" };
     await sensorService.createSensor(data);
@@ -37,6 +43,12 @@ describe("sensorService", () => {
     await sensorService.getSensorReadings("s1", { limit: "100", offset: "0" });
 
     expect(apiFetchMock).toHaveBeenCalledWith("/api/sensors/s1/readings?limit=100&offset=0");
+  });
+
+  it("uses readings endpoint without query params", async () => {
+    await sensorService.getSensorReadings("s1");
+
+    expect(apiFetchMock).toHaveBeenCalledWith("/api/sensors/s1/readings");
   });
 
   it("covers remaining CRUD and reading endpoints", async () => {

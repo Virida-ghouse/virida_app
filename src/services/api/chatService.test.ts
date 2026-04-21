@@ -58,6 +58,29 @@ describe('chatService', () => {
     });
   });
 
+  it('covers conversation and history helper endpoints', async () => {
+    const json = vi.fn().mockResolvedValue({ success: true, data: [] });
+    const blob = vi.fn().mockResolvedValue(new Blob(['history']));
+    const apiFetchSpy = vi
+      .spyOn(apiConfig, 'apiFetch')
+      .mockResolvedValue({ json, blob } as unknown as Response);
+
+    await chatService.getChatHistory('user-1');
+    await chatService.deleteConversation('user-1', 'conv-9');
+    await chatService.exportHistory('user-1');
+    await chatService.syncHistory('user-1', [{ id: 'conv-1' }]);
+
+    expect(apiFetchSpy).toHaveBeenCalledWith('/api/chat-history/user-1');
+    expect(apiFetchSpy).toHaveBeenCalledWith('/api/chat-history/user-1/conversation/conv-9', {
+      method: 'DELETE',
+    });
+    expect(apiFetchSpy).toHaveBeenCalledWith('/api/chat-history/user-1/export');
+    expect(apiFetchSpy).toHaveBeenCalledWith('/api/chat-history/sync', {
+      method: 'POST',
+      body: JSON.stringify({ userId: 'user-1', conversations: [{ id: 'conv-1' }] }),
+    });
+  });
+
   it('speak returns a blob response', async () => {
     const mockBlob = new Blob(['audio']);
     const blob = vi.fn().mockResolvedValue(mockBlob);

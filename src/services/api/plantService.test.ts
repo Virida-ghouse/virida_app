@@ -24,6 +24,11 @@ describe("plantService", () => {
     );
   });
 
+  it("uses plants endpoint without query params", async () => {
+    await plantService.getPlants();
+    expect(apiFetchMock).toHaveBeenCalledWith("/api/plants");
+  });
+
   it("calls plant CRUD endpoints", async () => {
     await plantService.getPlant("p1");
     await plantService.createPlant({ greenhouseId: "g1", name: "Basil" });
@@ -81,6 +86,11 @@ describe("plantService", () => {
     );
   });
 
+  it("uses tasks endpoint without query params", async () => {
+    await plantService.getAllTasks();
+    expect(apiFetchMock).toHaveBeenCalledWith("/api/plant-tasks");
+  });
+
   it("calls catalog endpoints", async () => {
     await plantService.getPlantCatalog({ category: "herb" });
     await plantService.getPlantCatalogItem("basil");
@@ -89,6 +99,11 @@ describe("plantService", () => {
     expect(apiFetchMock).toHaveBeenCalledWith("/api/plant-catalog?category=herb");
     expect(apiFetchMock).toHaveBeenCalledWith("/api/plant-catalog/basil");
     expect(apiFetchMock).toHaveBeenCalledWith("/api/plant-catalog/meta/categories");
+  });
+
+  it("uses catalog endpoint without filters", async () => {
+    await plantService.getPlantCatalog();
+    expect(apiFetchMock).toHaveBeenCalledWith("/api/plant-catalog");
   });
 
   it("encodes plant name for RAG info endpoint", async () => {
@@ -105,6 +120,11 @@ describe("plantService", () => {
       "/api/plants/p1/harvest",
       expect.objectContaining({ method: "POST" })
     );
+  });
+
+  it("uses harvest endpoint without params", async () => {
+    await plantService.getHarvests("p1");
+    expect(apiFetchMock).toHaveBeenCalledWith("/api/plants/p1/harvests");
   });
 
   it("calls advanced photo and growth endpoints", async () => {
@@ -144,6 +164,16 @@ describe("plantService", () => {
     );
   });
 
+  it("uses advanced endpoints without query params", async () => {
+    await plantService.getPhotos("p1");
+    await plantService.getGrowthLogs("p1");
+    await plantService.getCareEvents("p1");
+
+    expect(apiFetchMock).toHaveBeenCalledWith("/api/plant-advanced/p1/photos");
+    expect(apiFetchMock).toHaveBeenCalledWith("/api/plant-advanced/p1/growth-logs");
+    expect(apiFetchMock).toHaveBeenCalledWith("/api/plant-advanced/p1/care-events");
+  });
+
   it("uses multipart form-data upload endpoint with auth header", async () => {
     localStorage.setItem("virida_token", "token123");
     const file = new File(["data"], "photo.png", { type: "image/png" });
@@ -155,6 +185,21 @@ describe("plantService", () => {
       expect.objectContaining({
         method: "POST",
         headers: { Authorization: "Bearer token123" },
+      })
+    );
+  });
+
+  it("uploads photo without auth header when no token exists", async () => {
+    localStorage.removeItem("virida_token");
+    const file = new File(["data"], "photo.png", { type: "image/png" });
+
+    await plantService.uploadPhoto("p1", file);
+
+    expect(apiFetchMock).toHaveBeenCalledWith(
+      "/api/plant-advanced/p1/photos/upload",
+      expect.objectContaining({
+        method: "POST",
+        headers: {},
       })
     );
   });

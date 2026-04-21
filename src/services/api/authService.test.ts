@@ -64,6 +64,17 @@ describe("authService", () => {
     });
   });
 
+  it("supports logout without refresh token", async () => {
+    apiFetchMock.mockResolvedValue({ json: vi.fn().mockResolvedValue({ success: true }) });
+
+    await authService.logout();
+
+    expect(apiFetchMock).toHaveBeenCalledWith("/api/auth/logout", {
+      method: "POST",
+      body: JSON.stringify({ refreshToken: undefined }),
+    });
+  });
+
   it("removes local storage keys on logout", async () => {
     apiFetchMock.mockResolvedValue({ json: vi.fn().mockResolvedValue({ success: true }) });
     localStorage.setItem("virida_token", "tok");

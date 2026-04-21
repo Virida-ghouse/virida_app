@@ -43,6 +43,17 @@ describe('contactService', () => {
     expect(apiFetchSpy).toHaveBeenCalledWith('/api/contact?page=2&limit=25&interest=automation');
   });
 
+  it('builds contacts query params without optional interest', async () => {
+    const json = vi.fn().mockResolvedValue({ data: [], pagination: { total: 0, page: 1, limit: 10 } });
+    const apiFetchSpy = vi
+      .spyOn(apiConfig, 'apiFetch')
+      .mockResolvedValue({ json } as unknown as Response);
+
+    await contactService.getContacts();
+
+    expect(apiFetchSpy).toHaveBeenCalledWith('/api/contact?page=1&limit=10');
+  });
+
   it('deletes a contact with DELETE method', async () => {
     const apiFetchSpy = vi
       .spyOn(apiConfig, 'apiFetch')
