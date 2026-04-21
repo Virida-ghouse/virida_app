@@ -42,4 +42,23 @@ describe("useSensorStore", () => {
     expect(useSensorStore.getState().userPreferences.theme).toBe("dark");
     expect(useSensorStore.getState().userPreferences.chartPeriod).toBe("24h");
   });
+
+  it("updates historical data, system status and thresholds", () => {
+    useSensorStore
+      .getState()
+      .updateHistoricalData("s1", { sensorId: "s1", data: [{ timestamp: new Date(), value: 10 }] });
+    useSensorStore.getState().setSystemStatus({
+      isOnline: false,
+      lastUpdate: new Date(),
+      activeAlerts: 2,
+      systemHealth: "warning",
+    });
+    useSensorStore
+      .getState()
+      .setAlertThresholds([{ sensorType: "TEMPERATURE" as any, min: 10, max: 30 }]);
+
+    expect(useSensorStore.getState().historicalData.get("s1")?.sensorId).toBe("s1");
+    expect(useSensorStore.getState().systemStatus.activeAlerts).toBe(2);
+    expect(useSensorStore.getState().alertThresholds).toHaveLength(1);
+  });
 });

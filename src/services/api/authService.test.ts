@@ -39,6 +39,31 @@ describe("authService", () => {
     expect(result).toEqual(payload);
   });
 
+  it("calls register/update/refresh endpoints", async () => {
+    apiFetchMock.mockResolvedValue({ json: vi.fn().mockResolvedValue({ success: true }) });
+
+    await authService.register({
+      email: "n@x.dev",
+      username: "neo",
+      password: "pw",
+    });
+    await authService.updateProfile({ firstName: "Neo" });
+    await authService.refreshToken("refresh-token");
+
+    expect(apiFetchMock).toHaveBeenCalledWith("/api/auth/register", {
+      method: "POST",
+      body: JSON.stringify({ email: "n@x.dev", username: "neo", password: "pw" }),
+    });
+    expect(apiFetchMock).toHaveBeenCalledWith("/api/auth/profile", {
+      method: "PUT",
+      body: JSON.stringify({ firstName: "Neo" }),
+    });
+    expect(apiFetchMock).toHaveBeenCalledWith("/api/auth/refresh", {
+      method: "POST",
+      body: JSON.stringify({ refreshToken: "refresh-token" }),
+    });
+  });
+
   it("removes local storage keys on logout", async () => {
     apiFetchMock.mockResolvedValue({ json: vi.fn().mockResolvedValue({ success: true }) });
     localStorage.setItem("virida_token", "tok");

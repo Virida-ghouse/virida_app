@@ -32,4 +32,14 @@ describe("useViridaStore", () => {
     const updated = useViridaStore.getState().automationRules.find((r) => r.id === firstRule.id);
     expect(updated?.enabled).toBe(!initial);
   });
+
+  it("updates api url and plants list", () => {
+    useViridaStore.getState().configApiUrl("https://api.virida.org");
+    useViridaStore
+      .getState()
+      .setPlants([{ id: "p1", name: "Basil", species: "Ocimum", category: "herb", difficulty: "easy", health: 90, growthStage: "seedling" }]);
+
+    expect(useViridaStore.getState().apiUrl).toBe("https://api.virida.org");
+    expect(useViridaStore.getState().plants).toHaveLength(1);
+  });
 });

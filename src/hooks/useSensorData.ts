@@ -1,20 +1,19 @@
 import { useEffect, useCallback } from 'react';
-import axios from 'axios';
 import { useSensorStore } from '../store/sensorStore';
-import type { SensorData, SensorType } from '../types/sensors';
+import type { SensorData } from '../types/sensors';
 
 // Mock data generation
-const generateMockData = (type: SensorType): number => {
-  const ranges = {
-    [SensorType.TEMPERATURE]: { min: 18, max: 30 },
-    [SensorType.HUMIDITY]: { min: 40, max: 80 },
-    [SensorType.PH]: { min: 5.5, max: 7.5 },
-    [SensorType.LIGHT]: { min: 1000, max: 10000 },
-    [SensorType.WATER_LEVEL]: { min: 60, max: 100 },
-    [SensorType.NUTRIENTS]: { min: 300, max: 700 },
+const generateMockData = (type: string): number => {
+  const ranges: Record<string, { min: number; max: number }> = {
+    TEMPERATURE: { min: 18, max: 30 },
+    HUMIDITY: { min: 40, max: 80 },
+    PH: { min: 5.5, max: 7.5 },
+    LIGHT: { min: 1000, max: 10000 },
+    WATER_LEVEL: { min: 60, max: 100 },
+    NUTRIENTS: { min: 300, max: 700 },
   };
 
-  const range = ranges[type];
+  const range = ranges[type] ?? ranges.TEMPERATURE;
   return Math.random() * (range.max - range.min) + range.min;
 };
 
@@ -29,8 +28,8 @@ export const useSensorData = (sensorId: string) => {
       // For development, generate mock data
       const mockData: SensorData = {
         id: sensorId,
-        type: SensorType.TEMPERATURE,
-        value: generateMockData(SensorType.TEMPERATURE),
+        type: 'TEMPERATURE' as any,
+        value: generateMockData('TEMPERATURE' as any),
         unit: '°C',
         timestamp: new Date(),
         location: { x: 0, y: 0, z: 0 },

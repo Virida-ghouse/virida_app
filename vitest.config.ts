@@ -14,8 +14,15 @@ export default defineConfig({
       include: [
         "src/services/api/**/*.ts",
         "src/store/**/*.ts",
+        "src/hooks/useSensorData.ts",
       ],
       exclude: ["**/*.d.ts"],
+      thresholds: {
+        lines: 90,
+        statements: 90,
+        functions: 90,
+        branches: 65,
+      },
     },
   },
 });

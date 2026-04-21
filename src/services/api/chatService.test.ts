@@ -67,4 +67,30 @@ describe('chatService', () => {
 
     expect(result).toBe(mockBlob);
   });
+
+  it('covers remaining chat history endpoints', async () => {
+    const json = vi.fn().mockResolvedValue({ success: true, conversations: [] });
+    const blob = vi.fn().mockResolvedValue(new Blob(['export']));
+    const apiFetchSpy = vi.spyOn(apiConfig, 'apiFetch');
+    apiFetchSpy
+      .mockResolvedValueOnce({ json } as unknown as Response)
+      .mockResolvedValueOnce({ json } as unknown as Response)
+      .mockResolvedValueOnce({ blob } as unknown as Response)
+      .mockResolvedValueOnce({ json } as unknown as Response);
+
+    await chatService.getChatHistory('u1');
+    await chatService.deleteConversation('u1', 'c1');
+    await chatService.exportHistory('u1');
+    await chatService.syncHistory('u1', [{ id: 'c1' }]);
+
+    expect(apiFetchSpy).toHaveBeenCalledWith('/api/chat-history/u1');
+    expect(apiFetchSpy).toHaveBeenCalledWith('/api/chat-history/u1/conversation/c1', {
+      method: 'DELETE',
+    });
+    expect(apiFetchSpy).toHaveBeenCalledWith('/api/chat-history/u1/export');
+    expect(apiFetchSpy).toHaveBeenCalledWith('/api/chat-history/sync', {
+      method: 'POST',
+      body: JSON.stringify({ userId: 'u1', conversations: [{ id: 'c1' }] }),
+    });
+  });
 });

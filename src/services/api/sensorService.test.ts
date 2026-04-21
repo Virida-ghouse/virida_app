@@ -38,4 +38,24 @@ describe("sensorService", () => {
 
     expect(apiFetchMock).toHaveBeenCalledWith("/api/sensors/s1/readings?limit=100&offset=0");
   });
+
+  it("covers remaining CRUD and reading endpoints", async () => {
+    await sensorService.getSensor("s1");
+    await sensorService.updateSensor("s1", { name: "renamed" });
+    await sensorService.deleteSensor("s1");
+    await sensorService.addSensorReading("s1", { value: 42, quality: "ok" });
+
+    expect(apiFetchMock).toHaveBeenCalledWith("/api/sensors/s1");
+    expect(apiFetchMock).toHaveBeenCalledWith("/api/sensors/s1", {
+      method: "PUT",
+      body: JSON.stringify({ name: "renamed" }),
+    });
+    expect(apiFetchMock).toHaveBeenCalledWith("/api/sensors/s1", {
+      method: "DELETE",
+    });
+    expect(apiFetchMock).toHaveBeenCalledWith("/api/sensors/s1/readings", {
+      method: "POST",
+      body: JSON.stringify({ value: 42, quality: "ok" }),
+    });
+  });
 });
