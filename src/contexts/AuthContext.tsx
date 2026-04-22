@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo, useCallback, ReactNode } from 'react';
 import { authService } from '../services/api';
 
 interface User {
@@ -56,7 +56,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setIsLoading(false);
   }, []);
 
-  const login = async (email: string, password: string): Promise<void> => {
+  const login = useCallback(async (email: string, password: string): Promise<void> => {
     try {
       setIsLoading(true);
 
@@ -77,9 +77,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
-  const register = async (userData: {
+  const register = useCallback(async (userData: {
     firstName: string;
     lastName: string;
     email: string;
@@ -111,16 +111,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
-  const logout = (): void => {
+  const logout = useCallback((): void => {
     setUser(null);
     setToken(null);
     localStorage.removeItem('virida_token');
     localStorage.removeItem('virida_user');
-  };
+  }, []);
 
-  const value: AuthContextType = {
+  const value: AuthContextType = useMemo(() => ({
     user,
     token,
     isAuthenticated: !!user && !!token,
@@ -128,7 +128,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     login,
     register,
     logout,
-  };
+  }), [user, token, isLoading, login, register, logout]);
 
   return (
     <AuthContext.Provider value={value}>

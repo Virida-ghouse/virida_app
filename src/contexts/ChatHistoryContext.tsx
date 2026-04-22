@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo, useCallback, ReactNode } from 'react';
 import { useAuth } from './AuthContext';
 import { chatService } from '../services/api';
 
@@ -61,6 +61,37 @@ interface ChatHistoryProviderProps {
 const STORAGE_KEY = 'virida_chat_history';
 const API_SYNC_INTERVAL = 5 * 60 * 1000; // Sync toutes les 5 minutes
 
+const getConversationTitle = (message: ChatMessage, existingTitle?: string): string => {
+  return existingTitle ?? (message.sender === 'user' ? message.text.substring(0, 50) : 'Conversation sans titre');
+};
+
+const parseStoredConversations = (storedHistory: string): Conversation[] => {
+  const parsed = JSON.parse(storedHistory);
+  return parsed.map((conv: any) => ({
+    ...conv,
+    createdAt: new Date(conv.createdAt),
+    updatedAt: new Date(conv.updatedAt),
+    messages: conv.messages.map((msg: any) => ({
+      ...msg,
+      timestamp: new Date(msg.timestamp)
+    }))
+  }));
+};
+
+const buildConversationExport = (conv: Conversation) => ({
+  id: conv.id,
+  title: conv.title,
+  createdAt: conv.createdAt,
+  updatedAt: conv.updatedAt,
+  messagesCount: conv.messages.length,
+  messages: conv.messages.map(msg => ({
+    text: msg.text,
+    sender: msg.sender,
+    timestamp: msg.timestamp,
+    metadata: msg.metadata,
+  })),
+});
+
 export const ChatHistoryProvider: React.FC<ChatHistoryProviderProps> = ({ children }) => {
   const { user, token } = useAuth();
   const [conversations, setConversations] = useState<Conversation[]>([]);
@@ -73,17 +104,7 @@ export const ChatHistoryProvider: React.FC<ChatHistoryProviderProps> = ({ childr
       try {
         const storedHistory = localStorage.getItem(STORAGE_KEY);
         if (storedHistory) {
-          const parsed = JSON.parse(storedHistory);
-          // Convertir les timestamps en objets Date
-          const conversations = parsed.map((conv: any) => ({
-            ...conv,
-            createdAt: new Date(conv.createdAt),
-            updatedAt: new Date(conv.updatedAt),
-            messages: conv.messages.map((msg: any) => ({
-              ...msg,
-              timestamp: new Date(msg.timestamp)
-            }))
-          }));
+          const conversations = parseStoredConversations(storedHistory);
 
           setConversations(conversations);
 
@@ -122,7 +143,7 @@ export const ChatHistoryProvider: React.FC<ChatHistoryProviderProps> = ({ childr
       if (!user || !token || conversations.length === 0) return;
 
       try {
-        // TODO: Implémenter la méthode syncHistory dans chatService si nécessaire
+        await chatService.syncHistory(user.id, conversations);
         console.log('✅ Historique synchronisé avec le backend');
       } catch (error) {
         console.error('❌ Erreur lors de la synchronisation:', error);
@@ -139,7 +160,7 @@ export const ChatHistoryProvider: React.FC<ChatHistoryProviderProps> = ({ childr
   }, [conversations, user, token]);
 
   // 🆕 Démarrer une nouvelle conversation
-  const startNewConversation = (): string => {
+  const startNewConversation = useCallback((): string => {
     const newConv: Conversation = {
       id: `conv_${Date.now()}`,
       messages: [],
@@ -152,68 +173,64 @@ export const ChatHistoryProvider: React.FC<ChatHistoryProviderProps> = ({ childr
 
     console.log('🆕 Nouvelle conversation créée:', newConv.id);
     return newConv.id;
-  };
+  }, []);
+
+  const createConversationWithFirstMessage = useCallback((message: ChatMessage): Conversation => {
+    return {
+      id: `conv_${Date.now()}`,
+      messages: [message],
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      title: message.sender === 'user' ? message.text.substring(0, 50) : undefined,
+    };
+  }, []);
+
+  const appendMessageToConversation = useCallback((conversation: Conversation, message: ChatMessage): Conversation => {
+    return {
+      ...conversation,
+      messages: [...conversation.messages, message],
+      updatedAt: new Date(),
+      title: getConversationTitle(message, conversation.title),
+    };
+  }, []);
 
   // ➕ Ajouter un message à la conversation courante
-  const addMessage = (message: ChatMessage) => {
+  const addMessage = useCallback((message: ChatMessage) => {
     if (!currentConversation) {
-      // Créer une nouvelle conversation si aucune n'existe
       const convId = startNewConversation();
       const newConv = {
+        ...createConversationWithFirstMessage(message),
         id: convId,
-        messages: [message],
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        title: message.sender === 'user' ? message.text.substring(0, 50) : undefined,
       };
-
       setConversations(prev => {
-        const filtered = prev.filter(c => c.id !== convId);
+        const filtered = prev.filter(conv => conv.id !== convId);
         return [...filtered, newConv];
       });
       setCurrentConversation(newConv);
-    } else {
-      // Ajouter à la conversation existante - utiliser updater function pour éviter race conditions
-      const currentId = currentConversation.id;
-
-      setConversations(prev => {
-        const current = prev.find(c => c.id === currentId);
-        if (!current) return prev;
-
-        const updatedConv: Conversation = {
-          ...current,
-          messages: [...current.messages, message],
-          updatedAt: new Date(),
-          title: current.title || (message.sender === 'user' ? message.text.substring(0, 50) : 'Conversation sans titre'),
-        };
-
-        const filtered = prev.filter(c => c.id !== currentId);
-        return [...filtered, updatedConv];
-      });
-
-      // Mettre à jour currentConversation avec updater function
-      setCurrentConversation(prev => {
-        if (!prev || prev.id !== currentId) return prev;
-
-        return {
-          ...prev,
-          messages: [...prev.messages, message],
-          updatedAt: new Date(),
-          title: prev.title || (message.sender === 'user' ? message.text.substring(0, 50) : 'Conversation sans titre'),
-        };
-      });
+      console.log('➕ Message ajouté à la conversation:', message.sender, message.text.substring(0, 30));
+      return;
     }
 
+    const currentId = currentConversation.id;
+    setConversations(prev => prev.map(conv => (
+      conv.id === currentId ? appendMessageToConversation(conv, message) : conv
+    )));
+
+    setCurrentConversation(prev => {
+      if (!prev || prev.id !== currentId) return prev;
+      return appendMessageToConversation(prev, message);
+    });
+
     console.log('➕ Message ajouté à la conversation:', message.sender, message.text.substring(0, 30));
-  };
+  }, [appendMessageToConversation, createConversationWithFirstMessage, currentConversation, startNewConversation]);
 
   // 📖 Récupérer une conversation par ID
-  const getConversation = (conversationId: string): Conversation | undefined => {
+  const getConversation = useCallback((conversationId: string): Conversation | undefined => {
     return conversations.find(c => c.id === conversationId);
-  };
+  }, [conversations]);
 
   // 🗑️ Supprimer une conversation (RGPD - Droit à l'effacement)
-  const deleteConversation = (conversationId: string) => {
+  const deleteConversation = useCallback((conversationId: string) => {
     setConversations(prev => prev.filter(c => c.id !== conversationId));
 
     if (currentConversation?.id === conversationId) {
@@ -221,10 +238,10 @@ export const ChatHistoryProvider: React.FC<ChatHistoryProviderProps> = ({ childr
     }
 
     console.log('🗑️ Conversation supprimée:', conversationId);
-  };
+  }, [currentConversation?.id]);
 
   // 🧹 Effacer tout l'historique (RGPD - Droit à l'effacement)
-  const clearAllHistory = () => {
+  const clearAllHistory = useCallback(() => {
     if (window.confirm('Êtes-vous sûr de vouloir effacer tout l\'historique de vos conversations avec Eve ? Cette action est irréversible.')) {
       setConversations([]);
       setCurrentConversation(null);
@@ -237,28 +254,25 @@ export const ChatHistoryProvider: React.FC<ChatHistoryProviderProps> = ({ childr
         chatService.clearHistory().catch(err => console.error('Erreur lors de la suppression backend:', err));
       }
     }
-  };
+  }, [user]);
+
+  // 📊 Statistiques
+  const getTotalMessages = useCallback((): number => {
+    return conversations.reduce((total, conv) => total + conv.messages.length, 0);
+  }, [conversations]);
+
+  const getConversationCount = useCallback((): number => {
+    return conversations.length;
+  }, [conversations]);
 
   // 📥 Exporter l'historique (RGPD - Droit à la portabilité)
-  const exportHistory = () => {
+  const exportHistory = useCallback(() => {
     const exportData = {
       userId: user?.id,
       exportDate: new Date().toISOString(),
       conversationsCount: conversations.length,
       totalMessages: getTotalMessages(),
-      conversations: conversations.map(conv => ({
-        id: conv.id,
-        title: conv.title,
-        createdAt: conv.createdAt,
-        updatedAt: conv.updatedAt,
-        messagesCount: conv.messages.length,
-        messages: conv.messages.map(msg => ({
-          text: msg.text,
-          sender: msg.sender,
-          timestamp: msg.timestamp,
-          metadata: msg.metadata,
-        })),
-      })),
+      conversations: conversations.map(buildConversationExport),
     };
 
     const blob = new Blob([JSON.stringify(exportData, null, 2)], {
@@ -272,18 +286,9 @@ export const ChatHistoryProvider: React.FC<ChatHistoryProviderProps> = ({ childr
     URL.revokeObjectURL(url);
 
     console.log('📥 Historique exporté');
-  };
+  }, [conversations, getTotalMessages, user?.id]);
 
-  // 📊 Statistiques
-  const getTotalMessages = (): number => {
-    return conversations.reduce((total, conv) => total + conv.messages.length, 0);
-  };
-
-  const getConversationCount = (): number => {
-    return conversations.length;
-  };
-
-  const value: ChatHistoryContextType = {
+  const value: ChatHistoryContextType = useMemo(() => ({
     conversations,
     currentConversation,
     isLoading,
@@ -295,7 +300,19 @@ export const ChatHistoryProvider: React.FC<ChatHistoryProviderProps> = ({ childr
     exportHistory,
     getTotalMessages,
     getConversationCount,
-  };
+  }), [
+    conversations,
+    currentConversation,
+    isLoading,
+    startNewConversation,
+    addMessage,
+    getConversation,
+    deleteConversation,
+    clearAllHistory,
+    exportHistory,
+    getTotalMessages,
+    getConversationCount,
+  ]);
 
   return (
     <ChatHistoryContext.Provider value={value}>

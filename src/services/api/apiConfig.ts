@@ -3,7 +3,7 @@
  */
 
 export const API_CONFIG = {
-  BASE_URL: import.meta.env.VITE_API_URL || 'http://localhost:3001',
+  BASE_URL: import.meta.env.VITE_API_URL ?? 'http://localhost:3001',
   TIMEOUT: 30000, // 30 secondes
 };
 
@@ -26,10 +26,13 @@ export const handleApiError = async (response: Response) => {
     const error = await response.json().catch(() => ({
       error: `Erreur HTTP ${response.status}`,
     }));
-    throw {
-      status: response.status,
-      data: error,
+    const apiError = new Error(error?.error ?? `Erreur HTTP ${response.status}`) as Error & {
+      status: number;
+      data: unknown;
     };
+    apiError.status = response.status;
+    apiError.data = error;
+    throw apiError;
   }
   return response;
 };
