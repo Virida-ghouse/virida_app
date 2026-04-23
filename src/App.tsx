@@ -13,6 +13,7 @@ import { RGPDProvider } from './contexts/RGPDContext';
 import { ChatHistoryProvider } from './contexts/ChatHistoryContext';
 import CookieConsentBanner from './components/rgpd/CookieConsentBanner';
 import CookiePreferencesModal from './components/rgpd/CookiePreferencesModal';
+import OnboardingOverlay, { ONBOARDING_KEY } from './components/onboarding/OnboardingOverlay';
 import theme from './theme';
 
 // Composant pour gérer l'état d'authentification et le routing
@@ -20,6 +21,9 @@ const AppContent: React.FC = () => {
   const { isAuthenticated, isLoading } = useAuth();
   const [showLanding, setShowLanding] = useState(true);
   const [legalPage, setLegalPage] = useState<'mentions' | 'confidentialite' | null>(null);
+  const [onboardingDone, setOnboardingDone] = useState(
+    () => localStorage.getItem(ONBOARDING_KEY) === 'true'
+  );
 
   if (isLoading) {
     return (
@@ -37,9 +41,16 @@ const AppContent: React.FC = () => {
     return <PolitiqueConfidentialite onBack={() => { setLegalPage(null); window.scrollTo(0, 0); }} />;
   }
 
-  // Si authentifié, afficher l'app
+  // Si authentifié, afficher l'app + onboarding si première connexion
   if (isAuthenticated) {
-    return <MainAppNew />;
+    return (
+      <>
+        <MainAppNew />
+        {!onboardingDone && (
+          <OnboardingOverlay onDone={() => setOnboardingDone(true)} />
+        )}
+      </>
+    );
   }
 
   // Si non authentifié, afficher landing ou login selon l'état
