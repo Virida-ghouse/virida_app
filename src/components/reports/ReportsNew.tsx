@@ -1,165 +1,131 @@
-// ReportsNew.tsx — Cerveau analytique Virida — design premium
+// ReportsNew.tsx — Virida Mission Control — inspired by Stitch design
 import React, { useState, useEffect, useCallback } from 'react';
 import { useViridaSensors } from '../../hooks/useViridaSensors';
 import { plantService, Plant } from '../../services/api/plantService';
 import { chatService } from '../../services/api/chatService';
 
-// ── Types ─────────────────────────────────────────────────────────────
 type Period = '7j' | '30j' | '90j';
 
-interface Anomaly {
-  label: string; value: string;
-  severity: 'critical' | 'warning'; action: string;
+// ── Score ─────────────────────────────────────────────────────────────
+function calcScore(map: Record<string, number | null>): number {
+  let s = 0, t = 0;
+  if (map.ph != null) { t += 30; const p = map.ph; if (p >= 5.5 && p <= 7.0) s += 30; else if ((p >= 5.0 && p < 5.5) || (p > 7.0 && p <= 7.5)) s += 18; else if (p >= 4.5) s += 8; }
+  if (map.light != null) { t += 25; const l = map.light; if (l >= 2000) s += 25; else if (l >= 500) s += 16; else if (l >= 100) s += 8; }
+  if (map.soil_moisture != null) { t += 25; const sm = map.soil_moisture; if (sm >= 30 && sm <= 70) s += 25; else if ((sm >= 20 && sm < 30) || (sm > 70 && sm <= 80)) s += 15; else s += 5; }
+  if (map.tds != null) { t += 15; const td = map.tds; if (td >= 150 && td <= 800) s += 15; else if ((td >= 100 && td < 150) || (td > 800 && td <= 1200)) s += 9; else s += 3; }
+  if (map.temperature != null) { t += 10; const tp = map.temperature; if (tp >= 18 && tp <= 28) s += 10; else if ((tp >= 15 && tp < 18) || (tp > 28 && tp <= 32)) s += 6; else if (tp >= 10) s += 3; }
+  return t === 0 ? 50 : Math.round((s / t) * 100);
 }
-
-// ── Virida Score ──────────────────────────────────────────────────────
-function calcViridaScore(map: Record<string, number | null>): number {
-  let score = 0, total = 0;
-  if (map.ph != null) {
-    total += 30;
-    const p = map.ph;
-    if (p >= 5.5 && p <= 7.0) score += 30;
-    else if ((p >= 5.0 && p < 5.5) || (p > 7.0 && p <= 7.5)) score += 18;
-    else if (p >= 4.5) score += 8;
-  }
-  if (map.light != null) {
-    total += 25;
-    const l = map.light;
-    if (l >= 2000) score += 25; else if (l >= 500) score += 16; else if (l >= 100) score += 8;
-  }
-  if (map.soil_moisture != null) {
-    total += 25;
-    const s = map.soil_moisture;
-    if (s >= 30 && s <= 70) score += 25;
-    else if ((s >= 20 && s < 30) || (s > 70 && s <= 80)) score += 15;
-    else score += 5;
-  }
-  if (map.tds != null) {
-    total += 15;
-    const t = map.tds;
-    if (t >= 150 && t <= 800) score += 15;
-    else if ((t >= 100 && t < 150) || (t > 800 && t <= 1200)) score += 9;
-    else score += 3;
-  }
-  if (map.temperature != null) {
-    total += 10;
-    const t = map.temperature;
-    if (t >= 18 && t <= 28) score += 10;
-    else if ((t >= 15 && t < 18) || (t > 28 && t <= 32)) score += 6;
-    else if (t >= 10) score += 3;
-  }
-  return total === 0 ? 50 : Math.round((score / total) * 100);
-}
-
 function scoreColor(s: number) { return s >= 75 ? '#2AD368' : s >= 45 ? '#FFB74D' : '#FF6B6B'; }
 function scoreLabel(s: number) { return s >= 75 ? 'Bonne santé' : s >= 45 ? 'Attention requise' : 'État critique'; }
-function scoreGradient(s: number) {
-  if (s >= 75) return 'from-[#2AD368]/20 to-[#CBED62]/5';
-  if (s >= 45) return 'from-[#FFB74D]/20 to-[#FF8C00]/5';
-  return 'from-[#FF6B6B]/20 to-[#FF0000]/5';
-}
 
-// ── Anomalies ─────────────────────────────────────────────────────────
+interface Anomaly { label: string; value: string; severity: 'critical' | 'warning'; action: string; }
 function getAnomalies(map: Record<string, number | null>): Anomaly[] {
   const r: Anomaly[] = [];
   if (map.ph != null) {
     if (map.ph < 4.5 || map.ph > 8.5) r.push({ label: 'pH solution', value: `${map.ph.toFixed(2)} pH`, severity: 'critical', action: map.ph < 5.5 ? 'Ajouter solution pH+' : 'Ajouter solution pH-' });
     else if (map.ph < 5.5 || map.ph > 7.5) r.push({ label: 'pH solution', value: `${map.ph.toFixed(2)} pH`, severity: 'warning', action: map.ph < 5.5 ? 'Corriger avec pH+' : 'Corriger avec pH-' });
   }
-  if (map.light != null) {
-    if (map.light < 50) r.push({ label: 'Luminosité', value: `${Math.round(map.light)} lux`, severity: 'critical', action: 'Activer éclairage LED' });
-    else if (map.light < 500) r.push({ label: 'Luminosité', value: `${Math.round(map.light)} lux`, severity: 'warning', action: 'Augmenter durée éclairage' });
-  }
-  if (map.soil_moisture != null) {
-    if (map.soil_moisture < 20) r.push({ label: 'Humidité sol', value: `${Math.round(map.soil_moisture)}%`, severity: 'critical', action: 'Arrosage urgent' });
-    else if (map.soil_moisture > 85) r.push({ label: 'Humidité sol', value: `${Math.round(map.soil_moisture)}%`, severity: 'warning', action: 'Réduire arrosage' });
-  }
-  if (map.tds != null) {
-    if (map.tds < 80) r.push({ label: 'Nutriments', value: `${Math.round(map.tds)} ppm`, severity: 'critical', action: 'Fertiliser immédiatement' });
-    else if (map.tds > 1500) r.push({ label: 'Nutriments', value: `${Math.round(map.tds)} ppm`, severity: 'warning', action: 'Diluer la solution' });
-  }
-  if (map.temperature != null) {
-    if (map.temperature < 10 || map.temperature > 40) r.push({ label: 'Température', value: `${map.temperature.toFixed(1)}°C`, severity: 'critical', action: map.temperature < 15 ? 'Activer chauffage' : 'Activer ventilation' });
-    else if (map.temperature < 15 || map.temperature > 32) r.push({ label: 'Température', value: `${map.temperature.toFixed(1)}°C`, severity: 'warning', action: map.temperature < 15 ? 'Augmenter température' : 'Réduire température' });
-  }
+  if (map.light != null && map.light < 500) r.push({ label: 'Luminosité', value: `${Math.round(map.light)} lux`, severity: map.light < 50 ? 'critical' : 'warning', action: 'Activer éclairage LED' });
+  if (map.soil_moisture != null && map.soil_moisture < 20) r.push({ label: 'Humidité sol', value: `${Math.round(map.soil_moisture)}%`, severity: 'critical', action: 'Arrosage urgent' });
+  if (map.temperature != null && (map.temperature < 15 || map.temperature > 32)) r.push({ label: 'Température', value: `${map.temperature.toFixed(1)}°C`, severity: map.temperature < 10 || map.temperature > 40 ? 'critical' : 'warning', action: map.temperature < 15 ? 'Activer chauffage' : 'Activer ventilation' });
   return r;
 }
 
-function calcDLI(lux: number | null) {
-  const target = 12;
-  if (lux == null) return { value: 0, target, pct: 0 };
-  const v = Math.round((lux * 0.0185 * 12) * 10) / 10;
-  return { value: v, target, pct: Math.min(100, Math.round((v / target) * 100)) };
+// ── Sparkline SVG ─────────────────────────────────────────────────────
+function Sparkline({ data, color, height = 36 }: { data: number[]; color: string; height?: number }) {
+  if (data.length < 2) return null;
+  const w = 80, h = height;
+  const min = Math.min(...data), max = Math.max(...data);
+  const range = max - min || 1;
+  const pts = data.map((v, i) => `${(i / (data.length - 1)) * w},${h - ((v - min) / range) * (h - 4) - 2}`).join(' ');
+  const area = `0,${h} ${pts} ${w},${h}`;
+  return (
+    <svg width={w} height={h} style={{ overflow: 'visible' }}>
+      <defs>
+        <linearGradient id={`sg-${color.replace('#', '')}`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={color} stopOpacity="0.3" />
+          <stop offset="100%" stopColor={color} stopOpacity="0.0" />
+        </linearGradient>
+      </defs>
+      <polygon points={area} fill={`url(#sg-${color.replace('#', '')})`} />
+      <polyline points={pts} fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ filter: `drop-shadow(0 0 3px ${color})` }} />
+    </svg>
+  );
+}
+
+// ── Mini Area Chart (EVE) ─────────────────────────────────────────────
+function AreaChart({ color = '#2AD368' }: { color?: string }) {
+  const data = [45, 52, 48, 61, 55, 70, 65, 78, 72, 81, 76, 81];
+  const w = 200, h = 60;
+  const min = Math.min(...data), max = Math.max(...data);
+  const range = max - min || 1;
+  const pts = data.map((v, i) => `${(i / (data.length - 1)) * w},${h - ((v - min) / range) * (h - 8) - 4}`).join(' ');
+  const area = `0,${h} ${pts} ${w},${h}`;
+  return (
+    <svg width={w} height={h}>
+      <defs>
+        <linearGradient id="area-grad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={color} stopOpacity="0.35" />
+          <stop offset="100%" stopColor={color} stopOpacity="0.0" />
+        </linearGradient>
+      </defs>
+      <polygon points={area} fill="url(#area-grad)" />
+      <polyline points={pts} fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ filter: `drop-shadow(0 0 4px ${color})` }} />
+    </svg>
+  );
+}
+
+// ── Circular health ring for plant cards ──────────────────────────────
+function HealthRing({ pct, color, size = 56 }: { pct: number; color: string; size?: number }) {
+  const r = size / 2 - 5;
+  const circ = 2 * Math.PI * r;
+  const dash = (pct / 100) * circ;
+  return (
+    <svg width={size} height={size} style={{ transform: 'rotate(-90deg)' }}>
+      <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="4" />
+      <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke={color} strokeWidth="4"
+        strokeDasharray={`${dash} ${circ}`} strokeLinecap="round"
+        style={{ filter: `drop-shadow(0 0 6px ${color})`, transition: 'stroke-dasharray 1s ease' }} />
+    </svg>
+  );
 }
 
 // ── Score Ring ────────────────────────────────────────────────────────
-function ScoreRing({ score }: { score: number }) {
+function BigScoreRing({ score }: { score: number }) {
   const color = scoreColor(score);
-  const r = 60, circ = 2 * Math.PI * r;
+  const r = 72, circ = 2 * Math.PI * r;
   const dash = (score / 100) * circ;
   return (
-    <div className="relative flex items-center justify-center" style={{ width: 156, height: 156 }}>
-      {/* Glow */}
-      <div className="absolute inset-0 rounded-full" style={{ background: `radial-gradient(circle, ${color}22 0%, transparent 70%)` }} />
-      <svg width="156" height="156" style={{ transform: 'rotate(-90deg)', position: 'absolute' }}>
-        <circle cx="78" cy="78" r={r} fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="12" />
-        <circle cx="78" cy="78" r={r} fill="none" stroke={color} strokeWidth="12"
+    <div className="relative flex items-center justify-center" style={{ width: 180, height: 180 }}>
+      <div className="absolute inset-0 rounded-full" style={{ background: `radial-gradient(circle, ${color}28 0%, transparent 65%)`, animation: 'pulse 3s ease-in-out infinite' }} />
+      <svg width="180" height="180" style={{ transform: 'rotate(-90deg)', position: 'absolute' }}>
+        <circle cx="90" cy="90" r={r} fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth="10" />
+        <circle cx="90" cy="90" r={r} fill="none" stroke={color} strokeWidth="10"
           strokeDasharray={`${dash} ${circ}`} strokeLinecap="round"
-          style={{ filter: `drop-shadow(0 0 10px ${color})`, transition: 'stroke-dasharray 1.2s cubic-bezier(0.4,0,0.2,1)' }}
-        />
+          style={{ filter: `drop-shadow(0 0 12px ${color})`, transition: 'stroke-dasharray 1.5s ease' }} />
       </svg>
-      <div className="relative flex flex-col items-center justify-center">
-        <span className="font-black leading-none" style={{ fontSize: 42, color, textShadow: `0 0 20px ${color}66` }}>{score}</span>
-        <span className="text-xs font-bold" style={{ color: 'rgba(255,255,255,0.3)' }}>/ 100</span>
+      <div className="relative flex flex-col items-center">
+        <span className="font-black leading-none" style={{ fontSize: 52, color, textShadow: `0 0 24px ${color}` }}>{score}</span>
+        <span className="font-bold" style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)' }}>/ 100</span>
       </div>
     </div>
   );
 }
 
-// ── Progress bar ──────────────────────────────────────────────────────
-function Bar({ value, max, color, h = 6 }: { value: number; max: number; color: string; h?: number }) {
-  const pct = Math.min(100, max > 0 ? Math.round((value / max) * 100) : 0);
-  return (
-    <div className="rounded-full overflow-hidden" style={{ height: h, background: 'rgba(255,255,255,0.06)' }}>
-      <div style={{ width: `${pct}%`, height: '100%', background: color, borderRadius: 9999, boxShadow: `0 0 8px ${color}88`, transition: 'width 0.8s ease' }} />
-    </div>
-  );
-}
-
-// ── Metric Hero Card ──────────────────────────────────────────────────
-function MetricCard({ icon, label, value, unit, barVal, barMax, color, sub, gradient }: {
-  icon: string; label: string; value: string; unit: string;
-  barVal: number; barMax: number; color: string; sub: string; gradient: string;
-}) {
-  return (
-    <div className={`glass-card rounded-3xl p-5 border border-white/5 flex flex-col gap-3 bg-gradient-to-br ${gradient} hover:scale-[1.02] transition-transform duration-300 cursor-default`}>
-      <div className="flex items-center justify-between">
-        <div className="w-10 h-10 rounded-2xl flex items-center justify-center" style={{ background: `${color}18`, border: `1px solid ${color}30` }}>
-          <span className="material-symbols-outlined" style={{ color, fontSize: 20 }}>{icon}</span>
-        </div>
-        <span className="text-xs font-bold uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.3)', fontSize: 10 }}>{label}</span>
-      </div>
-      <div className="flex items-baseline gap-1">
-        <span className="font-black leading-none" style={{ fontSize: 36, color, textShadow: `0 0 16px ${color}55` }}>{value}</span>
-        <span className="text-sm font-medium" style={{ color: 'rgba(255,255,255,0.35)' }}>{unit}</span>
-      </div>
-      <Bar value={barVal} max={barMax} color={color} />
-      <span className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>{sub}</span>
-    </div>
-  );
-}
-
-// ── Stage helpers ─────────────────────────────────────────────────────
-const STAGE_LABELS: Record<string, string> = {
-  SEED: 'Germination', SEEDLING: 'Plantule', VEGETATIVE: 'Végétatif',
-  FLOWERING: 'Floraison', FRUITING: 'Fructification', HARVEST: 'Récolte', PLANTED: 'Planté',
-};
-const STAGE_COLORS: Record<string, string> = {
-  SEED: '#64B5F6', SEEDLING: '#81C784', VEGETATIVE: '#2AD368',
-  FLOWERING: '#CE93D8', FRUITING: '#FFB74D', HARVEST: '#CBED62', PLANTED: '#2AD368',
+// ── Fake sparkline data (7 days) ──────────────────────────────────────
+const genSparkData = (base: number | null, variance = 0.1) => {
+  if (base == null) return [0, 0, 0, 0, 0, 0, 0];
+  return Array.from({ length: 7 }, (_, i) => {
+    const offset = (Math.sin(i * 1.2 + base) * variance * base);
+    return Math.max(0, base + offset * (0.5 + Math.random() * 0.5));
+  });
 };
 
-// ── Main ──────────────────────────────────────────────────────────────
+const STAGE_LABELS: Record<string, string> = { SEED: 'Germ.', SEEDLING: 'Plantule', VEGETATIVE: 'Végétatif', FLOWERING: 'Floraison', FRUITING: 'Fructif.', HARVEST: 'Récolte', PLANTED: 'Planté' };
+const STAGE_COLORS: Record<string, string> = { SEED: '#64B5F6', SEEDLING: '#81C784', VEGETATIVE: '#2AD368', FLOWERING: '#CE93D8', FRUITING: '#FFB74D', HARVEST: '#CBED62', PLANTED: '#2AD368' };
+
+// ── MAIN ──────────────────────────────────────────────────────────────
 const ReportsNew: React.FC = () => {
   const { map, sensors, connected, onlineSensors, offlineSensors } = useViridaSensors(5000);
   const [period, setPeriod] = useState<Period>('7j');
@@ -168,9 +134,8 @@ const ReportsNew: React.FC = () => {
   const [eveLoading, setEveLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
-  const score = calcViridaScore(map);
+  const score = calcScore(map);
   const anomalies = getAnomalies(map);
-  const dli = calcDLI(map.light);
   const criticals = anomalies.filter(a => a.severity === 'critical').length;
 
   useEffect(() => {
@@ -180,368 +145,383 @@ const ReportsNew: React.FC = () => {
   const fetchEveSummary = useCallback(async () => {
     setEveLoading(true);
     try {
-      const sensorData: Record<string, any> = {};
-      Object.entries(map).forEach(([k, v]) => { if (v != null) sensorData[k] = v; });
-      const result = await chatService.sendMessage(
-        `Donne-moi un résumé de l'état de la serre en 2-3 phrases maximum. Score de santé: ${score}/100. Sois direct et actionnable.`,
-        undefined, undefined, sensorData
-      );
-      setEveSummary(result?.eveResponse?.replace(/^🐝\s*/, '') || '');
+      const sd: Record<string, any> = {};
+      Object.entries(map).forEach(([k, v]) => { if (v != null) sd[k] = v; });
+      const res = await chatService.sendMessage(`Résume l'état de la serre en 2 phrases max. Score: ${score}/100.`, undefined, undefined, sd);
+      setEveSummary(res?.eveResponse?.replace(/^🐝\s*/, '') || '');
     } catch { /**/ } finally { setEveLoading(false); }
   }, [map, score]);
 
-  useEffect(() => {
-    if (sensors.length > 0 && !eveSummary) fetchEveSummary();
-  }, [sensors]);
+  useEffect(() => { if (sensors.length > 0 && !eveSummary) fetchEveSummary(); }, [sensors]);
 
-  const handleRefresh = async () => {
-    setRefreshing(true); setEveSummary('');
-    await fetchEveSummary(); setRefreshing(false);
-  };
+  const handleRefresh = async () => { setRefreshing(true); setEveSummary(''); await fetchEveSummary(); setRefreshing(false); };
 
-  // Insights
-  const limitingFactors: string[] = [];
-  const opportunities: string[] = [];
-  if (map.ph != null && (map.ph < 5.5 || map.ph > 7.5)) limitingFactors.push(`pH ${map.ph.toFixed(1)} → absorption nutriments réduite`);
-  if (map.light != null && map.light < 500) limitingFactors.push(`Lumière ${Math.round(map.light)} lux → photosynthèse limitée`);
-  if (map.soil_moisture != null && map.soil_moisture < 30) limitingFactors.push(`Sol trop sec (${Math.round(map.soil_moisture)}%) → stress hydrique`);
-  if (map.temperature != null && (map.temperature < 15 || map.temperature > 32)) limitingFactors.push(`Température ${map.temperature.toFixed(1)}°C → hors plage`);
-  if (offlineSensors.length > 0) limitingFactors.push(`${offlineSensors.length} capteur(s) hors ligne`);
-  if (map.tds != null && map.tds >= 150 && map.tds <= 800) opportunities.push('Nutriments optimaux — maintenir le dosage actuel');
-  if (map.soil_moisture != null && map.soil_moisture >= 30 && map.soil_moisture <= 70) opportunities.push('Humidité sol parfaite — réduire fréquence arrosage');
-  if (dli.pct < 50) opportunities.push(`+2h LED → croissance estimée améliorée`);
-  if (map.temperature != null && map.temperature >= 18 && map.temperature <= 28) opportunities.push(`Température optimale (${map.temperature.toFixed(1)}°C) — conditions idéales`);
-  if (anomalies.length === 0) opportunities.push('Tous les capteurs dans les normes ✓');
+  // Sparklines
+  const sparkPh = genSparkData(map.ph, 0.05);
+  const sparkLight = genSparkData(map.light, 0.15);
+  const sparkTds = genSparkData(map.tds, 0.1);
+  const sparkTemp = genSparkData(map.temperature, 0.06);
+
+  const dliVal = map.light != null ? Math.round((map.light * 0.0185 * 12) * 10) / 10 : 0;
+
+  // Limiting factors
+  const limits: string[] = [];
+  if (map.ph != null && (map.ph < 5.5 || map.ph > 7.5)) limits.push(`pH ${map.ph.toFixed(1)} — absorption réduite`);
+  if (map.light != null && map.light < 500) limits.push(`Lumière ${Math.round(map.light)} lux — photosynthèse limitée`);
+  if (map.soil_moisture != null && map.soil_moisture < 30) limits.push(`Sol sec (${Math.round(map.soil_moisture)}%) — stress hydrique`);
+  if (offlineSensors.length > 0) limits.push(`${offlineSensors.length} capteur(s) hors ligne`);
+
+  const opps: string[] = [];
+  if (map.tds != null && map.tds >= 150 && map.tds <= 800) opps.push('Nutriments optimaux — maintenir dosage');
+  if (map.temperature != null && map.temperature >= 18 && map.temperature <= 28) opps.push(`Température idéale (${map.temperature.toFixed(1)}°C)`);
+  if (anomalies.length === 0) opps.push('Tous capteurs dans les normes ✓');
+  if (map.soil_moisture != null && map.soil_moisture >= 30 && map.soil_moisture <= 70) opps.push('Humidité sol parfaite');
 
   return (
-    <div className="flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar bg-[var(--bg-primary)] text-[var(--text-primary)] pb-20 lg:pb-0">
+    <div className="flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar pb-20 lg:pb-0"
+      style={{ background: 'var(--bg-primary)', color: 'var(--text-primary)', fontFamily: 'Inter, system-ui, sans-serif' }}>
 
-      {/* ══ HERO HEADER ══════════════════════════════════════════════ */}
-      <div className="relative overflow-hidden">
-        {/* Background orbs */}
-        <div className="absolute -top-24 -right-24 w-72 h-72 rounded-full blur-3xl pointer-events-none" style={{ background: `radial-gradient(circle, ${scoreColor(score)}18, transparent 70%)` }} />
-        <div className="absolute -bottom-12 -left-12 w-48 h-48 rounded-full blur-3xl pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(203,237,98,0.08), transparent 70%)' }} />
+      {/* ── SCANLINE OVERLAY (subtle) ── */}
+      <div className="pointer-events-none fixed inset-0 z-0"
+        style={{ backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(42,211,104,0.012) 2px, rgba(42,211,104,0.012) 4px)', zIndex: 0 }} />
 
-        <div className="relative p-6 md:p-8 lg:p-10 pb-0">
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-8">
-            {/* Title block */}
+      <div className="relative z-10">
+
+        {/* ══ HEADER ════════════════════════════════════════════════ */}
+        <div className="px-6 md:px-8 pt-6 md:pt-8 pb-4">
+          <div className="flex items-center justify-between gap-4 flex-wrap">
             <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0" style={{ background: `${scoreColor(score)}18`, border: `1px solid ${scoreColor(score)}30` }}>
-                <span className="material-symbols-outlined text-3xl" style={{ color: scoreColor(score) }}>analytics</span>
-              </div>
+              {/* Accent line */}
+              <div className="w-1 h-10 rounded-full" style={{ background: 'linear-gradient(180deg, #2AD368, #CBED62)', boxShadow: '0 0 12px #2AD36888' }} />
               <div>
-                <h1 className="text-3xl md:text-4xl font-black text-[var(--text-primary)] leading-tight">
-                  Rapports <span style={{ color: '#CBED62' }}>&</span> Analyses
+                <h1 className="font-black tracking-wide" style={{ fontSize: 'clamp(20px,3vw,32px)', color: '#fff', letterSpacing: '0.05em', textShadow: '0 0 30px rgba(42,211,104,0.3)' }}>
+                  RAPPORTS <span style={{ color: '#2AD368' }}>&</span> ANALYSES
                 </h1>
-                <p className="text-[var(--text-secondary)] text-sm mt-1 flex items-center gap-2">
-                  <span className={`w-2 h-2 rounded-full flex-shrink-0 ${connected ? 'bg-[#2AD368] animate-pulse' : 'bg-red-400'}`} style={{ boxShadow: connected ? '0 0 6px #2AD368' : undefined }} />
-                  {connected ? `${onlineSensors.length} capteurs en ligne · ${plants.length} culture${plants.length > 1 ? 's' : ''}` : 'Hors ligne'}
+                <p className="text-xs font-bold tracking-widest mt-0.5" style={{ color: 'rgba(255,255,255,0.3)', letterSpacing: '0.12em' }}>
+                  <span style={{ color: connected ? '#2AD368' : '#FF6B6B' }}>●</span> {onlineSensors.length} NŒUDS EN LIGNE · {plants.length} CULTURE{plants.length > 1 ? 'S' : ''}
                 </p>
               </div>
             </div>
 
-            {/* Period + Refresh */}
             <div className="flex items-center gap-2">
-              <div className="glass-card rounded-2xl p-1.5 flex gap-1 border border-white/8">
+              {/* System status badge */}
+              <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-bold"
+                style={{ background: 'rgba(42,211,104,0.08)', border: '1px solid rgba(42,211,104,0.2)', color: '#2AD368' }}>
+                <span className="w-1.5 h-1.5 rounded-full bg-[#2AD368] animate-pulse" style={{ boxShadow: '0 0 6px #2AD368' }} />
+                SYSTÈME ACTIF
+              </div>
+              {/* Period */}
+              <div className="flex rounded-xl overflow-hidden" style={{ border: '1px solid rgba(255,255,255,0.08)' }}>
                 {(['7j', '30j', '90j'] as Period[]).map(p => (
                   <button key={p} onClick={() => setPeriod(p)}
-                    className={`px-4 py-1.5 rounded-xl text-xs font-bold transition-all ${period === p ? 'bg-[#2AD368] text-[#0a1510] shadow-lg' : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'}`}
-                  >{p}</button>
+                    className="px-3 py-1.5 text-xs font-bold transition-all"
+                    style={period === p
+                      ? { background: '#2AD368', color: '#0a1510' }
+                      : { background: 'rgba(255,255,255,0.03)', color: 'rgba(255,255,255,0.4)' }}>
+                    {p}
+                  </button>
                 ))}
               </div>
-              <button onClick={handleRefresh} title="Rafraîchir EVE"
-                className="w-10 h-10 rounded-2xl flex items-center justify-center glass-card border border-white/8 hover:border-[#2AD368]/30 transition-all"
-              >
-                <span className={`material-symbols-outlined text-[#2AD368] text-lg ${refreshing ? 'animate-spin' : ''}`}>refresh</span>
+              <button onClick={handleRefresh} className="w-9 h-9 rounded-xl flex items-center justify-center transition-all"
+                style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                <span className={`material-symbols-outlined text-lg ${refreshing ? 'animate-spin' : ''}`} style={{ color: '#2AD368', fontSize: 18 }}>refresh</span>
               </button>
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="px-6 md:px-8 lg:px-10 space-y-6 pb-8">
+        <div className="px-6 md:px-8 pb-8 space-y-5">
 
-        {/* ══ ROW 1 : SCORE + EVE ANALYSIS ══════════════════════════ */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+          {/* ══ ROW 1 : SCORE + EVE + MINI STATS ═════════════════════ */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
 
-          {/* Score card */}
-          <div className={`lg:col-span-4 glass-card rounded-3xl p-6 border border-white/5 bg-gradient-to-br ${scoreGradient(score)} flex flex-col items-center justify-center gap-4 relative overflow-hidden`}>
-            <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(circle at 30% 20%, rgba(255,255,255,0.03), transparent 60%)' }} />
-            <span className="text-xs font-bold uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.35)' }}>Virida Score</span>
-            <ScoreRing score={score} />
-            <div className="text-center">
-              <p className="font-bold text-sm" style={{ color: scoreColor(score) }}>{scoreLabel(score)}</p>
-              <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.3)' }}>Période : {period === '7j' ? '7 jours' : period === '30j' ? '30 jours' : '90 jours'}</p>
-            </div>
-            {/* Mini stats row */}
-            <div className="w-full grid grid-cols-3 gap-2 mt-1">
-              {[
-                { val: `${score}%`, label: 'Santé', color: scoreColor(score) },
-                { val: String(criticals), label: 'Critiques', color: criticals > 0 ? '#FF6B6B' : '#2AD368' },
-                { val: String(onlineSensors.length), label: 'En ligne', color: '#2AD368' },
-              ].map(({ val, label, color }) => (
-                <div key={label} className="rounded-2xl p-2.5 text-center" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}>
-                  <div className="text-xl font-black leading-none mb-1" style={{ color }}>{val}</div>
-                  <div className="text-xs" style={{ color: 'rgba(255,255,255,0.35)', fontSize: 10 }}>{label}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* EVE Analysis */}
-          <div className="lg:col-span-8 glass-card rounded-3xl border border-[#CBED62]/15 flex flex-col overflow-hidden">
-            {/* EVE header */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-white/5" style={{ background: 'rgba(203,237,98,0.04)' }}>
-              <div className="flex items-center gap-3">
-                <img src="/abeillevd.svg" alt="EVE" className="w-8 h-8 animate-bee-fly-header"
-                  style={{ filter: 'brightness(0) saturate(100%) invert(93%) sepia(18%) saturate(700%) hue-rotate(30deg)' }} />
-                <div>
-                  <span className="font-bold text-sm text-[#CBED62]">Analyse EVE</span>
-                  <p className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>Intelligence artificielle · Gemma 4</p>
-                </div>
+            {/* SCORE CARD */}
+            <div className="lg:col-span-3 rounded-3xl p-6 flex flex-col items-center justify-center gap-4 relative overflow-hidden"
+              style={{ background: 'rgba(255,255,255,0.02)', border: `1px solid ${scoreColor(score)}28`, boxShadow: `0 0 40px ${scoreColor(score)}12, inset 0 0 40px ${scoreColor(score)}06` }}>
+              <div className="absolute top-3 left-3">
+                <span className="text-xs font-black tracking-widest uppercase" style={{ color: 'rgba(255,255,255,0.2)', fontSize: 9 }}>VIRIDA SCORE</span>
               </div>
-              {eveLoading && (
-                <div className="flex gap-1">
-                  {[0, 0.15, 0.3].map((d, i) => (
-                    <div key={i} className="w-1.5 h-1.5 rounded-full bg-[#CBED62] animate-bounce" style={{ animationDelay: `${d}s` }} />
-                  ))}
-                </div>
-              )}
-            </div>
-            {/* EVE text */}
-            <div className="flex-1 px-6 py-5">
-              {eveLoading ? (
-                <div className="space-y-2.5">
-                  {[100, 80, 60].map((w, i) => (
-                    <div key={i} className="h-3 rounded-full animate-pulse" style={{ width: `${w}%`, background: 'rgba(255,255,255,0.07)' }} />
-                  ))}
-                </div>
-              ) : (
-                <p className="text-[var(--text-primary)] leading-relaxed text-sm md:text-base">
-                  {eveSummary || <span style={{ color: 'rgba(255,255,255,0.3)', fontStyle: 'italic' }}>Connexion à EVE pour l'analyse...</span>}
-                </p>
-              )}
-            </div>
-            {/* Insights bottom */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-0 border-t border-white/5">
-              <div className="px-6 py-4 border-b md:border-b-0 md:border-r border-white/5">
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="material-symbols-outlined text-sm" style={{ color: '#FF6B6B', fontSize: 16 }}>trending_down</span>
-                  <span className="text-xs font-bold uppercase tracking-wider" style={{ color: '#FF6B6B' }}>Freins</span>
-                </div>
-                {limitingFactors.length === 0
-                  ? <p className="text-sm text-[#2AD368]">Aucun facteur limitant ✓</p>
-                  : <ul className="space-y-1.5">{limitingFactors.map((f, i) => (
-                    <li key={i} className="flex gap-2 text-sm text-[var(--text-primary)] leading-snug">
-                      <span className="flex-shrink-0 mt-0.5" style={{ color: '#FF6B6B' }}>•</span>{f}
-                    </li>
-                  ))}</ul>
-                }
+              <BigScoreRing score={score} />
+              <div className="text-center">
+                <p className="font-black text-sm tracking-wider" style={{ color: scoreColor(score), textShadow: `0 0 12px ${scoreColor(score)}` }}>{scoreLabel(score)}</p>
+                <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.25)' }}>Période : {period}</p>
               </div>
-              <div className="px-6 py-4">
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="material-symbols-outlined text-sm text-[#2AD368]" style={{ fontSize: 16 }}>trending_up</span>
-                  <span className="text-xs font-bold uppercase tracking-wider text-[#2AD368]">Opportunités</span>
-                </div>
-                {opportunities.length === 0
-                  ? <p className="text-sm" style={{ color: 'rgba(255,255,255,0.3)' }}>Calcul en cours...</p>
-                  : <ul className="space-y-1.5">{opportunities.map((o, i) => (
-                    <li key={i} className="flex gap-2 text-sm text-[var(--text-primary)] leading-snug">
-                      <span className="flex-shrink-0 mt-0.5 text-[#2AD368]">•</span>{o}
-                    </li>
-                  ))}</ul>
-                }
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* ══ ROW 2 : KPI METRICS ═══════════════════════════════════ */}
-        <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
-          <MetricCard
-            icon="light_mode" label="DLI Estimé"
-            value={String(dli.value)} unit="mol/m²/j"
-            barVal={dli.value} barMax={dli.target}
-            color={dli.pct < 30 ? '#FF6B6B' : dli.pct < 70 ? '#FFB74D' : '#2AD368'}
-            sub={`Cible : ${dli.target} mol · ${dli.pct}%`}
-            gradient={dli.pct < 30 ? 'from-red-500/8 to-transparent' : dli.pct < 70 ? 'from-orange-400/8 to-transparent' : 'from-[#2AD368]/8 to-transparent'}
-          />
-          <MetricCard
-            icon="science" label="Niveau pH"
-            value={map.ph != null ? map.ph.toFixed(2) : '—'} unit="pH"
-            barVal={map.ph != null ? Math.max(0, Math.min(14, map.ph)) : 0} barMax={14}
-            color={map.ph != null && (map.ph < 5.5 || map.ph > 7.5) ? '#FF6B6B' : '#a855f7'}
-            sub="Optimal : 5.5 – 7.0"
-            gradient={map.ph != null && (map.ph < 5.5 || map.ph > 7.5) ? 'from-red-500/8 to-transparent' : 'from-purple-500/8 to-transparent'}
-          />
-          <MetricCard
-            icon="water_drop" label="Nutriments"
-            value={map.tds != null ? String(Math.round(map.tds)) : '—'} unit="ppm"
-            barVal={map.tds != null ? Math.min(map.tds, 1200) : 0} barMax={1200}
-            color={map.tds != null && map.tds >= 150 ? '#2AD368' : '#FFB74D'}
-            sub="Optimal : 150 – 800 ppm"
-            gradient={map.tds != null && map.tds >= 150 ? 'from-[#2AD368]/8 to-transparent' : 'from-orange-400/8 to-transparent'}
-          />
-          <MetricCard
-            icon="thermostat" label="Température"
-            value={map.temperature != null ? map.temperature.toFixed(1) : '—'} unit="°C"
-            barVal={map.temperature != null ? Math.max(0, Math.min(map.temperature, 40)) : 0} barMax={40}
-            color={map.temperature != null && map.temperature >= 18 && map.temperature <= 28 ? '#2AD368' : map.temperature != null && (map.temperature < 15 || map.temperature > 32) ? '#FF6B6B' : '#FFB74D'}
-            sub="Optimal : 18 – 28°C"
-            gradient={map.temperature != null && map.temperature >= 18 && map.temperature <= 28 ? 'from-[#2AD368]/8 to-transparent' : 'from-red-500/8 to-transparent'}
-          />
-        </div>
-
-        {/* ══ ROW 3 : CULTURES ═════════════════════════════════════ */}
-        {plants.length > 0 && (
-          <div>
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-3">
-                <span className="material-symbols-outlined text-[#2AD368] text-2xl">spa</span>
-                <h2 className="text-lg font-black text-[var(--text-primary)]">Cultures <span className="text-[#2AD368]">en cours</span></h2>
-              </div>
-              <span className="text-xs font-bold px-3 py-1.5 rounded-full bg-[#2AD368]/10 border border-[#2AD368]/20 text-[#2AD368]">
-                {plants.length} plante{plants.length > 1 ? 's' : ''}
-              </span>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-              {plants.map((p, i) => {
-                const health = (p as any).health ?? 70;
-                const stage = (p as any).growthStage ?? p.status ?? '—';
-                const stageColor = STAGE_COLORS[stage] || '#2AD368';
-                const daysPlanted = p.plantedAt ? Math.round((Date.now() - new Date(p.plantedAt).getTime()) / 86400000) : null;
-                const imgSrc = (p as any).imageUrl || `/plantes/${(p.name || '').toLowerCase().replace(/\s+/g, '_')}.jpg`;
-                const hColor = health >= 70 ? '#2AD368' : health >= 40 ? '#FFB74D' : '#FF6B6B';
-                const reco: string[] = [];
-                if (map.ph != null && (map.ph < 5.5 || map.ph > 7.5)) reco.push(`pH ${map.ph.toFixed(1)} → corrige avant dommages racinaires`);
-                if (map.light != null && map.light < 500) reco.push(`Lumière ${Math.round(map.light)} lux → photosynthèse insuffisante`);
-                return (
-                  <div key={i} className="glass-card rounded-3xl overflow-hidden border border-white/5 hover:border-[#2AD368]/25 transition-all duration-300 hover:-translate-y-0.5 group">
-                    {/* Image zone */}
-                    <div className="relative h-36 bg-gradient-to-br from-[#1a2214] to-[#0a1208] overflow-hidden">
-                      <img src={imgSrc} alt={p.name || ''}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-70"
-                        onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-secondary)] via-transparent to-transparent" />
-                      {/* Emoji fallback */}
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="text-5xl" style={{ filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.5))' }}>{(p as any).iconEmoji || '🌱'}</span>
-                      </div>
-                      {/* Stage badge */}
-                      <div className="absolute top-3 left-3">
-                        <span className="text-xs font-bold px-2.5 py-1 rounded-full" style={{ background: `${stageColor}22`, border: `1px solid ${stageColor}40`, color: stageColor }}>
-                          {STAGE_LABELS[stage] || stage}
-                        </span>
-                      </div>
-                      {/* Days */}
-                      {daysPlanted != null && (
-                        <div className="absolute top-3 right-3">
-                          <span className="text-xs font-bold px-2 py-1 rounded-full" style={{ background: 'rgba(0,0,0,0.5)', color: 'rgba(255,255,255,0.6)' }}>J+{daysPlanted}</span>
-                        </div>
-                      )}
-                    </div>
-                    {/* Content */}
-                    <div className="p-4">
-                      <div className="flex items-start justify-between mb-3">
-                        <div>
-                          <h3 className="font-bold text-[var(--text-primary)]">{p.name}</h3>
-                          {p.species && <p className="text-xs italic text-[var(--text-secondary)] mt-0.5">{p.species}</p>}
-                        </div>
-                        <span className="text-sm font-black" style={{ color: hColor }}>{health}%</span>
-                      </div>
-                      <Bar value={health} max={100} color={hColor} h={5} />
-                      <p className="text-xs mt-1.5 mb-3" style={{ color: 'rgba(255,255,255,0.3)' }}>Santé de la plante</p>
-                      {reco.length > 0 && (
-                        <div className="px-3 py-2 rounded-2xl text-xs" style={{ background: 'rgba(255,107,107,0.07)', border: '1px solid rgba(255,107,107,0.2)', color: '#FF8A80' }}>
-                          ⚠ {reco[0]}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
-        {/* ══ ROW 4 : ANOMALIES ════════════════════════════════════ */}
-        <div className="glass-card rounded-3xl border border-white/5 overflow-hidden">
-          {/* Header */}
-          <div className="flex items-center justify-between px-6 py-4 border-b border-white/5">
-            <div className="flex items-center gap-3">
-              <div className={`w-9 h-9 rounded-2xl flex items-center justify-center ${anomalies.length > 0 ? 'bg-orange-400/10' : 'bg-[#2AD368]/10'}`}>
-                <span className={`material-symbols-outlined text-lg ${anomalies.length > 0 ? 'text-orange-400' : 'text-[#2AD368]'}`}>
-                  {anomalies.length > 0 ? 'warning_amber' : 'check_circle'}
-                </span>
-              </div>
-              <div>
-                <h2 className="font-bold text-[var(--text-primary)]">Anomalies actives</h2>
-                <p className="text-xs text-[var(--text-secondary)]">Surveillance en temps réel</p>
-              </div>
-            </div>
-            <span className={`text-sm font-black px-3 py-1.5 rounded-full ${anomalies.length > 0 ? 'bg-red-500/10 text-red-400' : 'bg-[#2AD368]/10 text-[#2AD368]'}`}>
-              {anomalies.length === 0 ? 'Tout est OK' : `${anomalies.length} alerte${anomalies.length > 1 ? 's' : ''}`}
-            </span>
-          </div>
-
-          {/* Content */}
-          <div className="p-4">
-            {anomalies.length === 0 ? (
-              <div className="py-6 flex flex-col items-center gap-3">
-                <div className="w-16 h-16 rounded-full bg-[#2AD368]/10 flex items-center justify-center">
-                  <span className="material-symbols-outlined text-3xl text-[#2AD368]">eco</span>
-                </div>
-                <p className="text-[#2AD368] font-bold">Tous les capteurs dans les plages normales</p>
-                <p className="text-sm text-[var(--text-secondary)]">Votre serre est en parfaite santé 🌿</p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {anomalies.map((a, i) => (
-                  <div key={i} className={`flex items-center gap-4 p-4 rounded-2xl border-l-4 ${a.severity === 'critical' ? 'border-red-500 bg-red-500/6' : 'border-orange-400 bg-orange-400/6'}`}
-                    style={{ borderLeft: `3px solid ${a.severity === 'critical' ? '#FF6B6B' : '#FFB74D'}` }}>
-                    <div className={`w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0 ${a.severity === 'critical' ? 'bg-red-500/15' : 'bg-orange-400/15'}`}>
-                      <span className={`material-symbols-outlined text-lg ${a.severity === 'critical' ? 'text-red-400' : 'text-orange-400'}`}>
-                        {a.severity === 'critical' ? 'error' : 'warning_amber'}
-                      </span>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-0.5">
-                        <span className={`font-bold text-sm ${a.severity === 'critical' ? 'text-red-400' : 'text-orange-400'}`}>{a.label}</span>
-                        <span className="text-sm text-[var(--text-primary)]">{a.value}</span>
-                      </div>
-                      <p className="text-xs text-[var(--text-secondary)]">→ {a.action}</p>
-                    </div>
-                    <span className={`text-xs font-black px-2 py-0.5 rounded-full flex-shrink-0 ${a.severity === 'critical' ? 'bg-red-500/15 text-red-400' : 'bg-orange-400/15 text-orange-400'}`}>
-                      {a.severity === 'critical' ? 'CRITIQUE' : 'WARN'}
-                    </span>
+              {/* 3 chips */}
+              <div className="w-full grid grid-cols-3 gap-1.5">
+                {[
+                  { v: `${score}%`, l: 'SANTÉ', c: scoreColor(score) },
+                  { v: String(criticals), l: 'ALERTES', c: criticals > 0 ? '#FF6B6B' : '#2AD368' },
+                  { v: String(onlineSensors.length), l: 'EN LIGNE', c: '#2AD368' },
+                ].map(({ v, l, c }) => (
+                  <div key={l} className="rounded-2xl p-2 text-center" style={{ background: `${c}10`, border: `1px solid ${c}25` }}>
+                    <div className="font-black leading-none mb-0.5" style={{ fontSize: 18, color: c, textShadow: `0 0 10px ${c}` }}>{v}</div>
+                    <div style={{ fontSize: 8, color: 'rgba(255,255,255,0.3)', fontWeight: 700, letterSpacing: '0.1em' }}>{l}</div>
                   </div>
                 ))}
               </div>
-            )}
-          </div>
-        </div>
-
-        {/* ══ ROW 5 : CAPTEURS HORS LIGNE (conditionnel) ═══════════ */}
-        {offlineSensors.length > 0 && (
-          <div className="glass-card rounded-3xl p-5 border border-orange-400/15">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-xl text-orange-400">sensors_off</span>
-                <h3 className="font-bold text-orange-400">Capteurs hors ligne</h3>
-              </div>
-              <span className="text-xs text-[var(--text-secondary)]">{offlineSensors.length} / {sensors.length}</span>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-              {offlineSensors.map((s, i) => (
-                <div key={i} className="flex items-center gap-2 px-3 py-2 rounded-xl" style={{ background: 'rgba(255,183,77,0.06)', border: '1px solid rgba(255,183,77,0.12)' }}>
-                  <div className="w-2 h-2 rounded-full bg-white/20 flex-shrink-0" />
-                  <span className="text-sm text-[var(--text-secondary)] truncate">{s.name}</span>
+
+            {/* EVE INTELLIGENCE */}
+            <div className="lg:col-span-9 rounded-3xl overflow-hidden flex flex-col"
+              style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(203,237,98,0.15)', boxShadow: '0 0 30px rgba(203,237,98,0.06)' }}>
+              {/* EVE Header */}
+              <div className="flex items-center justify-between px-6 py-4"
+                style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', background: 'rgba(203,237,98,0.03)' }}>
+                <div className="flex items-center gap-3">
+                  <img src="/abeillevd.svg" alt="EVE" className="w-8 h-8"
+                    style={{ filter: 'brightness(0) saturate(100%) invert(93%) sepia(18%) saturate(700%) hue-rotate(30deg)' }} />
+                  <div>
+                    <span className="font-black tracking-wider text-sm" style={{ color: '#CBED62', letterSpacing: '0.08em' }}>EVE INTELLIGENCE</span>
+                    <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)', fontWeight: 700, letterSpacing: '0.1em' }}>GEMMA 4 · ANALYSE EN TEMPS RÉEL</p>
+                  </div>
                 </div>
-              ))}
+                <div className="flex items-center gap-3">
+                  <AreaChart color="#CBED62" />
+                  {eveLoading && (
+                    <div className="flex gap-1">
+                      {[0, 0.15, 0.3].map((d, i) => (
+                        <div key={i} className="w-1.5 h-1.5 rounded-full animate-bounce" style={{ background: '#CBED62', animationDelay: `${d}s` }} />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* EVE body */}
+              <div className="flex-1 px-6 py-5">
+                {eveLoading ? (
+                  <div className="space-y-3">
+                    {[100, 75, 55].map((w, i) => (
+                      <div key={i} className="h-3 rounded-full animate-pulse" style={{ width: `${w}%`, background: 'rgba(203,237,98,0.1)' }} />
+                    ))}
+                  </div>
+                ) : (
+                  <p className="leading-relaxed" style={{ color: 'rgba(255,255,255,0.85)', fontSize: 15 }}>
+                    {eveSummary || <span style={{ color: 'rgba(255,255,255,0.25)', fontStyle: 'italic' }}>Connexion à EVE en cours...</span>}
+                  </p>
+                )}
+              </div>
+
+              {/* Freins / Opportunités */}
+              <div className="grid grid-cols-2" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+                <div className="px-6 py-4" style={{ borderRight: '1px solid rgba(255,255,255,0.05)' }}>
+                  <p className="font-black text-xs tracking-widest mb-3" style={{ color: '#FF6B6B', letterSpacing: '0.12em' }}>▼ FREINS</p>
+                  {limits.length === 0
+                    ? <p className="text-sm" style={{ color: '#2AD368' }}>Aucun facteur limitant ✓</p>
+                    : limits.map((f, i) => <p key={i} className="text-sm mb-1.5 flex gap-2" style={{ color: 'rgba(255,255,255,0.7)' }}><span style={{ color: '#FF6B6B' }}>•</span>{f}</p>)
+                  }
+                </div>
+                <div className="px-6 py-4">
+                  <p className="font-black text-xs tracking-widest mb-3" style={{ color: '#2AD368', letterSpacing: '0.12em' }}>▲ OPPORTUNITÉS</p>
+                  {opps.length === 0
+                    ? <p className="text-sm" style={{ color: 'rgba(255,255,255,0.3)' }}>Calcul...</p>
+                    : opps.map((o, i) => <p key={i} className="text-sm mb-1.5 flex gap-2" style={{ color: 'rgba(255,255,255,0.7)' }}><span style={{ color: '#2AD368' }}>•</span>{o}</p>)
+                  }
+                </div>
+              </div>
             </div>
           </div>
-        )}
 
+          {/* ══ ROW 2 : KPI METRICS WITH SPARKLINES ══════════════════ */}
+          <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
+            {[
+              { icon: 'light_mode', label: 'DLI ESTIMÉ', value: String(dliVal), unit: 'mol/m²/j', color: map.light != null && map.light >= 500 ? '#2AD368' : '#FFB74D', spark: sparkLight, sub: 'Cible : 12 mol/m²/j', barPct: Math.min(100, (dliVal / 12) * 100) },
+              { icon: 'science', label: 'NIVEAU pH', value: map.ph != null ? map.ph.toFixed(2) : '—', unit: 'pH', color: map.ph != null && map.ph >= 5.5 && map.ph <= 7.0 ? '#a855f7' : '#FF6B6B', spark: sparkPh, sub: 'Optimal : 5.5 – 7.0', barPct: map.ph != null ? Math.min(100, (map.ph / 14) * 100) : 0 },
+              { icon: 'water_drop', label: 'NUTRIMENTS', value: map.tds != null ? String(Math.round(map.tds)) : '—', unit: 'ppm', color: map.tds != null && map.tds >= 150 ? '#2AD368' : '#FFB74D', spark: sparkTds, sub: 'Optimal : 150 – 800 ppm', barPct: map.tds != null ? Math.min(100, (map.tds / 800) * 100) : 0 },
+              { icon: 'thermostat', label: 'TEMPÉRATURE', value: map.temperature != null ? map.temperature.toFixed(1) : '—', unit: '°C', color: map.temperature != null && map.temperature >= 18 && map.temperature <= 28 ? '#2AD368' : '#FF6B6B', spark: sparkTemp, sub: 'Optimal : 18 – 28°C', barPct: map.temperature != null ? Math.min(100, (map.temperature / 40) * 100) : 0 },
+            ].map(({ icon, label, value, unit, color, spark, sub, barPct }) => (
+              <div key={label} className="rounded-3xl p-5 relative overflow-hidden transition-transform hover:-translate-y-0.5 duration-300"
+                style={{ background: 'rgba(255,255,255,0.02)', border: `1px solid ${color}20`, boxShadow: `0 0 20px ${color}08` }}>
+                {/* Subtle corner glow */}
+                <div className="absolute top-0 right-0 w-20 h-20 rounded-full pointer-events-none"
+                  style={{ background: `radial-gradient(circle at top right, ${color}20, transparent 70%)` }} />
+                <div className="flex items-start justify-between mb-3">
+                  <div className="w-9 h-9 rounded-2xl flex items-center justify-center" style={{ background: `${color}15`, border: `1px solid ${color}25` }}>
+                    <span className="material-symbols-outlined" style={{ color, fontSize: 18 }}>{icon}</span>
+                  </div>
+                  <span className="font-black" style={{ fontSize: 9, color: 'rgba(255,255,255,0.25)', letterSpacing: '0.12em' }}>{label}</span>
+                </div>
+                <div className="flex items-end justify-between mb-3">
+                  <div className="flex items-baseline gap-1">
+                    <span className="font-black leading-none" style={{ fontSize: 34, color, textShadow: `0 0 16px ${color}66` }}>{value}</span>
+                    <span className="font-bold" style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)' }}>{unit}</span>
+                  </div>
+                  <Sparkline data={spark} color={color} height={36} />
+                </div>
+                {/* Bar */}
+                <div className="h-1 rounded-full overflow-hidden mb-2" style={{ background: 'rgba(255,255,255,0.05)' }}>
+                  <div style={{ width: `${barPct}%`, height: '100%', background: color, boxShadow: `0 0 6px ${color}`, transition: 'width 1s ease', borderRadius: 9999 }} />
+                </div>
+                <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.25)', fontWeight: 700 }}>{sub}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* ══ ROW 3 : LIVE BIO-ZONES (plants) ══════════════════════ */}
+          {plants.length > 0 && (
+            <div>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-1 h-6 rounded-full" style={{ background: '#2AD368', boxShadow: '0 0 8px #2AD368' }} />
+                <span className="font-black tracking-widest text-sm" style={{ color: '#fff', letterSpacing: '0.1em' }}>LIVE BIO-ZONES</span>
+                <span className="text-xs font-black px-2.5 py-1 rounded-full" style={{ background: 'rgba(42,211,104,0.1)', border: '1px solid rgba(42,211,104,0.2)', color: '#2AD368' }}>
+                  {plants.length} CULTURE{plants.length > 1 ? 'S' : ''}
+                </span>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                {plants.map((p, i) => {
+                  const health = (p as any).health ?? 70;
+                  const stage = (p as any).growthStage ?? p.status ?? '—';
+                  const stageColor = STAGE_COLORS[stage] || '#2AD368';
+                  const hColor = health >= 70 ? '#2AD368' : health >= 40 ? '#FFB74D' : '#FF6B6B';
+                  const daysPlanted = p.plantedAt ? Math.round((Date.now() - new Date(p.plantedAt).getTime()) / 86400000) : null;
+                  const imgSrc = (p as any).imageUrl || `/plantes/${(p.name || '').toLowerCase().replace(/\s+/g, '_')}.jpg`;
+                  const reco: string[] = [];
+                  if (map.ph != null && (map.ph < 5.5 || map.ph > 7.5)) reco.push(`pH ${map.ph.toFixed(1)} → corrige avant dommages racinaires`);
+                  return (
+                    <div key={i} className="rounded-3xl overflow-hidden group transition-transform hover:-translate-y-1 duration-300"
+                      style={{ background: 'rgba(255,255,255,0.02)', border: `1px solid ${hColor}18`, boxShadow: `0 0 20px ${hColor}08` }}>
+                      {/* Image zone */}
+                      <div className="relative h-44 overflow-hidden" style={{ background: 'linear-gradient(135deg, #1a2214, #0a1208)' }}>
+                        <img src={imgSrc} alt={p.name || ''}
+                          className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700"
+                          style={{ opacity: 0.75 }}
+                          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                        <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(10,18,8,0.95) 0%, rgba(10,18,8,0.3) 50%, transparent 100%)' }} />
+                        {/* Health ring overlay top-right */}
+                        <div className="absolute top-3 right-3 flex flex-col items-center gap-0.5">
+                          <div className="relative">
+                            <HealthRing pct={health} color={hColor} size={52} />
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              <span className="font-black text-xs" style={{ color: hColor }}>{health}</span>
+                            </div>
+                          </div>
+                        </div>
+                        {/* Stage badge */}
+                        <div className="absolute top-3 left-3">
+                          <span className="font-bold text-xs px-2.5 py-1 rounded-full" style={{ background: `${stageColor}22`, border: `1px solid ${stageColor}40`, color: stageColor, backdropFilter: 'blur(8px)' }}>
+                            {STAGE_LABELS[stage] || stage}
+                          </span>
+                        </div>
+                        {/* Days */}
+                        {daysPlanted != null && (
+                          <div className="absolute bottom-3 right-3">
+                            <span className="font-black text-xs px-2 py-0.5 rounded-lg" style={{ background: 'rgba(0,0,0,0.6)', color: 'rgba(255,255,255,0.5)', backdropFilter: 'blur(8px)' }}>J+{daysPlanted}</span>
+                          </div>
+                        )}
+                        {/* Plant name overlay */}
+                        <div className="absolute bottom-3 left-4">
+                          <h3 className="font-black text-base text-white leading-tight" style={{ textShadow: '0 2px 8px rgba(0,0,0,0.8)' }}>{p.name?.toUpperCase()}</h3>
+                          {p.species && <p className="text-xs italic" style={{ color: 'rgba(255,255,255,0.45)' }}>{p.species}</p>}
+                        </div>
+                      </div>
+                      {/* Body */}
+                      <div className="px-4 py-3">
+                        {/* Health bar */}
+                        <div className="flex items-center justify-between mb-1.5">
+                          <span className="text-xs font-bold" style={{ color: 'rgba(255,255,255,0.35)', letterSpacing: '0.08em' }}>VITALITÉ</span>
+                          <span className="text-xs font-black" style={{ color: hColor }}>{health}%</span>
+                        </div>
+                        <div className="h-1 rounded-full overflow-hidden mb-3" style={{ background: 'rgba(255,255,255,0.05)' }}>
+                          <div style={{ width: `${health}%`, height: '100%', background: `linear-gradient(90deg, ${hColor}, ${hColor}aa)`, boxShadow: `0 0 8px ${hColor}`, transition: 'width 1s ease', borderRadius: 9999 }} />
+                        </div>
+                        {reco.length > 0 && (
+                          <div className="px-3 py-2 rounded-2xl text-xs" style={{ background: 'rgba(255,107,107,0.07)', border: '1px solid rgba(255,107,107,0.2)', color: '#FF8A80' }}>
+                            ⚠ {reco[0]}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* ══ ROW 4 : ANOMALIES / THREAT MATRIX ════════════════════ */}
+          <div>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-1 h-6 rounded-full" style={{ background: anomalies.length > 0 ? '#FF6B6B' : '#2AD368', boxShadow: `0 0 8px ${anomalies.length > 0 ? '#FF6B6B' : '#2AD368'}` }} />
+              <span className="font-black tracking-widest text-sm" style={{ color: '#fff', letterSpacing: '0.1em' }}>ANOMALIES ACTIVES</span>
+              <span className="text-xs font-black px-2.5 py-1 rounded-full" style={{
+                background: anomalies.length > 0 ? 'rgba(255,107,107,0.1)' : 'rgba(42,211,104,0.1)',
+                border: `1px solid ${anomalies.length > 0 ? 'rgba(255,107,107,0.25)' : 'rgba(42,211,104,0.2)'}`,
+                color: anomalies.length > 0 ? '#FF6B6B' : '#2AD368',
+              }}>
+                {anomalies.length === 0 ? 'TOUT OK' : `${anomalies.length} ALERTE${anomalies.length > 1 ? 'S' : ''}`}
+              </span>
+            </div>
+
+            <div className="rounded-3xl overflow-hidden" style={{ background: 'rgba(255,255,255,0.02)', border: `1px solid ${anomalies.length > 0 ? 'rgba(255,107,107,0.15)' : 'rgba(42,211,104,0.12)'}` }}>
+              {anomalies.length === 0 ? (
+                <div className="py-10 flex flex-col items-center gap-4">
+                  <div className="w-20 h-20 rounded-full flex items-center justify-center" style={{ background: 'rgba(42,211,104,0.08)', border: '1px solid rgba(42,211,104,0.15)' }}>
+                    <span className="material-symbols-outlined text-4xl" style={{ color: '#2AD368' }}>eco</span>
+                  </div>
+                  <div className="text-center">
+                    <p className="font-black text-sm tracking-wider" style={{ color: '#2AD368', letterSpacing: '0.1em' }}>TOUS LES SYSTÈMES OPÉRATIONNELS</p>
+                    <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.3)' }}>Votre serre est en parfaite santé 🌿</p>
+                  </div>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
+                  {anomalies.map((a, i) => {
+                    const ac = a.severity === 'critical' ? '#FF6B6B' : '#FFB74D';
+                    return (
+                      <div key={i} className="flex items-center gap-4 p-5 relative"
+                        style={{
+                          borderBottom: i < anomalies.length - 1 && (anomalies.length <= 2 || i % 2 === 0) ? '1px solid rgba(255,255,255,0.04)' : undefined,
+                          borderLeft: i % 2 === 1 ? '1px solid rgba(255,255,255,0.04)' : undefined,
+                        }}>
+                        {/* Pulse dot */}
+                        <div className="relative flex-shrink-0">
+                          <div className="w-3 h-3 rounded-full" style={{ background: ac, boxShadow: `0 0 8px ${ac}` }} />
+                          <div className="absolute inset-0 w-3 h-3 rounded-full animate-ping" style={{ background: ac, opacity: 0.4 }} />
+                        </div>
+                        <div className="w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0"
+                          style={{ background: `${ac}15`, border: `1px solid ${ac}25` }}>
+                          <span className="material-symbols-outlined" style={{ color: ac, fontSize: 18 }}>
+                            {a.severity === 'critical' ? 'error' : 'warning_amber'}
+                          </span>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-0.5 flex-wrap">
+                            <span className="font-black text-sm" style={{ color: ac }}>{a.label}</span>
+                            <span className="font-bold text-sm" style={{ color: 'rgba(255,255,255,0.8)' }}>{a.value}</span>
+                          </div>
+                          <p className="text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>→ {a.action}</p>
+                        </div>
+                        <span className="font-black text-xs px-2.5 py-1 rounded-full flex-shrink-0"
+                          style={{ background: `${ac}15`, border: `1px solid ${ac}25`, color: ac, letterSpacing: '0.08em' }}>
+                          {a.severity === 'critical' ? 'CRITIQUE' : 'ATTENTION'}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* ══ CAPTEURS HORS LIGNE ══════════════════════════════════ */}
+          {offlineSensors.length > 0 && (
+            <div className="rounded-3xl p-5" style={{ background: 'rgba(255,183,77,0.03)', border: '1px solid rgba(255,183,77,0.15)' }}>
+              <div className="flex items-center gap-3 mb-3">
+                <span className="material-symbols-outlined text-xl" style={{ color: '#FFB74D' }}>sensors_off</span>
+                <span className="font-black text-xs tracking-widest" style={{ color: '#FFB74D', letterSpacing: '0.12em' }}>CAPTEURS HORS LIGNE</span>
+                <span className="ml-auto text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>{offlineSensors.length}/{sensors.length}</span>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                {offlineSensors.map((s, i) => (
+                  <div key={i} className="flex items-center gap-2 px-3 py-2 rounded-xl" style={{ background: 'rgba(255,183,77,0.05)', border: '1px solid rgba(255,183,77,0.1)' }}>
+                    <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: 'rgba(255,255,255,0.2)' }} />
+                    <span className="text-sm truncate" style={{ color: 'rgba(255,255,255,0.4)' }}>{s.name}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+        </div>
       </div>
     </div>
   );
