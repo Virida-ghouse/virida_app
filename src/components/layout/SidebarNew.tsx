@@ -11,7 +11,7 @@ interface SidebarProps {
 const menuItems = [
   { id: 'dashboard', label: 'Dashboard', icon: 'grid_view' },
   { id: 'plants', label: 'Crops', icon: 'potted_plant' },
-  { id: 'irrigation', label: 'Sensors', icon: 'sensors' },
+  { id: 'sensors', label: 'Sensors', icon: 'sensors' },
   { id: 'automation', label: 'Automation', icon: 'bolt' },
   { id: 'energy', label: 'Energy', icon: 'bolt' },
   { id: 'reports', label: 'Reports', icon: 'analytics' },

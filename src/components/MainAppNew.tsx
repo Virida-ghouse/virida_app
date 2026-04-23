@@ -11,6 +11,7 @@ import SettingsPanelNew from './settings/SettingsPanelNew';
 import ChatBotNew from './chatbot/ChatBotNew';
 import AdminPage from './admin/AdminPage';
 import ReportsNew from './reports/ReportsNew';
+import SensorsPageNew from './sensors/SensorsPageNew';
 import { useAuth } from '../contexts/AuthContext';
 import { useViridaSensors } from '../hooks/useViridaSensors';
 
@@ -42,6 +43,8 @@ const MainAppNew: React.FC = () => {
         return <DashboardNew greenhouseName={primaryGreenhouse?.name} />;
       case 'plants':
         return <PlantsLayoutNew defaultTab={plantsDefaultTab} onTabConsumed={() => setPlantsDefaultTab(0)} />;
+      case 'sensors':
+        return <SensorsPageNew />;
       case 'irrigation':
         return <IrrigationScheduleNew />;
       case 'automation':

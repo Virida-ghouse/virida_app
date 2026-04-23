@@ -22,7 +22,8 @@ const HeaderNew: React.FC<HeaderNewProps> = ({ currentView = 'dashboard', onNoti
   const viewTitles: Record<string, string> = {
     dashboard: 'Dashboard',
     plants: 'Plantes',
-    irrigation: 'Capteurs',
+    sensors: 'Capteurs',
+    irrigation: 'Irrigation',
     automation: 'Automation',
     energy: 'Énergie',
     reports: 'Rapports',
