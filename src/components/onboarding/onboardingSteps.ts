@@ -3,6 +3,8 @@ export interface OnboardingStep {
   title: string;
   description: string;
   emoji: string;
+  /** ID DOM de l'élément à mettre en évidence (sidebar ou bouton chat) */
+  targetId?: string;
 }
 
 export const ONBOARDING_STEPS: OnboardingStep[] = [
@@ -18,28 +20,32 @@ export const ONBOARDING_STEPS: OnboardingStep[] = [
     emoji: '📊',
     title: 'Tableau de bord',
     description:
-      "Ici tu as une vue complète de ta serre en temps réel : température, humidité, pH, luminosité… Tout d'un coup d'œil !",
+      "Clique sur Dashboard pour voir tous tes capteurs en temps réel : température, humidité, pH, luminosité… Tout d'un coup d'œil !",
+    targetId: 'onboarding-dashboard',
   },
   {
     id: 'plants',
     emoji: '🌱',
     title: 'Mes Plantes',
     description:
-      "Suis la croissance de chaque plante individuellement, note les arrosages et les soins, et observe leur évolution dans le temps.",
+      "Dans Crops, suis la croissance de chaque plante individuellement, note les arrosages, les soins et observe leur évolution.",
+    targetId: 'onboarding-plants',
   },
   {
-    id: 'irrigation',
-    emoji: '💧',
-    title: 'Irrigation & Automatisation',
+    id: 'automation',
+    emoji: '⚡',
+    title: 'Automatisation',
     description:
-      "Planifie tes arrosages et crée des règles automatiques. Si l'humidité du sol chute, la pompe se déclenche toute seule !",
+      "Avec Automation, crée des règles intelligentes : si l'humidité du sol chute, la pompe se déclenche toute seule !",
+    targetId: 'onboarding-automation',
   },
   {
     id: 'chat',
     emoji: '💬',
     title: 'Discute avec moi',
     description:
-      "Pose-moi n'importe quelle question sur ta serre en langage naturel. Je suis toujours disponible via le bouton 🐝 en bas à droite.",
+      "Ce bouton 🐝 en bas à droite, c'est moi ! Clique dessus pour me poser n'importe quelle question sur ta serre en langage naturel.",
+    targetId: 'onboarding-chat',
   },
   {
     id: 'ready',

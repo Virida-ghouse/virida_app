@@ -191,6 +191,7 @@ const ChatBotNew: React.FC<ChatBotProps> = ({ sensorData }) => {
       {/* Chat Toggle Button - Abeille EVE */}
       {!isOpen && (
         <button
+          id="onboarding-chat"
           onClick={() => setIsOpen(true)}
           className="relative group transition-all duration-300 hover:scale-110"
           aria-label="Ouvrir le chat avec EVE"

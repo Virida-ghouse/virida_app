@@ -50,6 +50,7 @@ const SidebarNew: React.FC<SidebarProps> = ({
             return (
               <div
                 key={item.id}
+                id={`onboarding-${item.id}`}
                 onClick={() => onViewChange(item.id)}
                 className={`
                   flex items-center gap-3 px-3 py-3 rounded-xl cursor-pointer transition-all

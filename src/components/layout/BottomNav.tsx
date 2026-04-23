@@ -22,6 +22,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ currentView, onViewChange }) => {
           return (
             <button
               key={item.id}
+              id={`onboarding-${item.id}`}
               onClick={() => onViewChange(item.id)}
               className={`flex flex-col items-center justify-center gap-1 px-3 py-2 rounded-xl transition-all min-w-[60px] ${
                 isActive
