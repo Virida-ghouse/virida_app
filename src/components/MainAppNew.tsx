@@ -21,6 +21,7 @@ const MainAppNew: React.FC = () => {
   const [currentView, setCurrentView] = React.useState('dashboard');
   const [sidebarOpen] = React.useState(true);
   const [plantsDefaultTab, setPlantsDefaultTab] = React.useState(0);
+  const [energyDefaultTab, setEnergyDefaultTab] = React.useState<'diagnostic' | 'energy' | undefined>(undefined);
   const { step, isOpen: onboardingOpen } = useOnboardingContext();
 
   // Navigation automatique onboarding : quand le step indique une vue, on y navigue
@@ -31,6 +32,9 @@ const MainAppNew: React.FC = () => {
     }
     if (step.tabNavigate !== undefined && step.viewNavigate === 'plants') {
       setPlantsDefaultTab(step.tabNavigate);
+    }
+    if (step.tabNavigate !== undefined && step.viewNavigate === 'energy') {
+      setEnergyDefaultTab(step.tabNavigate === 0 ? 'diagnostic' : 'energy');
     }
   }, [step.id, onboardingOpen]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -63,7 +67,7 @@ const MainAppNew: React.FC = () => {
       case 'automation':
         return <AutomationRulesNew />;
       case 'energy':
-        return <EnergyManagementNew />;
+        return <EnergyManagementNew defaultTab={energyDefaultTab} onTabConsumed={() => setEnergyDefaultTab(undefined)} />;
       case 'settings':
         return <SettingsPanelNew />;
       case 'admin':

@@ -181,63 +181,100 @@ export const ONBOARDING_STEPS: OnboardingStep[] = [
     emoji: '🔋',
     title: 'System Health',
     description:
-      "Clique sur 'Energy' 👆 pour accéder au diagnostic complet de ta serre : état de tous les capteurs, alertes de santé, et guide de dépannage IoT.",
+      "Clique sur 'Energy' dans le menu 👆 pour accéder au centre de diagnostic de ta serre. Ici tu supervises l'état de tous tes capteurs IoT en temps réel !",
     targetId: 'onboarding-energy',
     viewNavigate: 'energy',
+    tabNavigate: 0,
   },
   {
     id: 'energy-kpis',
     emoji: '💚',
-    title: 'Indicateurs de santé',
+    title: 'État global en un coup d\'œil',
     description:
-      "Ces 4 compteurs résument l'état global : capteurs en bonne santé, à surveiller, hors ligne et critiques. Un seul regard pour savoir si ta serre va bien !",
+      "Ces 4 indicateurs te donnent l'état de ta serre instantanément : capteurs OK (vert), à surveiller (orange), hors ligne (gris) et critiques (rouge). Si tout est vert, tu peux dormir tranquille ! 😴",
     targetId: 'onboarding-energy-kpis',
     viewNavigate: 'energy',
+    tabNavigate: 0,
   },
   {
     id: 'energy-telemetry',
     emoji: '📡',
     title: 'Sensor Telemetry',
     description:
-      "Ce tableau liste tous tes capteurs en direct avec leur valeur, plage cible et statut. Clique sur une ligne pour ouvrir la carte détaillée avec statut santé, valeur live et timestamp !",
+      "Ce tableau liste tous tes capteurs en direct, triés par priorité (critiques en premier). Clique sur une ligne pour voir les seuils, la tendance et le topic MQTT du capteur !",
     targetId: 'onboarding-energy-telemetry',
     viewNavigate: 'energy',
+    tabNavigate: 0,
   },
   {
     id: 'energy-mqtt',
     emoji: '🔗',
     title: 'MQTT Broker',
     description:
-      "Ce widget affiche l'état de connexion au broker MQTT de ta serre. Broker, utilisateur, topic abonné — et la commande SSH pour surveiller les messages en direct.",
+      "Ce widget affiche le statut de connexion au broker MQTT — la colonne vertébrale de ta serre IoT. Broker, user, topic, et une commande live pour voir les messages en direct !",
     targetId: 'onboarding-energy-mqtt',
     viewNavigate: 'energy',
-  },
-  {
-    id: 'energy-guide',
-    emoji: '🔧',
-    title: 'Guide de Dépannage',
-    description:
-      "Si un capteur est défaillant, EVE affiche automatiquement les étapes de résolution ici ! Numérotées et contextuelles selon le type de capteur : pH, TDS, température...",
-    targetId: 'onboarding-energy-guide',
-    viewNavigate: 'energy',
+    tabNavigate: 0,
   },
   {
     id: 'energy-commands',
     emoji: '💻',
     title: 'ESP32 Commandes',
     description:
-      "Ces commandes SSH te permettent de diagnostiquer rapidement : logs firmware, ping MQTT, redémarrage API, statut des services Pi. Copie-les directement dans ton terminal !",
+      "Tes raccourcis de diagnostic SSH : logs firmware, ping MQTT, redémarrage API, statut services Pi. Copie-colle directement dans ton terminal pour diagnostiquer en 10 secondes !",
     targetId: 'onboarding-energy-commands',
     viewNavigate: 'energy',
+    tabNavigate: 0,
   },
   {
     id: 'energy-thresholds',
     emoji: '🔔',
     title: 'Seuils d\'Alerte',
     description:
-      "Ce récapitulatif affiche les plages idéales pour chaque capteur : température, humidité, pH, TDS, lumière... Si une valeur sort de ces bornes, une alerte se déclenche !",
+      "Plages optimales de chaque capteur : température, humidité, pH, TDS, lumière, sol... Dès qu'une valeur dépasse ces bornes, le capteur passe en statut 'Attention' dans le tableau !",
     targetId: 'onboarding-energy-thresholds',
     viewNavigate: 'energy',
+    tabNavigate: 0,
+  },
+  {
+    id: 'energy-guide',
+    emoji: '🔧',
+    title: 'Guide de Dépannage',
+    description:
+      "En bas de page, EVE liste automatiquement les capteurs défaillants avec des étapes de résolution numérotées. pH hors plage ? Capteur offline ? Le guide te dit exactement quoi faire !",
+    targetId: 'onboarding-energy-guide',
+    viewNavigate: 'energy',
+    tabNavigate: 0,
+  },
+  {
+    id: 'energy-tab',
+    emoji: '⚡',
+    title: 'Onglet Énergie',
+    description:
+      "Clique sur l'onglet 'Énergie' ⚡ en haut à droite 👆 pour voir la consommation électrique estimée de ta serre et la distribution par module !",
+    targetId: 'onboarding-energy',
+    viewNavigate: 'energy',
+    tabNavigate: 1,
+  },
+  {
+    id: 'energy-power',
+    emoji: '🔌',
+    title: 'Consommation Estimée',
+    description:
+      "Ces 3 compteurs résument la puissance de ta serre : consommation totale en watts, nombre de capteurs actifs, et lectures stockées en base. Les valeurs changent en fonction de l'état réel de l'installation !",
+    targetId: 'onboarding-energy-power',
+    viewNavigate: 'energy',
+    tabNavigate: 1,
+  },
+  {
+    id: 'energy-distribution',
+    emoji: '📊',
+    title: 'Distribution par Module',
+    description:
+      "Chaque barre représente la consommation estimée d'un composant : ESP32, capteurs, pompe d'irrigation, ventilation, LEDs... Le total te donne la puissance instantanée de ta serre !",
+    targetId: 'onboarding-energy-distribution',
+    viewNavigate: 'energy',
+    tabNavigate: 1,
   },
   // ── Reports ───────────────────────────────────────────────────────────────
   {

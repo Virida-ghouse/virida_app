@@ -157,9 +157,14 @@ const MQTT_CONFIG = {
 };
 
 // ── Main Component ─────────────────────────────────────────────────────────
-export default function EnergyManagementNew() {
+interface EnergyProps { defaultTab?: 'diagnostic' | 'energy'; onTabConsumed?: () => void; }
+export default function EnergyManagementNew({ defaultTab, onTabConsumed }: EnergyProps = {}) {
   const { sensors, map, connected, onlineSensors, offlineSensors } = useViridaSensors(5000);
-  const [activeTab, setActiveTab] = useState<'diagnostic' | 'energy'>('diagnostic');
+  const [activeTab, setActiveTab] = useState<'diagnostic' | 'energy'>(defaultTab ?? 'diagnostic');
+
+  React.useEffect(() => {
+    if (defaultTab) { setActiveTab(defaultTab); onTabConsumed?.(); }
+  }, [defaultTab]); // eslint-disable-line react-hooks/exhaustive-deps
   const [expandedSensor, setExpandedSensor] = useState<string | null>(null);
 
   const lastUpdate = useMemo(() => {
@@ -561,7 +566,7 @@ export default function EnergyManagementNew() {
         {/* ══ TAB: ÉNERGIE ══════════════════════════════════════════════ */}
         {activeTab === 'energy' && (
           <div className="space-y-5">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div id="onboarding-energy-power" className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {[
                 { icon: 'bolt', label: 'CONSOMMATION ESTIMÉE', value: `${estimatedWatts.toFixed(1)}`, unit: 'W', sub: `${onlineSensors.length} modules actifs`, color: '#FF7043', note: 'Basé sur fiches techniques composants' },
                 { icon: 'memory', label: 'CAPTEURS ACTIFS', value: `${onlineSensors.length}`, unit: `/ ${sensors.length}`, sub: `${offlineSensors.length} hors ligne`, color: '#52f081', note: 'ESP32 principal + modules' },
@@ -588,7 +593,7 @@ export default function EnergyManagementNew() {
             </div>
 
             {/* Module distribution */}
-            <div className="rounded-2xl p-5" style={{ background: '#1c2026', border: '1px solid rgba(255,255,255,0.06)' }}>
+            <div id="onboarding-energy-distribution" className="rounded-2xl p-5" style={{ background: '#1c2026', border: '1px solid rgba(255,255,255,0.06)' }}>
               <div className="flex items-center gap-2 mb-5">
                 <div className="w-1 h-6 rounded-full" style={{ background: '#52f081', boxShadow: '0 0 8px #52f081' }} />
                 <span className="font-bold text-sm tracking-wider" style={{ color: '#fff', letterSpacing: '0.06em' }}>DISTRIBUTION PAR MODULE</span>
