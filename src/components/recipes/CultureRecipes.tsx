@@ -23,10 +23,6 @@ import {
   FormControl,
   InputLabel,
   Chip,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemIcon,
   Paper,
   Tooltip,
   Slider,
@@ -40,10 +36,8 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import ThermostatIcon from '@mui/icons-material/Thermostat';
 import OpacityIcon from '@mui/icons-material/Opacity';
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
-import ScienceIcon from '@mui/icons-material/Science';
 import LocalFloristIcon from '@mui/icons-material/LocalFlorist';
 import TimerIcon from '@mui/icons-material/Timer';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 const StyledCard = styled(Card)(({ theme }) => ({
   background: '#FFFFFF',
@@ -395,7 +389,7 @@ const CultureRecipes: React.FC = () => {
               <Grid item xs={12} md={6}>
                 <TextField
                   label="Recipe Name"
-                  value={newRecipe.name || ''}
+                  value={newRecipe.name ?? ''}
                   onChange={(e) =>
                     setNewRecipe((prev) => ({ ...prev, name: e.target.value }))
                   }
@@ -406,7 +400,7 @@ const CultureRecipes: React.FC = () => {
                 <FormControl fullWidth>
                   <InputLabel>Plant Type</InputLabel>
                   <Select
-                    value={newRecipe.plant || ''}
+                    value={newRecipe.plant ?? ''}
                     label="Plant Type"
                     onChange={(e) =>
                       setNewRecipe((prev) => ({ ...prev, plant: e.target.value }))
@@ -424,7 +418,7 @@ const CultureRecipes: React.FC = () => {
               <Grid item xs={12}>
                 <TextField
                   label="Description"
-                  value={newRecipe.description || ''}
+                  value={newRecipe.description ?? ''}
                   onChange={(e) =>
                     setNewRecipe((prev) => ({
                       ...prev,
@@ -442,7 +436,7 @@ const CultureRecipes: React.FC = () => {
                   Growth Duration (days)
                 </Typography>
                 <Slider
-                  value={newRecipe.duration || 90}
+                  value={newRecipe.duration ?? 90}
                   onChange={(_, value) =>
                     setNewRecipe((prev) => ({ ...prev, duration: value as number }))
                   }
@@ -475,7 +469,7 @@ const CultureRecipes: React.FC = () => {
                     <Box>
                       <Typography variant="caption">Day (°C)</Typography>
                       <Slider
-                        value={newRecipe.temperature?.day || 23}
+                        value={newRecipe.temperature?.day ?? 23}
                         onChange={(_, value) =>
                           setNewRecipe((prev) => ({
                             ...prev,
@@ -493,7 +487,7 @@ const CultureRecipes: React.FC = () => {
                     <Box>
                       <Typography variant="caption">Night (°C)</Typography>
                       <Slider
-                        value={newRecipe.temperature?.night || 18}
+                        value={newRecipe.temperature?.night ?? 18}
                         onChange={(_, value) =>
                           setNewRecipe((prev) => ({
                             ...prev,
@@ -528,8 +522,8 @@ const CultureRecipes: React.FC = () => {
                       <Typography variant="caption">Range (%)</Typography>
                       <Slider
                         value={[
-                          newRecipe.humidity?.min || 60,
-                          newRecipe.humidity?.max || 80,
+                          newRecipe.humidity?.min ?? 60,
+                          newRecipe.humidity?.max ?? 80,
                         ]}
                         onChange={(_, value) =>
                           setNewRecipe((prev) => ({
@@ -564,7 +558,7 @@ const CultureRecipes: React.FC = () => {
                     <Box>
                       <Typography variant="caption">Intensity (%)</Typography>
                       <Slider
-                        value={newRecipe.light?.intensity || 80}
+                        value={newRecipe.light?.intensity ?? 80}
                         onChange={(_, value) =>
                           setNewRecipe((prev) => ({
                             ...prev,
@@ -582,7 +576,7 @@ const CultureRecipes: React.FC = () => {
                     <Box>
                       <Typography variant="caption">Duration (hours)</Typography>
                       <Slider
-                        value={newRecipe.light?.duration || 16}
+                        value={newRecipe.light?.duration ?? 16}
                         onChange={(_, value) =>
                           setNewRecipe((prev) => ({
                             ...prev,
@@ -618,7 +612,7 @@ const CultureRecipes: React.FC = () => {
                         Frequency (times per day)
                       </Typography>
                       <Slider
-                        value={newRecipe.irrigation?.frequency || 2}
+                        value={newRecipe.irrigation?.frequency ?? 2}
                         onChange={(_, value) =>
                           setNewRecipe((prev) => ({
                             ...prev,
@@ -636,7 +630,7 @@ const CultureRecipes: React.FC = () => {
                     <Box>
                       <Typography variant="caption">Amount (ml)</Typography>
                       <Slider
-                        value={newRecipe.irrigation?.amount || 200}
+                        value={newRecipe.irrigation?.amount ?? 200}
                         onChange={(_, value) =>
                           setNewRecipe((prev) => ({
                             ...prev,

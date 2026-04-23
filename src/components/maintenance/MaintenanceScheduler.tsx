@@ -30,7 +30,6 @@ import { styled } from '@mui/material/styles';
 import AddIcon from '@mui/icons-material/Add';
 import BuildIcon from '@mui/icons-material/Build';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import WarningIcon from '@mui/icons-material/Warning';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -204,7 +203,7 @@ const MaintenanceScheduler: React.FC = () => {
     const task = {
       ...newTask,
       lastMaintenance: today,
-      nextMaintenance: calculateNextMaintenance(today, newTask.frequency || 'monthly'),
+      nextMaintenance: calculateNextMaintenance(today, newTask.frequency ?? 'monthly'),
       healthScore: 100,
     } as MaintenanceTask;
 
@@ -358,7 +357,7 @@ const MaintenanceScheduler: React.FC = () => {
           <Box display="flex" flexDirection="column" gap={3} mt={2}>
             <TextField
               label="Task Name"
-              value={newTask.name || ''}
+              value={newTask.name ?? ''}
               onChange={(e) =>
                 setNewTask((prev) => ({ ...prev, name: e.target.value }))
               }
@@ -367,7 +366,7 @@ const MaintenanceScheduler: React.FC = () => {
 
             <TextField
               label="Description"
-              value={newTask.description || ''}
+              value={newTask.description ?? ''}
               onChange={(e) =>
                 setNewTask((prev) => ({ ...prev, description: e.target.value }))
               }
@@ -379,7 +378,7 @@ const MaintenanceScheduler: React.FC = () => {
             <FormControl fullWidth>
               <InputLabel>System</InputLabel>
               <Select
-                value={newTask.system || 'Sensors'}
+                value={newTask.system ?? 'Sensors'}
                 label="System"
                 onChange={(e) =>
                   setNewTask((prev) => ({ ...prev, system: e.target.value }))
@@ -396,7 +395,7 @@ const MaintenanceScheduler: React.FC = () => {
             <FormControl fullWidth>
               <InputLabel>Frequency</InputLabel>
               <Select
-                value={newTask.frequency || 'monthly'}
+                value={newTask.frequency ?? 'monthly'}
                 label="Frequency"
                 onChange={(e) =>
                   setNewTask((prev) => ({ ...prev, frequency: e.target.value }))
@@ -413,7 +412,7 @@ const MaintenanceScheduler: React.FC = () => {
             <FormControl fullWidth>
               <InputLabel>Priority</InputLabel>
               <Select
-                value={newTask.priority || 'medium'}
+                value={newTask.priority ?? 'medium'}
                 label="Priority"
                 onChange={(e) =>
                   setNewTask((prev) => ({ ...prev, priority: e.target.value }))

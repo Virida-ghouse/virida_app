@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { motion, AnimatePresence } from 'framer-motion';
 import WarningIcon from '@mui/icons-material/Warning';
@@ -93,6 +93,13 @@ const getAlertIcon = (type: string) => {
   }
 };
 
+const getAlertColor = (type: string) => {
+  if (type === 'error') return '#EF4444';
+  if (type === 'warning') return '#F59E0B';
+  if (type === 'success') return '#10B981';
+  return '#3B82F6';
+};
+
 const AlertsPanel: React.FC<AlertsPanelProps> = ({ alerts }) => {
   const containerVariants = {
     hidden: { opacity: 0, x: -20 },
@@ -119,6 +126,11 @@ const AlertsPanel: React.FC<AlertsPanelProps> = ({ alerts }) => {
       transition: { duration: 0.2 },
     },
   };
+
+  const hasError = alerts.some((a) => a.type === 'error');
+  const hasWarning = alerts.some((a) => a.type === 'warning');
+  const globalStatusColor = hasError ? '#EF4444' : hasWarning ? '#F59E0B' : '#10B981';
+  const globalStatusLabel = hasError ? 'CRITIQUE' : hasWarning ? 'ATTENTION' : 'NORMAL';
 
   return (
     <AlertsContainer
@@ -205,11 +217,7 @@ const AlertsPanel: React.FC<AlertsPanelProps> = ({ alerts }) => {
                   left: 0,
                   right: 0,
                   bottom: 0,
-                  background: `radial-gradient(circle at 10% 50%, ${
-                    alert.type === 'error' ? '#EF4444' :
-                    alert.type === 'warning' ? '#F59E0B' :
-                    alert.type === 'success' ? '#10B981' : '#3B82F6'
-                  }20, transparent)`,
+                  background: `radial-gradient(circle at 10% 50%, ${getAlertColor(alert.type)}20, transparent)`,
                   borderRadius: '8px',
                   pointerEvents: 'none',
                 }}
@@ -268,8 +276,7 @@ const AlertsPanel: React.FC<AlertsPanelProps> = ({ alerts }) => {
               width: 8,
               height: 8,
               borderRadius: '50%',
-              background: alerts.some(a => a.type === 'error') ? '#EF4444' :
-                         alerts.some(a => a.type === 'warning') ? '#F59E0B' : '#10B981',
+              background: globalStatusColor,
             }}
           />
         </motion.div>
@@ -281,8 +288,7 @@ const AlertsPanel: React.FC<AlertsPanelProps> = ({ alerts }) => {
             fontWeight: 500,
           }}
         >
-          {alerts.some(a => a.type === 'error') ? 'CRITIQUE' :
-           alerts.some(a => a.type === 'warning') ? 'ATTENTION' : 'NORMAL'}
+          {globalStatusLabel}
         </Typography>
       </Box>
     </AlertsContainer>

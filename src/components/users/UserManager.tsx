@@ -24,14 +24,11 @@ import {
   InputLabel,
   Avatar,
   Chip,
-  Switch,
-  Tooltip,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import SecurityIcon from '@mui/icons-material/Security';
 import PersonIcon from '@mui/icons-material/Person';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import EngineeringIcon from '@mui/icons-material/Engineering';
@@ -325,7 +322,7 @@ const UserManager: React.FC = () => {
           <Box display="flex" flexDirection="column" gap={3} mt={2}>
             <TextField
               label="Full Name"
-              value={newUser.name || ''}
+              value={newUser.name ?? ''}
               onChange={(e) =>
                 setNewUser((prev) => ({ ...prev, name: e.target.value }))
               }
@@ -335,7 +332,7 @@ const UserManager: React.FC = () => {
             <TextField
               label="Email"
               type="email"
-              value={newUser.email || ''}
+              value={newUser.email ?? ''}
               onChange={(e) =>
                 setNewUser((prev) => ({ ...prev, email: e.target.value }))
               }
@@ -345,7 +342,7 @@ const UserManager: React.FC = () => {
             <FormControl fullWidth>
               <InputLabel>Role</InputLabel>
               <Select
-                value={newUser.role || 'operator'}
+                value={newUser.role ?? 'operator'}
                 label="Role"
                 onChange={(e) =>
                   setNewUser((prev) => ({
@@ -372,7 +369,7 @@ const UserManager: React.FC = () => {
                 <InputLabel>Permissions</InputLabel>
                 <Select
                   multiple
-                  value={newUser.permissions || []}
+                  value={newUser.permissions ?? []}
                   label="Permissions"
                   onChange={(e) =>
                     setNewUser((prev) => ({
@@ -408,7 +405,7 @@ const UserManager: React.FC = () => {
             <FormControl fullWidth>
               <InputLabel>Status</InputLabel>
               <Select
-                value={newUser.status || 'active'}
+                value={newUser.status ?? 'active'}
                 label="Status"
                 onChange={(e) =>
                   setNewUser((prev) => ({ ...prev, status: e.target.value }))

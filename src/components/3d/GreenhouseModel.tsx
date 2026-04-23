@@ -85,8 +85,8 @@ const SerreModel = ({ potGroup }: { potGroup: THREE.Group | null }) => {
     renderer.setSize(1, 1); // Taille minimale pour éviter les erreurs
 
     // Appliquer l'effet plexiglas/verre uniquement au matériau spécifique
-    if (materials && materials['0.917647_0.917647_0.917647_0.000000_0.800000']) {
-      const glassMaterial = materials['0.917647_0.917647_0.917647_0.000000_0.800000'];
+    const glassMaterial = materials?.['0.917647_0.917647_0.917647_0.000000_0.800000'];
+    if (glassMaterial) {
 
       // Appliquer l'effet plexiglas/verre
       glassMaterial.transparent = true;
@@ -116,8 +116,8 @@ const SerreModel = ({ potGroup }: { potGroup: THREE.Group | null }) => {
     }
 
     // Changer le matériau du plateau (beige/marron) en blanc
-    if (materials && materials['0.729412_0.250980_0.105882_0.000000_0.000000']) {
-      const platformMaterial = materials['0.729412_0.250980_0.105882_0.000000_0.000000'];
+    const platformMaterial = materials?.['0.729412_0.250980_0.105882_0.000000_0.000000'];
+    if (platformMaterial) {
 
       if (platformMaterial instanceof THREE.MeshStandardMaterial || platformMaterial instanceof THREE.MeshPhongMaterial) {
         // Appliquer la couleur blanche
@@ -529,21 +529,22 @@ const GreenhouseWithPot = () => {
 const SceneContent = () => {
   return (
     <>
+      {/* react-three-fiber JSX uses renderer-specific props (not DOM props). */}
       {/* Background adapté au thème - vert clair en light mode, sombre en dark mode */}
-      <color attach="background" args={[document.documentElement.classList.contains('dark') ? '#1a1f26' : '#f9fffa']} />
+      <color attach="background" args={[document.documentElement.classList.contains('dark') ? '#1a1f26' : '#f9fffa']} /> {/* NOSONAR */}
       
       {/* Lumière ambiante très faible pour le fond sombre */}
-      <ambientLight intensity={0.4} />
+      <ambientLight intensity={0.4} /> {/* NOSONAR */}
       
       {/* Point light au centre de la serre - éclairage intérieur */}
-      <pointLight 
+      <pointLight
         position={[0, 2, 0]} 
         intensity={1.8} 
         color="#ffffff" 
         distance={8} 
         decay={2}
         castShadow
-      />
+      /> {/* NOSONAR */}
       
       {/* Spotlight principal sur la serre - effet dramatique */}
       <spotLight
@@ -555,7 +556,7 @@ const SceneContent = () => {
         shadow-mapSize-width={2048}
         shadow-mapSize-height={2048}
         color="#2AD368"
-      />
+      /> {/* NOSONAR */}
       
       {/* Spotlight secondaire pour remplir les ombres */}
       <spotLight
@@ -565,15 +566,15 @@ const SceneContent = () => {
         intensity={1.2}
         color="#CBED62"
         castShadow
-      />
+      /> {/* NOSONAR */}
       
       {/* Lumière d'appoint latérale */}
-      <pointLight 
+      <pointLight
         position={[8, 4, -3]} 
         intensity={0.8} 
         color="#1fc75c"
         castShadow
-      />
+      /> {/* NOSONAR */}
       
       {/* Lumière de fond pour créer de la profondeur */}
       <directionalLight
@@ -581,7 +582,7 @@ const SceneContent = () => {
         intensity={0.4}
         color="#4a90e2"
         castShadow
-      />
+      /> {/* NOSONAR */}
       
       {/* <Environment preset="night" /> */}
       <Environment preset="sunset" />
@@ -610,7 +611,7 @@ const SceneContent = () => {
         args={[10, 10, VIRIDA_COLORS.PRIMARY_GREEN, VIRIDA_COLORS.LIGHT_GREEN]}
         position={[0, -0.01, 0]}
         visible={false}
-      />
+      /> {/* NOSONAR */}
     </>
   );
 };

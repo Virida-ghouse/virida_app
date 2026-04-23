@@ -6,7 +6,6 @@ import {
   Grid,
   Typography,
   Button,
-  IconButton,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -21,22 +20,15 @@ import {
   ListItem,
   ListItemText,
   ListItemIcon,
-  ListItemSecondaryAction,
-  Tooltip,
   Paper,
-  Divider,
   Alert,
   styled,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import GroupIcon from '@mui/icons-material/Group';
 import AssignmentIcon from '@mui/icons-material/Assignment';
-import TimelineIcon from '@mui/icons-material/Timeline';
 import {
   Timeline,
   TimelineItem,
@@ -273,8 +265,8 @@ const AdvancedTaskScheduler: React.FC = () => {
           <Alert severity="warning" sx={{ mb: 2 }}>
             <Typography variant="subtitle2">Scheduling Conflicts:</Typography>
             <List dense>
-              {conflicts.map((conflict, index) => (
-                <ListItem key={index}>
+              {conflicts.map((conflict) => (
+                <ListItem key={conflict}>
                   <ListItemIcon>
                     <PriorityHighIcon color="warning" />
                   </ListItemIcon>
@@ -431,7 +423,7 @@ const AdvancedTaskScheduler: React.FC = () => {
                 <FormControl fullWidth>
                   <InputLabel>Priority</InputLabel>
                   <Select
-                    defaultValue={editingTask?.priority || 'medium'}
+                    defaultValue={editingTask?.priority ?? 'medium'}
                     label="Priority"
                   >
                     <MenuItem value="high">High</MenuItem>
@@ -444,7 +436,7 @@ const AdvancedTaskScheduler: React.FC = () => {
                 <FormControl fullWidth>
                   <InputLabel>Status</InputLabel>
                   <Select
-                    defaultValue={editingTask?.status || 'pending'}
+                    defaultValue={editingTask?.status ?? 'pending'}
                     label="Status"
                   >
                     <MenuItem value="pending">Pending</MenuItem>
@@ -473,14 +465,14 @@ const AdvancedTaskScheduler: React.FC = () => {
               <InputLabel>Dependencies</InputLabel>
               <Select
                 multiple
-                defaultValue={editingTask?.dependencies || []}
+                defaultValue={editingTask?.dependencies ?? []}
                 label="Dependencies"
                 renderValue={(selected) => (
                   <Box display="flex" gap={1} flexWrap="wrap">
                     {selected.map((value) => (
                       <Chip
                         key={value}
-                        label={tasks.find(t => t.id === value)?.title || value}
+                        label={tasks.find(t => t.id === value)?.title ?? value}
                         size="small"
                       />
                     ))}
@@ -500,14 +492,14 @@ const AdvancedTaskScheduler: React.FC = () => {
               <InputLabel>Resources</InputLabel>
               <Select
                 multiple
-                defaultValue={editingTask?.resources || []}
+                defaultValue={editingTask?.resources ?? []}
                 label="Resources"
                 renderValue={(selected) => (
                   <Box display="flex" gap={1} flexWrap="wrap">
                     {selected.map((value) => (
                       <Chip
                         key={value}
-                        label={resources.find(r => r.id === value)?.name || value}
+                        label={resources.find(r => r.id === value)?.name ?? value}
                         size="small"
                       />
                     ))}

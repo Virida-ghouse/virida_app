@@ -12,11 +12,6 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  TextField,
-  Select,
-  MenuItem,
-  InputLabel,
-  FormControl,
   Tooltip,
   Chip,
   Paper,
@@ -71,7 +66,7 @@ interface Resource {
 }
 
 const ResourceManager: React.FC = () => {
-  const [resources, setResources] = React.useState<Resource[]>([
+  const [resources] = React.useState<Resource[]>([
     {
       id: 'water-main',
       name: 'Water Supply',
@@ -194,6 +189,15 @@ const ResourceManager: React.FC = () => {
     return `${value.toLocaleString()} ${unit}`;
   };
 
+  const getConsumptionLabel = (resource: Resource) => {
+    if (resource.consumption <= 0) {
+      return 'N/A';
+    }
+    return resource.type === 'energy'
+      ? `${resource.consumption} kWh`
+      : `${resource.consumption} L`;
+  };
+
   return (
     <Grid container spacing={3}>
       {resources.map((resource) => (
@@ -282,9 +286,7 @@ const ResourceManager: React.FC = () => {
                   sx={{ mt: 1 }}
                 >
                   Daily Consumption:{' '}
-                  {resource.type === 'energy'
-                    ? `${resource.consumption} kWh`
-                    : `${resource.consumption} L`}
+                  {getConsumptionLabel(resource)}
                 </Typography>
               )}
             </CardContent>
@@ -425,11 +427,7 @@ const ResourceManager: React.FC = () => {
                         Daily Consumption
                       </Typography>
                       <Typography variant="h6">
-                        {selectedResource.consumption > 0
-                          ? selectedResource.type === 'energy'
-                            ? `${selectedResource.consumption} kWh`
-                            : `${selectedResource.consumption} L`
-                          : 'N/A'}
+                        {getConsumptionLabel(selectedResource)}
                       </Typography>
                     </Paper>
                   </Grid>

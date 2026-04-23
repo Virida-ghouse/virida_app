@@ -10,12 +10,6 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogActions,
-  TextField,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
   Chip,
   List,
   ListItem,
@@ -23,19 +17,14 @@ import {
   ListItemIcon,
   Tooltip,
   Paper,
-  Divider,
-  Alert,
-  LinearProgress,
   styled,
 } from '@mui/material';
 import ThermostatIcon from '@mui/icons-material/Thermostat';
 import OpacityIcon from '@mui/icons-material/Opacity';
 import Co2Icon from '@mui/icons-material/Co2';
 import LightModeIcon from '@mui/icons-material/LightMode';
-import SettingsIcon from '@mui/icons-material/Settings';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import WarningIcon from '@mui/icons-material/Warning';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import TimelineIcon from '@mui/icons-material/Timeline';
 import BuildIcon from '@mui/icons-material/Build';
 import {
@@ -83,7 +72,6 @@ const EnhancedSensorManager: React.FC = () => {
   const [sensors, setSensors] = useState<SensorData[]>([]);
   const [selectedSensor, setSelectedSensor] = useState<SensorData | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
-  const [diagnosticsOpen, setDiagnosticsOpen] = useState(false);
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
 
   // Initialize with mock data
@@ -420,8 +408,8 @@ const EnhancedSensorManager: React.FC = () => {
                       Maintenance History
                     </Typography>
                     <List dense>
-                      {selectedSensor.maintenanceHistory.map((record, index) => (
-                        <ListItem key={index}>
+                      {selectedSensor.maintenanceHistory.map((record) => (
+                        <ListItem key={`${record.date}-${record.action}`}>
                           <ListItemIcon>
                             <BuildIcon />
                           </ListItemIcon>

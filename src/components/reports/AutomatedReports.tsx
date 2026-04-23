@@ -25,12 +25,6 @@ import {
   Chip,
   Switch,
   Tooltip,
-  Paper,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemIcon,
-  Divider,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import AddIcon from '@mui/icons-material/Add';
@@ -41,9 +35,6 @@ import EmailIcon from '@mui/icons-material/Email';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import BarChartIcon from '@mui/icons-material/BarChart';
-import BoltIcon from '@mui/icons-material/Bolt';
-import OpacityIcon from '@mui/icons-material/Opacity';
-import LocalFloristIcon from '@mui/icons-material/LocalFlorist';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 
 const StyledCard = styled(Card)(({ theme }) => ({
@@ -360,7 +351,7 @@ const AutomatedReports: React.FC = () => {
           <Box display="flex" flexDirection="column" gap={3} mt={2}>
             <TextField
               label="Report Name"
-              value={newSchedule.name || ''}
+              value={newSchedule.name ?? ''}
               onChange={(e) =>
                 setNewSchedule((prev) => ({ ...prev, name: e.target.value }))
               }
@@ -370,7 +361,7 @@ const AutomatedReports: React.FC = () => {
             <FormControl fullWidth>
               <InputLabel>Report Type</InputLabel>
               <Select
-                value={newSchedule.type || 'performance'}
+                value={newSchedule.type ?? 'performance'}
                 label="Report Type"
                 onChange={(e) =>
                   setNewSchedule((prev) => ({
@@ -394,7 +385,7 @@ const AutomatedReports: React.FC = () => {
             <FormControl fullWidth>
               <InputLabel>Frequency</InputLabel>
               <Select
-                value={newSchedule.frequency || 'daily'}
+                value={newSchedule.frequency ?? 'daily'}
                 label="Frequency"
                 onChange={(e) =>
                   setNewSchedule((prev) => ({
@@ -414,7 +405,7 @@ const AutomatedReports: React.FC = () => {
             <FormControl fullWidth>
               <InputLabel>Report Format</InputLabel>
               <Select
-                value={newSchedule.format || 'pdf'}
+                value={newSchedule.format ?? 'pdf'}
                 label="Report Format"
                 onChange={(e) =>
                   setNewSchedule((prev) => ({
@@ -435,7 +426,7 @@ const AutomatedReports: React.FC = () => {
               <InputLabel>Sections</InputLabel>
               <Select
                 multiple
-                value={newSchedule.sections || []}
+                value={newSchedule.sections ?? []}
                 label="Sections"
                 onChange={(e) =>
                   setNewSchedule((prev) => ({
@@ -468,7 +459,7 @@ const AutomatedReports: React.FC = () => {
 
             <TextField
               label="Recipients (comma-separated emails)"
-              value={newSchedule.recipients?.join(', ') || ''}
+              value={newSchedule.recipients?.join(', ') ?? ''}
               onChange={(e) =>
                 setNewSchedule((prev) => ({
                   ...prev,

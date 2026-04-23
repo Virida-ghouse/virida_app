@@ -115,9 +115,9 @@ const RealTimeCharts: React.FC<RealTimeChartsProps> = ({ data }) => {
     },
   ];
 
-  const currentMetric = metrics.find(m => m.key === selectedMetric) || metrics[0];
-  const currentValue = mockData[mockData.length - 1]?.[selectedMetric as keyof DataPoint] || 0;
-  const previousValue = mockData[mockData.length - 2]?.[selectedMetric as keyof DataPoint] || 0;
+  const currentMetric = metrics.find((m) => m.key === selectedMetric) ?? metrics[0];
+  const currentValue = mockData[mockData.length - 1]?.[selectedMetric as keyof DataPoint] ?? 0;
+  const previousValue = mockData[mockData.length - 2]?.[selectedMetric as keyof DataPoint] ?? 0;
   const trend = currentValue > previousValue ? 'up' : 'down';
   const trendPercentage = Math.abs(((currentValue - previousValue) / previousValue) * 100).toFixed(1);
 

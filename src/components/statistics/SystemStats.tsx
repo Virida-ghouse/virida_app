@@ -62,7 +62,6 @@ const COLORS = ['#052E1C', '#2AD368', '#2AD368', '#CBED62'];
 const SystemStats: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const isTablet = useMediaQuery(theme.breakpoints.down('lg'));
   
   // Exemple de données pour les statistiques
   const resourceUsage = [
@@ -93,7 +92,7 @@ const SystemStats: React.FC = () => {
       <Grid item xs={12} md={8}>
         <StyledCard>
           <CardContent>
-            <Typography variant={isMobile ? "h6" : "h6"} gutterBottom>
+            <Typography variant="h6" gutterBottom>
               Weekly Resource Usage
             </Typography>
             <Box height={isMobile ? 250 : 300}>

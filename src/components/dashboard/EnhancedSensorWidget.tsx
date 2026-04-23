@@ -74,15 +74,7 @@ const EnhancedSensorWidget: React.FC<EnhancedSensorWidgetProps> = ({ sensor }) =
     }
   };
 
-  const getColor = () => {
-    switch (sensor.type) {
-      case 'temperature': return '#2E7D32';
-      case 'humidity': return '#2E7D32';
-      case 'light': return '#2E7D32';
-      case 'ph': return '#2E7D32';
-      default: return '#2E7D32';
-    }
-  };
+  const getColor = () => '#2E7D32';
 
   const chartData = sensor.trend.map((value, index) => ({
     time: index,
@@ -90,6 +82,16 @@ const EnhancedSensorWidget: React.FC<EnhancedSensorWidgetProps> = ({ sensor }) =
   }));
 
   const progress = ((sensor.value - sensor.min) / (sensor.max - sensor.min)) * 100;
+  const statusColor = sensor.status === 'normal'
+    ? '#2AD388'
+    : sensor.status === 'warning'
+      ? '#FFA726'
+      : '#FF5252';
+  const statusLabel = sensor.status === 'normal'
+    ? 'Optimal'
+    : sensor.status === 'warning'
+      ? 'Attention Required'
+      : 'Critical Alert';
 
   return (
     <WidgetContainer>
@@ -134,7 +136,7 @@ const EnhancedSensorWidget: React.FC<EnhancedSensorWidgetProps> = ({ sensor }) =
             }
           }}
         />
-        {sensor.target && (
+        {sensor.target != null && (
           <Typography variant="caption" sx={{ color: '#666', mt: 0.5, display: 'block' }}>
             Target: {sensor.target}{sensor.unit}
           </Typography>
@@ -175,16 +177,14 @@ const EnhancedSensorWidget: React.FC<EnhancedSensorWidgetProps> = ({ sensor }) =
       <Typography 
         variant="caption" 
         sx={{ 
-          color: sensor.status === 'normal' ? '#2AD388' : 
-                sensor.status === 'warning' ? '#FFA726' : '#FF5252',
+          color: statusColor,
           fontWeight: 'medium',
           textAlign: 'center',
           display: 'block',
           mt: 1
         }}
       >
-        {sensor.status === 'normal' ? 'Optimal' : 
-         sensor.status === 'warning' ? 'Attention Required' : 'Critical Alert'}
+        {statusLabel}
       </Typography>
     </WidgetContainer>
   );

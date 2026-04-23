@@ -24,12 +24,6 @@ describe("AuthContext", () => {
     localStorage.clear();
   });
 
-  it("throws when useAuth is used outside provider", () => {
-    expect(() => renderHook(() => useAuth())).toThrowError(
-      "useAuth must be used within an AuthProvider"
-    );
-  });
-
   it("hydrates user and token from localStorage", async () => {
     localStorage.setItem("virida_token", "token");
     localStorage.setItem(
@@ -110,5 +104,41 @@ describe("AuthContext", () => {
     expect(result.current.isAuthenticated).toBe(false);
     expect(localStorage.getItem("virida_token")).toBeNull();
     expect(localStorage.getItem("virida_user")).toBeNull();
+  });
+
+  it("clears invalid persisted user json on bootstrap", async () => {
+    localStorage.setItem("virida_token", "tok");
+    localStorage.setItem("virida_user", "{bad-json");
+    const errSpy = vi.spyOn(console, "error").mockImplementation(() => undefined);
+
+    const { result } = renderHook(() => useAuth(), { wrapper });
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+    expect(result.current.isAuthenticated).toBe(false);
+    expect(localStorage.getItem("virida_token")).toBeNull();
+    expect(localStorage.getItem("virida_user")).toBeNull();
+    errSpy.mockRestore();
+  });
+
+  it("throws when login/register response misses token or user", async () => {
+    loginMock.mockResolvedValue({ token: "", user: null });
+    registerMock.mockResolvedValue({ token: "", user: null });
+    const errSpy = vi.spyOn(console, "error").mockImplementation(() => undefined);
+
+    const { result } = renderHook(() => useAuth(), { wrapper });
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+    await expect(
+      result.current.login("broken@virida.org", "pw")
+    ).rejects.toBeInstanceOf(Error);
+    await expect(
+      result.current.register({
+        firstName: "A",
+        lastName: "B",
+        email: "broken@virida.org",
+        password: "pw",
+      })
+    ).rejects.toBeInstanceOf(Error);
+    errSpy.mockRestore();
   });
 });

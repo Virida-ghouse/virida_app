@@ -89,27 +89,32 @@ const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const drawerVariant = isMobile ? 'temporary' : 'permanent';
+  const effectiveOpen = isMobile ? open : true;
+  const drawerWidth = isMobile ? 280 : open ? 240 : 72;
+  const containerWidth = isMobile ? 0 : open ? 240 : 72;
+  const displayMode = isMobile && !open ? 'none' : 'block';
 
   return (
     <StyledDrawer
-      variant={isMobile ? "temporary" : "permanent"}
-      open={isMobile ? open : true}
+      variant={drawerVariant}
+      open={effectiveOpen}
       onClose={onToggle}
       ModalProps={{
         keepMounted: true, // Better open performance on mobile.
       }}
       sx={{
-        width: isMobile ? 0 : (open ? 240 : 72),
+        width: containerWidth,
         flexShrink: 0,
         position: 'fixed',
         zIndex: 1200,
-        display: isMobile ? (open ? 'block' : 'none') : 'block',
+        display: displayMode,
         transition: theme.transitions.create('width', {
           easing: theme.transitions.easing.sharp,
           duration: theme.transitions.duration.enteringScreen,
         }),
         '& .MuiDrawer-paper': {
-          width: isMobile ? 280 : (open ? 240 : 72),
+          width: drawerWidth,
           overflowX: 'hidden',
           position: 'fixed',
           height: '100vh',

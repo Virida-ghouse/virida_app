@@ -26,7 +26,8 @@ describe('apiConfig helpers', () => {
       json: vi.fn().mockResolvedValue({ error: 'Invalid payload' }),
     } as unknown as Response;
 
-    await expect(handleApiError(response)).rejects.toEqual({
+    await expect(handleApiError(response)).rejects.toMatchObject({
+      message: 'Invalid payload',
       status: 422,
       data: { error: 'Invalid payload' },
     });
@@ -39,7 +40,8 @@ describe('apiConfig helpers', () => {
       json: vi.fn().mockRejectedValue(new Error('bad json')),
     } as unknown as Response;
 
-    await expect(handleApiError(response)).rejects.toEqual({
+    await expect(handleApiError(response)).rejects.toMatchObject({
+      message: 'Erreur HTTP 500',
       status: 500,
       data: { error: 'Erreur HTTP 500' },
     });

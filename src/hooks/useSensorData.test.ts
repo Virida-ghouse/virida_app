@@ -1,5 +1,5 @@
 import { renderHook, waitFor } from "@testing-library/react";
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useSensorData } from "./useSensorData";
 import { useSensorStore } from "../store/sensorStore";
 
@@ -32,5 +32,23 @@ describe("useSensorData", () => {
     });
 
     expect(result.current.data?.unit).toBe("°C");
+  });
+
+  it("exposes refetch and handles update errors without crashing", async () => {
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => undefined);
+    useSensorStore.setState({
+      updateSensorData: () => {
+        throw new Error("forced-update-error");
+      },
+    } as never);
+
+    const { result } = renderHook(() => useSensorData("sensor-err"));
+
+    await waitFor(() => {
+      expect(errorSpy).toHaveBeenCalled();
+    });
+
+    await expect(result.current.refetch()).resolves.toBeUndefined();
+    errorSpy.mockRestore();
   });
 });

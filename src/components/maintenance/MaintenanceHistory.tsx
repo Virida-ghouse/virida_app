@@ -24,16 +24,13 @@ import {
   ListItem,
   ListItemText,
   ListItemIcon,
-  Divider,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
 import BuildIcon from '@mui/icons-material/Build';
-import DescriptionIcon from '@mui/icons-material/Description';
 import PersonIcon from '@mui/icons-material/Person';
 import TimelineIcon from '@mui/icons-material/Timeline';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import WarningIcon from '@mui/icons-material/Warning';
 import InfoIcon from '@mui/icons-material/Info';
 
 const StyledCard = styled(Card)(({ theme }) => ({
@@ -62,7 +59,7 @@ interface MaintenanceRecord {
 }
 
 const MaintenanceHistory: React.FC = () => {
-  const [records, setRecords] = React.useState<MaintenanceRecord[]>([
+  const [records] = React.useState<MaintenanceRecord[]>([
     {
       id: 1,
       taskName: 'Sensor Calibration',
@@ -257,8 +254,8 @@ const MaintenanceHistory: React.FC = () => {
                       Findings
                     </Typography>
                     <List dense>
-                      {selectedRecord.findings.map((finding, index) => (
-                        <ListItem key={index}>
+                      {selectedRecord.findings.map((finding) => (
+                        <ListItem key={`${selectedRecord.id}-finding-${finding}`}>
                           <ListItemIcon>
                             <TimelineIcon sx={{ color: '#3498db' }} />
                           </ListItemIcon>
@@ -281,8 +278,8 @@ const MaintenanceHistory: React.FC = () => {
                       Actions Taken
                     </Typography>
                     <List dense>
-                      {selectedRecord.actions.map((action, index) => (
-                        <ListItem key={index}>
+                      {selectedRecord.actions.map((action) => (
+                        <ListItem key={`${selectedRecord.id}-action-${action}`}>
                           <ListItemIcon>
                             <CheckCircleIcon sx={{ color: '#2ecc71' }} />
                           </ListItemIcon>
@@ -305,9 +302,9 @@ const MaintenanceHistory: React.FC = () => {
                       Parts Used
                     </Typography>
                     <Box display="flex" gap={1} flexWrap="wrap">
-                      {selectedRecord.parts.map((part, index) => (
+                      {selectedRecord.parts.map((part) => (
                         <Chip
-                          key={index}
+                          key={`${selectedRecord.id}-part-${part}`}
                           label={part}
                           size="small"
                           icon={<BuildIcon />}

@@ -2,6 +2,12 @@ import { useEffect, useCallback } from 'react';
 import { useSensorStore } from '../store/sensorStore';
 import type { SensorData } from '../types/sensors';
 
+const getSecureRandomValue = (): number => {
+  const randomBuffer = new Uint32Array(1);
+  crypto.getRandomValues(randomBuffer);
+  return randomBuffer[0] / (0xffffffff + 1);
+};
+
 // Mock data generation
 const generateMockData = (type: string): number => {
   const ranges: Record<string, { min: number; max: number }> = {
@@ -14,7 +20,7 @@ const generateMockData = (type: string): number => {
   };
 
   const range = ranges[type] ?? ranges.TEMPERATURE;
-  return Math.random() * (range.max - range.min) + range.min;
+  return getSecureRandomValue() * (range.max - range.min) + range.min;
 };
 
 export const useSensorData = (sensorId: string) => {

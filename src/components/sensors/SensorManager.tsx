@@ -22,7 +22,6 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
-  Switch,
   Chip,
   LinearProgress,
   Tooltip,
@@ -349,7 +348,7 @@ const SensorManager: React.FC = () => {
           <Box display="flex" flexDirection="column" gap={3} mt={2}>
             <TextField
               label="Sensor Name"
-              value={newSensor.name || ''}
+              value={newSensor.name ?? ''}
               onChange={(e) =>
                 setNewSensor((prev) => ({ ...prev, name: e.target.value }))
               }
@@ -359,7 +358,7 @@ const SensorManager: React.FC = () => {
             <FormControl fullWidth>
               <InputLabel>Type</InputLabel>
               <Select
-                value={newSensor.type || 'temperature'}
+                value={newSensor.type ?? 'temperature'}
                 label="Type"
                 onChange={(e) =>
                   setNewSensor((prev) => ({
@@ -383,7 +382,7 @@ const SensorManager: React.FC = () => {
             <FormControl fullWidth>
               <InputLabel>Location</InputLabel>
               <Select
-                value={newSensor.location || ''}
+                value={newSensor.location ?? ''}
                 label="Location"
                 onChange={(e) =>
                   setNewSensor((prev) => ({ ...prev, location: e.target.value }))
@@ -400,7 +399,7 @@ const SensorManager: React.FC = () => {
             <FormControl fullWidth>
               <InputLabel>Unit</InputLabel>
               <Select
-                value={newSensor.unit || ''}
+                value={newSensor.unit ?? ''}
                 label="Unit"
                 onChange={(e) =>
                   setNewSensor((prev) => ({ ...prev, unit: e.target.value }))
