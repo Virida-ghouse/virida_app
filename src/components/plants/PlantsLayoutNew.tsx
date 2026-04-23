@@ -35,10 +35,10 @@ const PlantsLayoutNew: React.FC<PlantsLayoutNewProps> = ({ defaultTab, onTabCons
   }, [defaultTab]);
 
   const tabs = [
-    { id: 0, label: 'Mon Jardin', icon: 'yard' },
-    { id: 1, label: 'Bibliothèque', icon: 'menu_book' },
-    { id: 2, label: 'Soins', icon: 'checklist' },
-    { id: 3, label: 'Calendrier', icon: 'calendar_month' },
+    { id: 0, label: 'Mon Jardin',   icon: 'yard',           onboardingId: 'onboarding-plants-tab-garden'   },
+    { id: 1, label: 'Bibliothèque', icon: 'menu_book',      onboardingId: 'onboarding-plants-tab-library'  },
+    { id: 2, label: 'Soins',        icon: 'checklist',      onboardingId: 'onboarding-plants-tab-care'     },
+    { id: 3, label: 'Calendrier',   icon: 'calendar_month', onboardingId: 'onboarding-plants-tab-calendar' },
   ];
 
   return (
@@ -67,6 +67,7 @@ const PlantsLayoutNew: React.FC<PlantsLayoutNewProps> = ({ defaultTab, onTabCons
           {tabs.map((tab) => (
             <button
               key={tab.id}
+              id={tab.onboardingId}
               onClick={() => setCurrentTab(tab.id)}
               className={`flex items-center gap-2 px-4 md:px-5 py-2.5 md:py-3 rounded-xl transition-all font-semibold whitespace-nowrap flex-shrink-0 ${
                 currentTab === tab.id

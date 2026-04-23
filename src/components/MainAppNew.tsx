@@ -14,12 +14,25 @@ import ReportsNew from './reports/ReportsNew';
 import SensorsPageNew from './sensors/SensorsPageNew';
 import { useAuth } from '../contexts/AuthContext';
 import { useViridaSensors } from '../hooks/useViridaSensors';
+import { useOnboardingContext } from './onboarding/OnboardingContext';
 
 const MainAppNew: React.FC = () => {
   const { user } = useAuth();
   const [currentView, setCurrentView] = React.useState('dashboard');
   const [sidebarOpen] = React.useState(true);
   const [plantsDefaultTab, setPlantsDefaultTab] = React.useState(0);
+  const { step, isOpen: onboardingOpen } = useOnboardingContext();
+
+  // Navigation automatique onboarding : quand le step indique une vue, on y navigue
+  React.useEffect(() => {
+    if (!onboardingOpen) return;
+    if (step.viewNavigate && step.viewNavigate !== currentView) {
+      setCurrentView(step.viewNavigate);
+    }
+    if (step.tabNavigate !== undefined && step.viewNavigate === 'plants') {
+      setPlantsDefaultTab(step.tabNavigate);
+    }
+  }, [step.id, onboardingOpen]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleNavigatePlantsCare = () => {
     setPlantsDefaultTab(2); // Onglet Soins

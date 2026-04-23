@@ -5,6 +5,10 @@ export interface OnboardingStep {
   emoji: string;
   /** ID DOM de l'élément à mettre en évidence */
   targetId?: string;
+  /** Vue à activer automatiquement lors de cette étape */
+  viewNavigate?: string;
+  /** Onglet à activer automatiquement dans PlantsLayout (0-3) */
+  tabNavigate?: number;
 }
 
 export const ONBOARDING_STEPS: OnboardingStep[] = [
@@ -44,8 +48,58 @@ export const ONBOARDING_STEPS: OnboardingStep[] = [
     emoji: '🌱',
     title: 'Mes Plantes',
     description:
-      "Dans Crops, suis la croissance de chaque plante individuellement. Note les arrosages, les soins et observe leur évolution dans le temps.",
+      "Clique sur 'Crops' dans le menu pour explorer tes cultures ! Tu peux y suivre chaque plante individuellement, planifier les soins et observer leur croissance.",
     targetId: 'onboarding-plants',
+  },
+  {
+    id: 'plants-mon-jardin',
+    emoji: '🪴',
+    title: 'Mon Jardin',
+    description:
+      "Voici tes cultures en cartes ! Chaque carte affiche la santé, le stade et les derniers soins. Clique sur une plante pour ouvrir sa fiche détaillée.",
+    targetId: 'onboarding-plants-grid',
+    viewNavigate: 'plants',
+    tabNavigate: 0,
+  },
+  {
+    id: 'plants-bibliotheque',
+    emoji: '📚',
+    title: 'Bibliothèque de plantes',
+    description:
+      "Clique sur l'onglet 'Bibliothèque' 👆 pour explorer le catalogue complet : fiches techniques, pH idéal, température, besoins en eau pour chaque espèce.",
+    targetId: 'onboarding-plants-tab-library',
+    viewNavigate: 'plants',
+    tabNavigate: 1,
+  },
+  {
+    id: 'plants-soins',
+    emoji: '💊',
+    title: 'Soins & Rappels',
+    description:
+      "Clique sur 'Soins' 👆 — tous tes rappels du jour sont ici : arrosage, taille, fertilisation. Tu peux créer des tâches récurrentes pour ne jamais oublier !",
+    targetId: 'onboarding-plants-tab-care',
+    viewNavigate: 'plants',
+    tabNavigate: 2,
+  },
+  {
+    id: 'plants-calendrier',
+    emoji: '📅',
+    title: 'Calendrier',
+    description:
+      "Clique sur 'Calendrier' 👆 pour une vue mensuelle de toutes tes interventions planifiées. Parfait pour anticiper la charge de travail !",
+    targetId: 'onboarding-plants-tab-calendar',
+    viewNavigate: 'plants',
+    tabNavigate: 3,
+  },
+  {
+    id: 'plants-detail',
+    emoji: '🔍',
+    title: 'Fiche détaillée',
+    description:
+      "Reviens sur 'Mon Jardin' et clique sur une plante ! Sa fiche s'ouvre avec 4 onglets : Vue d'ensemble, Soins, Historique de croissance, et Récoltes 🌾",
+    targetId: 'onboarding-plants-tab-garden',
+    viewNavigate: 'plants',
+    tabNavigate: 0,
   },
   {
     id: 'automation',
