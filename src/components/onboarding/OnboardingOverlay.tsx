@@ -139,12 +139,18 @@ const OnboardingOverlay: React.FC = () => {
             )}
           </AnimatePresence>
 
-          {/* ── Progress bar ── */}
-          <div style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 9100, height: 3, background: 'rgba(255,255,255,0.08)', pointerEvents: 'none' }}>
+          {/* ── Cadre vert tout autour de l'écran ── */}
+          <div style={{ position: 'fixed', inset: 0, zIndex: 9080, pointerEvents: 'none', borderRadius: 0,
+            border: '2.5px solid #1fc75c',
+            boxShadow: '0 0 18px rgba(31,199,92,0.7), inset 0 0 18px rgba(31,199,92,0.12)',
+          }} />
+
+          {/* ── Progress bar (en haut, fine) ── */}
+          <div style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 9100, height: 3, background: 'rgba(255,255,255,0.06)', pointerEvents: 'none' }}>
             <motion.div
               animate={{ width: `${((currentStep + 1) / total) * 100}%` }}
               transition={{ ease: 'easeOut', duration: 0.4 }}
-              style={{ height: '100%', background: 'linear-gradient(90deg, #1fc75c, #4ade80)', borderRadius: '0 3px 3px 0' }}
+              style={{ height: '100%', background: 'linear-gradient(90deg, #1fc75c, #4ade80)' }}
             />
           </div>
 
