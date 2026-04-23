@@ -89,7 +89,7 @@ const DashboardNew: React.FC<DashboardNewProps> = ({ greenhouseName }) => {
           {/* Left (8 col) */}
           <div className="lg:col-span-8 space-y-6">
             {/* Quick Stats — vraies données */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div id="onboarding-sensors-grid" className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <StatCard
                 icon="thermostat"
                 iconColor="text-[#2AD368]"
@@ -182,7 +182,7 @@ const DashboardNew: React.FC<DashboardNewProps> = ({ greenhouseName }) => {
             )}
 
             {/* 3D Visualization */}
-            <GlassCard className="rounded-3xl overflow-hidden relative group border-2 border-[var(--border-color)] shadow-xl hover:shadow-2xl transition-shadow">
+            <GlassCard id="onboarding-3d-view" className="rounded-3xl overflow-hidden relative group border-2 border-[var(--border-color)] shadow-xl hover:shadow-2xl transition-shadow">
               <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-primary)] via-[var(--bg-primary)]/60 to-transparent z-[5]"></div>
               <div className="w-full h-[300px] md:h-[400px] relative z-[1]">
                 <GreenhouseModel />
