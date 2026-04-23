@@ -180,7 +180,7 @@ const OnboardingOverlay: React.FC = () => {
                 style={{
                   position: 'fixed', inset: 0, zIndex: 9100,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  pointerEvents: 'auto',
+                  pointerEvents: 'none',
                 }}
               >
                 {/* Glass card centré */}
@@ -189,14 +189,15 @@ const OnboardingOverlay: React.FC = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.05 }}
                   style={{
-                    background: 'rgba(8,18,12,0.45)',
-                    border: '1.5px solid rgba(31,199,92,0.28)',
+                    pointerEvents: 'auto',
+                    background: 'rgba(8,18,12,0.25)',
+                    border: '2px solid #1fc75c',
                     borderRadius: 28,
                     padding: 'clamp(32px,5vw,48px) clamp(28px,5vw,52px)',
                     maxWidth: 520,
                     width: '90vw',
                     textAlign: 'center',
-                    boxShadow: '0 0 60px rgba(31,199,92,0.12), 0 24px 60px rgba(0,0,0,0.3)',
+                    boxShadow: '0 0 0 1px rgba(31,199,92,0.25), 0 0 40px rgba(31,199,92,0.45), 0 0 80px rgba(31,199,92,0.18), inset 0 0 30px rgba(31,199,92,0.04)',
                     backdropFilter: 'blur(2px)',
                     WebkitBackdropFilter: 'blur(2px)',
                   }}
@@ -206,7 +207,7 @@ const OnboardingOverlay: React.FC = () => {
                     alt="Eve"
                     animate={{ y: [0, -16, 0], rotate: [-3, 3, -3] }}
                     transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-                    style={{ width: 'clamp(120px,16vw,180px)', height: 'clamp(120px,16vw,180px)', objectFit: 'contain', filter: 'drop-shadow(0 12px 40px rgba(31,199,92,0.55))', marginBottom: 24 }}
+                    style={{ width: 'clamp(120px,16vw,180px)', height: 'clamp(120px,16vw,180px)', objectFit: 'contain', filter: 'drop-shadow(0 12px 40px rgba(31,199,92,0.55))', marginBottom: 24, marginLeft: 'auto', marginRight: 'auto', display: 'block', transform: 'translateX(8px)' }}
                   />
                   <motion.h1
                     initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
