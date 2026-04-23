@@ -101,28 +101,133 @@ export const ONBOARDING_STEPS: OnboardingStep[] = [
     viewNavigate: 'plants',
     tabNavigate: 0,
   },
+  // ── Sensors ──────────────────────────────────────────────────────────────
   {
-    id: 'automation',
-    emoji: '⚡',
-    title: 'Automatisation',
+    id: 'sensors-intro',
+    emoji: '📡',
+    title: 'Capteurs IoT',
     description:
-      "Crée des règles intelligentes : si le pH descend sous 5.5, l'ajustement se déclenche automatiquement. Ta serre se gère toute seule !",
-    targetId: 'onboarding-automation',
+      "Clique sur 'Sensors' dans le menu 👆 pour superviser tous tes capteurs en temps réel : température, humidité, pH, lumière, TDS et humidité du sol.",
+    targetId: 'onboarding-sensors',
+    viewNavigate: 'sensors',
   },
+  {
+    id: 'sensors-stats',
+    emoji: '📊',
+    title: 'Tableau de bord capteurs',
+    description:
+      "En haut tu vois d'un coup d'œil : combien de capteurs sont en ligne, combien ont des alertes. Les filtres par type permettent de ne voir qu'une catégorie.",
+    targetId: 'onboarding-sensors-stats',
+    viewNavigate: 'sensors',
+  },
+  {
+    id: 'sensors-cards',
+    emoji: '🌡️',
+    title: 'Cartes & historique',
+    description:
+      "Chaque carte affiche la valeur en direct avec une sparkline. Clique dessus pour ouvrir l'historique complet : 1h, 24h, 7j ou 30j avec stats MIN/MOY/MAX.",
+    targetId: 'onboarding-sensors-grid',
+    viewNavigate: 'sensors',
+  },
+  {
+    id: 'sensors-annotations',
+    emoji: '📝',
+    title: 'Annotations & seuils',
+    description:
+      "Dans l'historique tu peux : ajouter des **annotations** sur le graphique (ex: 'réglage pH fait'), configurer des **seuils d'alerte** visuels, et **exporter en CSV** pour tes rapports labo !",
+    targetId: 'onboarding-sensors-grid',
+    viewNavigate: 'sensors',
+  },
+  {
+    id: 'sensors-compare',
+    emoji: '🔀',
+    title: 'Mode comparaison',
+    description:
+      "Clique sur 'Comparer' 👆 puis sélectionne plusieurs capteurs pour les superposer sur un même graphique — idéal pour corréler pH et TDS, ou comparer deux zones.",
+    targetId: 'onboarding-sensors-compare',
+    viewNavigate: 'sensors',
+  },
+  // ── Automation ───────────────────────────────────────────────────────────
+  {
+    id: 'automation-intro',
+    emoji: '⚡',
+    title: 'Automation',
+    description:
+      "Clique sur 'Automation' 👆 pour créer des règles intelligentes. Si le pH descend sous 5.5, le système peut déclencher automatiquement un correcteur !",
+    targetId: 'onboarding-automation',
+    viewNavigate: 'automation',
+  },
+  {
+    id: 'automation-rules',
+    emoji: '📋',
+    title: 'Règles actives',
+    description:
+      "Ce tableau liste toutes tes règles : condition déclenchante, action automatique et statut actif/inactif. Active ou désactive chaque règle en un clic.",
+    targetId: 'onboarding-automation-table',
+    viewNavigate: 'automation',
+  },
+  {
+    id: 'automation-add',
+    emoji: '➕',
+    title: 'Créer une règle',
+    description:
+      "Clique sur '+ Add Rule' 👆 pour créer ta propre règle : choisis le capteur, la condition seuil, et l'action à déclencher. Simple et puissant !",
+    targetId: 'onboarding-automation-add',
+    viewNavigate: 'automation',
+  },
+  // ── Energy / System Health ────────────────────────────────────────────────
+  {
+    id: 'energy-intro',
+    emoji: '🔋',
+    title: 'System Health',
+    description:
+      "Clique sur 'Energy' 👆 pour accéder au diagnostic complet de ta serre : état de tous les capteurs, alertes de santé, et guide de dépannage IoT.",
+    targetId: 'onboarding-energy',
+    viewNavigate: 'energy',
+  },
+  {
+    id: 'energy-kpis',
+    emoji: '💚',
+    title: 'Indicateurs de santé',
+    description:
+      "Ces 4 compteurs résument l'état global : capteurs en bonne santé, à surveiller, hors ligne et critiques. Un seul regard pour savoir si ta serre va bien !",
+    targetId: 'onboarding-energy-kpis',
+    viewNavigate: 'energy',
+  },
+  // ── Reports ───────────────────────────────────────────────────────────────
+  {
+    id: 'reports-intro',
+    emoji: '📈',
+    title: 'Rapports & Analyses',
+    description:
+      "Clique sur 'Reports' 👆 pour obtenir une analyse complète générée par EVE : score de santé global, tendances par culture, et recommandations personnalisées.",
+    targetId: 'onboarding-reports',
+    viewNavigate: 'reports',
+  },
+  {
+    id: 'reports-score',
+    emoji: '🏆',
+    title: 'Score EVE',
+    description:
+      "Le score sur 100 reflète la santé globale de ta serre. Plus bas : clique sur 'Générer' pour obtenir un rapport EVE détaillé avec analyses et conseils d'optimisation.",
+    targetId: 'onboarding-reports-score',
+    viewNavigate: 'reports',
+  },
+  // ── EVE Chatbot ───────────────────────────────────────────────────────────
   {
     id: 'chat',
     emoji: '💬',
     title: 'Discute avec moi !',
     description:
-      "Ce bouton 🐝 en bas à droite, c'est moi ! Clique pour me poser n'importe quelle question sur ta serre, tes plantes, ou des conseils en langage naturel.",
+      "Ce bouton 🐝 en bas à droite, c'est moi ! Clique pour me poser n'importe quelle question : état des capteurs, conseils de culture, diagnostic en langage naturel.",
     targetId: 'onboarding-chat',
   },
   {
     id: 'ready',
-    emoji: '🚀',
-    title: "C'est parti !",
+    emoji: '🐝',
+    title: 'Virida est à toi !',
     description:
-      "Tu es prêt(e) à tout explorer ! Je reste disponible en permanence dans le chat. Bonne culture 🌿",
+      "Tu connais maintenant toutes les fonctionnalités de ta serre connectée. Je reste disponible 24h/24 dans le chat pour t'aider. Bonne culture ! 🌿",
   },
 ];
 

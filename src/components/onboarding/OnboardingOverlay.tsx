@@ -108,10 +108,10 @@ const OnboardingOverlay: React.FC = () => {
             transition={{ duration: 0.35 }}
             style={{
               position: 'fixed', inset: 0, zIndex: 8999,
-              // Step 0: visible blur with faint tint — steps 1+: no overlay at all
-              background: isFirst ? 'rgba(0,0,0,0.22)' : 'transparent',
-              backdropFilter: isFirst ? 'blur(6px)' : 'none',
-              WebkitBackdropFilter: isFirst ? 'blur(6px)' : 'none',
+              // Step 0 et dernier: blur — steps intermédiaires: transparent
+              background: (isFirst || isLast) ? 'rgba(0,0,0,0.22)' : 'transparent',
+              backdropFilter: (isFirst || isLast) ? 'blur(6px)' : 'none',
+              WebkitBackdropFilter: (isFirst || isLast) ? 'blur(6px)' : 'none',
               pointerEvents: 'none',
             }}
           />
@@ -175,8 +175,8 @@ const OnboardingOverlay: React.FC = () => {
           </motion.button>
 
           <AnimatePresence mode="wait">
-            {/* ── STEP 0 : hero centré — app visible derrière blur ── */}
-            {isFirst ? (
+            {/* ── STEP 0 et DERNIER : hero centré ── */}
+            {isFirst || isLast ? (
               <motion.div
                 key="welcome-hero"
                 initial={{ opacity: 0, scale: 0.88, y: 32 }}
@@ -241,7 +241,7 @@ const OnboardingOverlay: React.FC = () => {
                       boxShadow: '0 6px 24px rgba(31,199,92,0.42)',
                     }}
                   >
-                    Commencer la visite →
+                    {isFirst ? 'Commencer la visite →' : 'C\'est parti ! 🚀'}
                   </motion.button>
                   <motion.div
                     initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}

@@ -241,7 +241,7 @@ export default function EnergyManagementNew() {
         </div>
 
         {/* ── KPI STRIP ─────────────────────────────────────────── */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+        <div id="onboarding-energy-kpis" className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
           {[
             { v: healthCounts.ok, l: 'EN BONNE SANTÉ', c: '#52f081', icon: 'check_circle', bg: 'rgba(82,240,129,0.07)' },
             { v: healthCounts.warn, l: 'À SURVEILLER', c: '#FFB74D', icon: 'warning_amber', bg: 'rgba(255,183,77,0.07)' },

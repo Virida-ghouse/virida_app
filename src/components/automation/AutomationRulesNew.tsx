@@ -42,6 +42,7 @@ export default function AutomationRulesNew() {
             </div>
           </div>
           <button
+            id="onboarding-automation-add"
             onClick={handleOpenDialog}
             className="px-6 py-3 rounded-xl bg-[#2AD368] text-[var(--btn-primary-text)] font-semibold shadow-[0_8px_20px_rgba(42,211,104,0.5)] hover:shadow-[0_12px_30px_rgba(42,211,104,0.8)] hover:scale-105 transition-all flex items-center justify-center gap-2 whitespace-nowrap"
           >
@@ -52,7 +53,7 @@ export default function AutomationRulesNew() {
       </div>
 
       {/* Rules Table */}
-      <div className="glass-card backdrop-blur-xl rounded-2xl border border-[var(--border-color)] overflow-hidden">
+      <div id="onboarding-automation-table" className="glass-card backdrop-blur-xl rounded-2xl border border-[var(--border-color)] overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>

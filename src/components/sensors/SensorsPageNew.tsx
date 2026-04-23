@@ -724,7 +724,7 @@ const SensorsPageNew:React.FC = () => {
           </div>
           <div className="flex items-center gap-2 flex-wrap">
             {/* Compare button */}
-            <button onClick={()=>{ setCompareMode(m=>!m); setSelectedIds([]); }}
+            <button id="onboarding-sensors-compare" onClick={()=>{ setCompareMode(m=>!m); setSelectedIds([]); }}
               className="flex items-center gap-2 px-4 py-2.5 rounded-full font-semibold text-sm transition-all"
               style={compareMode
                 ?{background:'#a78bfa',color:'#0a0e14'}
@@ -742,7 +742,7 @@ const SensorsPageNew:React.FC = () => {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <div id="onboarding-sensors-stats" className="grid grid-cols-2 lg:grid-cols-4 gap-3">
           {STATS.map(stat=>(
             <div key={stat.label} className="rounded-2xl p-4 flex items-center gap-3" style={{background:'#1c2026'}}>
               <div className="w-11 h-11 rounded-2xl flex items-center justify-center flex-shrink-0" style={{background:stat.bg}}>
@@ -777,7 +777,7 @@ const SensorsPageNew:React.FC = () => {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+          <div id="onboarding-sensors-grid" className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
             {filtered.map(sensor=>(
               <SensorCard key={sensor.id} sensor={sensor} sparkData={sparklines[sensor.id]??[]}
                 onEdit={handleEdit} onDelete={handleDelete}

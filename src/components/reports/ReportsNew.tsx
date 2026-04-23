@@ -410,7 +410,7 @@ const ReportsNew: React.FC = () => {
         <div className="px-6 md:px-8 pb-8 space-y-5">
 
           {/* ══ ROW 1 : SCORE + EVE + MINI STATS ═════════════════════ */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+          <div id="onboarding-reports-score" className="grid grid-cols-1 lg:grid-cols-12 gap-4">
 
             {/* SCORE CARD */}
             <div className="lg:col-span-3 rounded-3xl p-6 flex flex-col items-center justify-center gap-4 relative overflow-hidden"
