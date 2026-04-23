@@ -13,10 +13,10 @@ import { RGPDProvider } from './contexts/RGPDContext';
 import { ChatHistoryProvider } from './contexts/ChatHistoryContext';
 import CookieConsentBanner from './components/rgpd/CookieConsentBanner';
 import CookiePreferencesModal from './components/rgpd/CookiePreferencesModal';
+import { OnboardingProvider } from './components/onboarding/OnboardingContext';
 import OnboardingOverlay from './components/onboarding/OnboardingOverlay';
 import theme from './theme';
 
-// Composant pour gérer l'état d'authentification et le routing
 const AppContent: React.FC = () => {
   const { isAuthenticated, isLoading } = useAuth();
   const [showLanding, setShowLanding] = useState(true);
@@ -30,7 +30,6 @@ const AppContent: React.FC = () => {
     );
   }
 
-  // Pages légales
   if (legalPage === 'mentions') {
     return <MentionsLegales onBack={() => { setLegalPage(null); window.scrollTo(0, 0); }} />;
   }
@@ -38,17 +37,16 @@ const AppContent: React.FC = () => {
     return <PolitiqueConfidentialite onBack={() => { setLegalPage(null); window.scrollTo(0, 0); }} />;
   }
 
-  // Si authentifié, afficher l'app + onboarding (géré en interne par useOnboarding)
   if (isAuthenticated) {
     return (
-      <>
+      // OnboardingProvider ici → accessible par MainAppNew (Settings) ET OnboardingOverlay
+      <OnboardingProvider>
         <MainAppNew />
         <OnboardingOverlay />
-      </>
+      </OnboardingProvider>
     );
   }
 
-  // Si non authentifié, afficher landing ou login selon l'état
   if (showLanding) {
     return <LandingPage onNavigateToLogin={() => setShowLanding(false)} onNavigateToLegal={setLegalPage} />;
   }
@@ -57,9 +55,6 @@ const AppContent: React.FC = () => {
 };
 
 function App() {
-  console.log(' App.tsx - Composant App en cours de rendu');
-  console.log('🎯 App.tsx - Composant App en cours de rendu');
-
   return (
     <ThemeProvider>
       <MuiThemeProvider theme={theme}>
@@ -68,7 +63,6 @@ function App() {
           <AuthProvider>
             <ChatHistoryProvider>
               <AppContent />
-              {/* 🍪 Composants RGPD - Affichés globalement */}
               <CookieConsentBanner />
               <CookiePreferencesModal />
             </ChatHistoryProvider>
