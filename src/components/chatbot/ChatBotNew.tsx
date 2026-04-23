@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useChatHistory } from '../../contexts/ChatHistoryContext';
 import type { ChatMessage } from '../../contexts/ChatHistoryContext';
 import { chatService } from '../../services/api';
-import EveMascote from '../../Eve_mascote.png';
 
 interface Message {
   id: string;
@@ -198,9 +197,12 @@ const ChatBotNew: React.FC<ChatBotProps> = ({ sensorData }) => {
           aria-label="Ouvrir le chat avec EVE"
         >
           <img
-            src={EveMascote}
+            src="/abeillevd.svg"
             alt="EVE"
-            className="w-16 h-16 lg:w-20 lg:h-20 object-contain drop-shadow-[0_8px_30px_rgba(42,211,104,0.6)] group-hover:drop-shadow-[0_12px_40px_rgba(42,211,104,0.9)] transition-all animate-bee-fly"
+            className="w-16 h-16 lg:w-20 lg:h-20 drop-shadow-[0_8px_30px_rgba(42,211,104,0.6)] group-hover:drop-shadow-[0_12px_40px_rgba(42,211,104,0.9)] transition-all animate-bee-fly"
+            style={{
+              filter: 'brightness(0) saturate(100%) invert(68%) sepia(85%) saturate(445%) hue-rotate(84deg) brightness(95%) contrast(89%)'
+            }}
           />
           <span className="absolute top-0 right-0 flex h-3 w-3">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#CBED62] opacity-75"></span>

@@ -5,6 +5,7 @@ import { useRGPD } from '../../contexts/RGPDContext';
 import { useChatHistory } from '../../contexts/ChatHistoryContext';
 import PrivacyPolicy from '../rgpd/PrivacyPolicy';
 import { useOnboardingContext } from '../onboarding/OnboardingOverlay';
+import EveMascote from '../../Eve_mascote.png';
 
 export default function SettingsPanelNew() {
   const { user, logout } = useAuth();
@@ -199,7 +200,7 @@ export default function SettingsPanelNew() {
               <h3 className="text-sm font-semibold text-[var(--text-secondary)] mb-3">Guide de l'application</h3>
               <div className="flex items-center justify-between p-4 rounded-xl glass-card backdrop-blur-xl border border-[var(--border-color)]">
                 <div className="flex items-center gap-3">
-                  <span className="text-2xl">🐝</span>
+                  <img src={EveMascote} alt="Eve" className="w-10 h-10 object-contain" />
                   <div>
                     <p className="text-sm font-semibold text-[var(--text-primary)]">Visite guidée avec Eve</p>
                     <p className="text-xs text-[var(--text-secondary)]">Relancer le tutoriel de présentation de l'app</p>
