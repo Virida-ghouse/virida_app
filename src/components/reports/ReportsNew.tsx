@@ -171,66 +171,106 @@ function sectionIcon(heading: string): string {
   return 'eco';
 }
 
+// Group parsed blocks into sections: { heading, content[] }
+type Section = { heading: string | null; content: MdBlock[] };
+function groupSections(blocks: MdBlock[]): Section[] {
+  const sections: Section[] = [];
+  let current: Section = { heading: null, content: [] };
+  for (const block of blocks) {
+    if (block.type === 'heading') {
+      if (current.content.length > 0 || current.heading) sections.push(current);
+      current = { heading: block.text, content: [] };
+    } else {
+      current.content.push(block);
+    }
+  }
+  if (current.content.length > 0 || current.heading) sections.push(current);
+  return sections;
+}
+
 function EveSummaryRender({ text }: { text: string }) {
   if (!text) return null;
   const blocks = parseMarkdown(text);
-  // If no headings found, just render as paragraphs nicely
   const hasStructure = blocks.some(b => b.type === 'heading');
+
+  // Fallback: no structure — display as a clean paragraph
   if (!hasStructure) {
-    // Fallback: split by sentences and display cleanly
     return (
-      <p className="leading-relaxed" style={{ color: 'rgba(255,255,255,0.8)', fontSize: 14, lineHeight: 1.7 }}>
+      <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.78)', lineHeight: 1.75 }}>
         {renderInline(text)}
       </p>
     );
   }
+
+  const sections = groupSections(blocks);
+
   return (
-    <div className="space-y-4">
-      {blocks.map((block, i) => {
-        if (block.type === 'heading') {
-          const col = sectionColor(block.text);
-          const icon = sectionIcon(block.text);
-          return (
-            <div key={i} className="flex items-center gap-2">
-              <span className="material-symbols-outlined" style={{ color: col, fontSize: 15 }}>{icon}</span>
-              <span className="font-black text-xs tracking-widest uppercase" style={{ color: col, letterSpacing: '0.1em' }}>{block.text}</span>
-              <div className="flex-1 h-px" style={{ background: `linear-gradient(90deg, ${col}40, transparent)` }} />
-            </div>
-          );
-        }
-        if (block.type === 'list') {
-          // Find previous heading to get color
-          const prevHeading = blocks.slice(0, i).reverse().find(b => b.type === 'heading');
-          const col = prevHeading ? sectionColor((prevHeading as any).text) : 'rgba(255,255,255,0.5)';
-          return (
-            <ul key={i} className="space-y-1.5 pl-2">
-              {block.items.map((item, j) => (
-                <li key={j} className="flex items-start gap-2.5 text-sm" style={{ color: 'rgba(255,255,255,0.75)', lineHeight: 1.6 }}>
-                  <span className="mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: col, boxShadow: `0 0 4px ${col}` }} />
-                  <span>{renderInline(item)}</span>
-                </li>
-              ))}
-            </ul>
-          );
-        }
-        // paragraph
-        const prevHeading = blocks.slice(0, i).reverse().find(b => b.type === 'heading');
-        const isRecommendation = prevHeading && (prevHeading as any).text.toLowerCase().includes('recommand');
-        if (isRecommendation) {
-          return (
-            <div key={i} className="px-4 py-3 rounded-2xl flex items-start gap-3"
-              style={{ background: 'rgba(100,181,246,0.07)', border: '1px solid rgba(100,181,246,0.2)' }}>
-              <span className="material-symbols-outlined flex-shrink-0 mt-0.5" style={{ color: '#64B5F6', fontSize: 16 }}>bolt</span>
-              <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.85)' }}>{renderInline(block.text)}</p>
-            </div>
-          );
-        }
-        return (
-          <p key={i} className="text-sm leading-relaxed pl-2" style={{ color: 'rgba(255,255,255,0.75)', lineHeight: 1.7 }}>
-            {renderInline(block.text)}
-          </p>
-        );
-      })}
+    <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid rgba(255,255,255,0.07)' }}>
+      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <tbody>
+          {sections.map((sec, si) => {
+            const col = sec.heading ? sectionColor(sec.heading) : 'rgba(255,255,255,0.4)';
+            const icon = sec.heading ? sectionIcon(sec.heading) : 'eco';
+            const isLast = si === sections.length - 1;
+            const isReco = sec.heading?.toLowerCase().includes('recommand') || sec.heading?.toLowerCase().includes('action') || sec.heading?.toLowerCase().includes('priorit');
+            return (
+              <tr key={si} style={{ borderBottom: isLast ? 'none' : '1px solid rgba(255,255,255,0.05)' }}>
+                {/* Section label column */}
+                <td className="align-top" style={{
+                  width: 160, minWidth: 140, padding: '14px 16px',
+                  background: `${col}08`,
+                  borderRight: `2px solid ${col}30`,
+                  verticalAlign: 'top',
+                }}>
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="material-symbols-outlined" style={{ color: col, fontSize: 14 }}>{icon}</span>
+                  </div>
+                  <span className="font-black uppercase" style={{
+                    fontSize: 10, color: col, letterSpacing: '0.1em', lineHeight: 1.3,
+                    display: 'block', textShadow: `0 0 8px ${col}55`,
+                  }}>
+                    {sec.heading}
+                  </span>
+                </td>
+
+                {/* Content column */}
+                <td className="align-top" style={{
+                  padding: '14px 18px',
+                  background: isReco ? 'rgba(100,181,246,0.04)' : 'transparent',
+                  verticalAlign: 'top',
+                }}>
+                  {sec.content.map((block, bi) => {
+                    if (block.type === 'list') {
+                      return (
+                        <ul key={bi} className="space-y-1.5">
+                          {block.items.map((item, ji) => (
+                            <li key={ji} className="flex items-start gap-2.5" style={{ color: 'rgba(255,255,255,0.78)', fontSize: 13, lineHeight: 1.6 }}>
+                              <span className="mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: col, boxShadow: `0 0 4px ${col}` }} />
+                              <span>{renderInline(item)}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      );
+                    }
+                    return (
+                      <p key={bi} className={bi > 0 ? 'mt-1.5' : ''} style={{
+                        fontSize: 13, lineHeight: 1.7,
+                        color: isReco ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.78)',
+                        fontWeight: isReco ? 500 : 400,
+                      }}>
+                        {isReco && (
+                          <span className="material-symbols-outlined mr-1.5 align-text-bottom" style={{ color: '#64B5F6', fontSize: 14 }}>bolt</span>
+                        )}
+                        {renderInline(block.text)}
+                      </p>
+                    );
+                  })}
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
     </div>
   );
 }
@@ -425,7 +465,7 @@ const ReportsNew: React.FC = () => {
               </div>
 
               {/* EVE body */}
-              <div className="flex-1 px-6 py-5 overflow-y-auto" style={{ maxHeight: 340 }}>
+              <div className="flex-1 px-6 py-5 overflow-y-auto" style={{ maxHeight: 380 }}>
                 {eveLoading ? (
                   <div className="space-y-4">
                     {/* Simulated section skeleton */}
