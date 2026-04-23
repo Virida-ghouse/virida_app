@@ -9,19 +9,41 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: "18"
+          node-version: "20"
           cache: npm
           cache-dependency-path: package-lock.json
 
       - name: Install (skip postinstall)
         run: npm ci --ignore-scripts
 
+      - name: Lint
+        run: npm run lint
+
       - name: Build
         env:
           NODE_OPTIONS: --max-old-space-size=2048 --no-warnings
-        run: npm run build:simple
+          VITE_API_URL: ${{ secrets.VITE_API_URL || 'https://placeholder.cleverapps.io' }}
+        run: npm run build
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Deploy to Clever Cloud
+        env:
+          CLEVER_TOKEN: ${{ secrets.CLEVER_TOKEN }}
+          CLEVER_SECRET: ${{ secrets.CLEVER_SECRET }}
+        run: |
+          git remote add clever https://oauth-token:${CLEVER_TOKEN}@push-n3-par-clevercloud-customers.services.clever-cloud.com/app_4fdbaf24-6225-4bc5-a2bb-84319ea72bfb.git
+          git push clever HEAD:master --force
