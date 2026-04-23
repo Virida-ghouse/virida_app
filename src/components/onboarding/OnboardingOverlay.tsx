@@ -189,15 +189,16 @@ const OnboardingOverlay: React.FC = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.05 }}
                   style={{
-                    background: 'rgba(8,18,12,0.92)',
-                    border: '1.5px solid rgba(31,199,92,0.35)',
+                    background: 'rgba(8,18,12,0.45)',
+                    border: '1.5px solid rgba(31,199,92,0.28)',
                     borderRadius: 28,
                     padding: 'clamp(32px,5vw,48px) clamp(28px,5vw,52px)',
                     maxWidth: 520,
                     width: '90vw',
                     textAlign: 'center',
-                    boxShadow: '0 0 80px rgba(31,199,92,0.18), 0 40px 80px rgba(0,0,0,0.6)',
-                    backdropFilter: 'blur(4px)',
+                    boxShadow: '0 0 60px rgba(31,199,92,0.12), 0 24px 60px rgba(0,0,0,0.3)',
+                    backdropFilter: 'blur(2px)',
+                    WebkitBackdropFilter: 'blur(2px)',
                   }}
                 >
                   <motion.img
