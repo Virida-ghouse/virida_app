@@ -109,7 +109,7 @@ const OnboardingOverlay: React.FC = () => {
             style={{
               position: 'fixed', inset: 0, zIndex: 8999,
               // Step 0: visible blur with faint tint — steps 1+: no overlay at all
-              background: isFirst ? 'rgba(0,0,0,0.18)' : 'transparent',
+              background: isFirst ? 'rgba(0,0,0,0.08)' : 'transparent',
               backdropFilter: isFirst ? 'blur(28px)' : 'none',
               WebkitBackdropFilter: isFirst ? 'blur(28px)' : 'none',
               pointerEvents: 'none',
@@ -196,7 +196,7 @@ const OnboardingOverlay: React.FC = () => {
                   transition={{ delay: 0.05 }}
                   style={{
                     pointerEvents: 'auto',
-                    background: 'rgba(8,18,12,0.25)',
+                    background: 'rgba(8,18,12,0.10)',
                     border: '2px solid #1fc75c',
                     borderRadius: 28,
                     padding: 'clamp(32px,5vw,48px) clamp(28px,5vw,52px)',
