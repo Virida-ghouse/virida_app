@@ -260,13 +260,10 @@ export default function EnergyManagementNew() {
 
         {/* ══ TAB: DIAGNOSTIC ═══════════════════════════════════════════ */}
         {activeTab === 'diagnostic' && (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+          <div className="space-y-5">
 
-            {/* ── LEFT : Table + Détails ─────────────────────────────── */}
-            <div className="lg:col-span-8 space-y-5">
-
-              {/* Sensor Telemetry Table */}
-              <div className="rounded-2xl overflow-hidden" style={{ background: '#1c2026', border: '1px solid rgba(255,255,255,0.06)' }}>
+            {/* ── Sensor Telemetry Table (full width) ───────────────── */}
+            <div id="onboarding-energy-telemetry" className="rounded-2xl overflow-hidden" style={{ background: '#1c2026', border: '1px solid rgba(255,255,255,0.06)' }}>
                 <div className="flex items-center justify-between px-5 py-4" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
                   <div className="flex items-center gap-2">
                     <span className="material-symbols-outlined text-base" style={{ color: '#52f081' }}>sensors</span>
@@ -401,169 +398,163 @@ export default function EnergyManagementNew() {
                 )}
               </div>
 
-              {/* MQTT Status */}
-              <div className="rounded-2xl p-5" style={{ background: '#1c2026', border: '1px solid rgba(255,255,255,0.06)' }}>
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="material-symbols-outlined text-base" style={{ color: '#52f081' }}>hub</span>
-                  <span className="font-bold text-sm tracking-wider" style={{ color: '#fff', letterSpacing: '0.06em' }}>MQTT BROKER STATUS</span>
-                  <span className="text-xs px-2 py-0.5 rounded-full font-bold ml-auto" style={{
+            {/* ── Info row : MQTT · ESP32 Commands · Seuils ─────────── */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+
+              {/* MQTT Broker Status */}
+              <div id="onboarding-energy-mqtt" className="rounded-2xl p-5 flex flex-col gap-3" style={{ background: '#1c2026', border: '1px solid rgba(255,255,255,0.06)' }}>
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(82,240,129,0.08)' }}>
+                    <span className="material-symbols-outlined" style={{ color: '#52f081', fontSize: 18 }}>hub</span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-bold text-sm" style={{ color: '#fff' }}>MQTT Broker</p>
+                    <p className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>Broker de messages IoT</p>
+                  </div>
+                  <span className="text-xs px-2 py-0.5 rounded-full font-bold flex-shrink-0" style={{
                     background: connected ? 'rgba(82,240,129,0.1)' : 'rgba(255,107,107,0.1)',
                     color: connected ? '#52f081' : '#FF6B6B',
                     border: `1px solid ${connected ? 'rgba(82,240,129,0.2)' : 'rgba(255,107,107,0.2)'}`,
+                    fontSize: 10,
                   }}>
-                    {connected ? '● CONNECTÉ' : '● DÉCONNECTÉ'}
+                    {connected ? '● ON' : '● OFF'}
                   </span>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                  {[
-                    { icon: 'router', label: 'Broker', value: MQTT_CONFIG.broker, color: '#52f081' },
-                    { icon: 'person', label: 'Utilisateur', value: MQTT_CONFIG.user, color: '#64B5F6' },
-                    { icon: 'topic', label: 'Topic abonné', value: MQTT_CONFIG.topic, color: '#CBED62' },
-                  ].map(({ icon, label, value, color }) => (
-                    <div key={label} className="rounded-xl p-3" style={{ background: 'rgba(255,255,255,0.03)' }}>
-                      <div className="flex items-center gap-1.5 mb-1">
-                        <span className="material-symbols-outlined" style={{ color, fontSize: 14 }}>{icon}</span>
-                        <span className="text-xs font-bold" style={{ color: 'rgba(255,255,255,0.4)', letterSpacing: '0.08em' }}>{label.toUpperCase()}</span>
-                      </div>
-                      <p className="text-xs font-mono" style={{ color: 'rgba(255,255,255,0.7)' }}>{value}</p>
-                    </div>
-                  ))}
-                </div>
-                <div className="mt-3 p-3 rounded-xl font-mono text-xs" style={{ background: '#0a0e14', color: '#52f081' }}>
-                  <span style={{ color: 'rgba(255,255,255,0.3)' }}># Vérifier les messages en direct :</span><br />
-                  <span style={{ color: '#CBED62' }}>ssh virida@100.97.47.46</span>{' '}
-                  <span style={{ color: '#fff' }}>'timeout 20 mosquitto_sub -h localhost -t "virida/#" -v'</span>
-                </div>
-              </div>
-
-              {/* Maintenance Checklist */}
-              <div className="rounded-2xl p-5" style={{ background: '#1c2026', border: '1px solid rgba(255,255,255,0.06)' }}>
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="material-symbols-outlined text-base" style={{ color: '#FFB74D' }}>checklist</span>
-                  <span className="font-bold text-sm tracking-wider" style={{ color: '#fff', letterSpacing: '0.06em' }}>CHECKLIST MAINTENANCE</span>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                  {[
-                    { task: 'Calibrer sonde pH avec solutions tampon 4.0 et 7.0', freq: 'Mensuel', done: false },
-                    { task: 'Nettoyer électrodes sonde TDS à l\'eau distillée', freq: 'Hebdomadaire', done: false },
-                    { task: 'Vérifier niveau eau réservoir (> 10 cm)', freq: 'Quotidien', done: true },
-                    { task: 'Contrôler connexions câbles ESP32', freq: 'Mensuel', done: true },
-                    { task: 'Mettre à jour firmware Leafnode si nouvelle version', freq: 'Mensuel', done: false },
-                    { task: 'Vider les logs TimescaleDB anciens (> 90j)', freq: 'Trimestriel', done: false },
-                    { task: 'Vérifier résistances pull-up DHT22 (10kΩ)', freq: 'Semestriel', done: true },
-                    { task: 'Backup base de données virida_prod', freq: 'Hebdomadaire', done: false },
-                  ].map(({ task, freq, done }, i) => (
-                    <div key={i} className="flex items-start gap-2.5 p-2.5 rounded-xl" style={{ background: 'rgba(255,255,255,0.025)' }}>
-                      <div className="flex-shrink-0 mt-0.5 w-4 h-4 rounded-full flex items-center justify-center"
-                        style={{ background: done ? 'rgba(82,240,129,0.2)' : 'rgba(255,255,255,0.05)', border: `1px solid ${done ? '#52f081' : 'rgba(255,255,255,0.1)'}` }}>
-                        {done && <span className="material-symbols-outlined" style={{ color: '#52f081', fontSize: 10 }}>check</span>}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-xs" style={{ color: done ? 'rgba(255,255,255,0.4)' : 'rgba(255,255,255,0.75)', textDecoration: done ? 'line-through' : 'none' }}>{task}</p>
-                        <p className="text-xs mt-0.5 font-bold" style={{ color: 'rgba(255,255,255,0.2)', letterSpacing: '0.06em' }}>{freq}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-            </div>
-
-            {/* ── RIGHT : Guide Dépannage ────────────────────────── */}
-            <div className="lg:col-span-4 space-y-4">
-
-              {/* Guide de dépannage */}
-              <div className="rounded-2xl overflow-hidden" style={{ background: '#1c2026', border: '1px solid rgba(255,255,255,0.06)' }}>
-                <div className="flex items-center gap-2 px-5 py-4" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-                  <span className="material-symbols-outlined text-base" style={{ color: '#FF6B6B' }}>build_circle</span>
-                  <span className="font-bold text-sm tracking-wider" style={{ color: '#fff', letterSpacing: '0.06em' }}>GUIDE DE DÉPANNAGE</span>
-                </div>
-
-                {problematicSensors.length === 0 ? (
-                  <div className="p-6 text-center">
-                    <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3" style={{ background: 'rgba(82,240,129,0.1)' }}>
-                      <span className="material-symbols-outlined text-3xl" style={{ color: '#52f081' }}>verified</span>
-                    </div>
-                    <p className="font-bold text-sm" style={{ color: '#52f081' }}>Tous les capteurs opérationnels</p>
-                    <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.3)' }}>Aucune intervention requise</p>
-                  </div>
-                ) : (
-                  <div className="p-4 space-y-4">
-                    {problematicSensors.map(s => {
-                      const m = getMeta(s.type);
-                      const h = sensorHealth(s);
-                      const tips = TROUBLESHOOT[s.type] || TROUBLESHOOT.default;
-                      return (
-                        <div key={s.id} className="rounded-xl overflow-hidden" style={{ border: `1px solid ${HC[h]}20`, background: 'rgba(255,255,255,0.02)' }}>
-                          <div className="flex items-center gap-2 px-3 py-2.5" style={{ background: `${HC[h]}08`, borderBottom: `1px solid ${HC[h]}15` }}>
-                            <span className="material-symbols-outlined flex-shrink-0" style={{ color: m.color, fontSize: 16 }}>{m.icon}</span>
-                            <div className="flex-1 min-w-0">
-                              <p className="font-bold text-sm truncate" style={{ color: '#fff' }}>{s.name}</p>
-                              <p className="text-xs font-mono truncate" style={{ color: 'rgba(255,255,255,0.3)' }}>{s.id}</p>
-                            </div>
-                            <span className="text-xs font-bold px-2 py-0.5 rounded-full flex-shrink-0"
-                              style={{ background: `${HC[h]}18`, color: HC[h], border: `1px solid ${HC[h]}30`, fontSize: 9 }}>
-                              {HL[h].toUpperCase()}
-                            </span>
-                          </div>
-                          <div className="px-3 py-3">
-                            <p className="text-xs font-black mb-2" style={{ color: 'rgba(255,255,255,0.4)', letterSpacing: '0.1em' }}>ÉTAPES DE RÉSOLUTION</p>
-                            <ol className="space-y-2">
-                              {tips.map((tip, i) => (
-                                <li key={i} className="flex items-start gap-2 text-xs" style={{ color: 'rgba(255,255,255,0.65)', lineHeight: 1.5 }}>
-                                  <span className="flex-shrink-0 w-4 h-4 rounded-full flex items-center justify-center font-black text-xs"
-                                    style={{ background: 'rgba(255,255,255,0.06)', color: HC[h], minWidth: 16, fontSize: 9 }}>{i + 1}</span>
-                                  <span>{tip}</span>
-                                </li>
-                              ))}
-                            </ol>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-
-              {/* Diagnostic rapide ESP32 */}
-              <div className="rounded-2xl p-4" style={{ background: '#1c2026', border: '1px solid rgba(255,255,255,0.06)' }}>
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="material-symbols-outlined text-base" style={{ color: '#64B5F6' }}>memory</span>
-                  <span className="font-bold text-sm tracking-wider" style={{ color: '#fff', letterSpacing: '0.06em' }}>ESP32 COMMANDES</span>
                 </div>
                 <div className="space-y-2">
                   {[
-                    { label: 'Logs firmware', cmd: 'ssh virida@100.97.47.46 \'sudo journalctl -u virida-api -f\'', color: '#52f081' },
-                    { label: 'Ping ESP32 via MQTT', cmd: 'mosquitto_pub -h 192.168.0.101 -t "virida/ping" -m "1"', color: '#CBED62' },
-                    { label: 'Redémarrer API', cmd: 'ssh virida@100.97.47.46 \'sudo systemctl restart virida-api\'', color: '#64B5F6' },
-                    { label: 'Statut services Pi', cmd: 'ssh virida@100.97.47.46 \'sudo systemctl status virida-*\'', color: '#CE93D8' },
+                    { icon: 'router', label: 'Broker', value: MQTT_CONFIG.broker, color: '#52f081' },
+                    { icon: 'person', label: 'User', value: MQTT_CONFIG.user, color: '#64B5F6' },
+                    { icon: 'topic', label: 'Topic', value: MQTT_CONFIG.topic, color: '#CBED62' },
+                  ].map(({ icon, label, value, color }) => (
+                    <div key={label} className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg" style={{ background: 'rgba(255,255,255,0.025)' }}>
+                      <span className="material-symbols-outlined flex-shrink-0" style={{ color, fontSize: 13 }}>{icon}</span>
+                      <span className="text-xs font-bold flex-shrink-0" style={{ color: 'rgba(255,255,255,0.3)', minWidth: 36 }}>{label}</span>
+                      <span className="text-xs font-mono truncate" style={{ color: 'rgba(255,255,255,0.65)' }}>{value}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-auto p-2.5 rounded-xl font-mono text-xs" style={{ background: '#0a0e14' }}>
+                  <span style={{ color: 'rgba(255,255,255,0.25)', fontSize: 10 }}># live feed</span><br />
+                  <span style={{ color: '#52f081', fontSize: 10 }}>mosquitto_sub -t "virida/#" -v</span>
+                </div>
+              </div>
+
+              {/* ESP32 Commandes */}
+              <div id="onboarding-energy-commands" className="rounded-2xl p-5 flex flex-col gap-3" style={{ background: '#1c2026', border: '1px solid rgba(255,255,255,0.06)' }}>
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(100,181,246,0.08)' }}>
+                    <span className="material-symbols-outlined" style={{ color: '#64B5F6', fontSize: 18 }}>memory</span>
+                  </div>
+                  <div>
+                    <p className="font-bold text-sm" style={{ color: '#fff' }}>ESP32 Commandes</p>
+                    <p className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>Diagnostic rapide SSH</p>
+                  </div>
+                </div>
+                <div className="space-y-2 flex-1">
+                  {[
+                    { label: 'Logs firmware', cmd: "journalctl -u virida-api -f", color: '#52f081' },
+                    { label: 'Ping MQTT', cmd: 'mosquitto_pub -t "virida/ping" -m "1"', color: '#CBED62' },
+                    { label: 'Restart API', cmd: "systemctl restart virida-api", color: '#64B5F6' },
+                    { label: 'Status services', cmd: "systemctl status virida-*", color: '#CE93D8' },
                   ].map(({ label, cmd, color }) => (
-                    <div key={label} className="rounded-lg p-2.5" style={{ background: '#0a0e14' }}>
-                      <p className="text-xs font-bold mb-1" style={{ color }}>{label}</p>
-                      <p className="text-xs font-mono" style={{ color: 'rgba(255,255,255,0.45)', wordBreak: 'break-all' }}>{cmd}</p>
+                    <div key={label} className="rounded-lg px-3 py-2" style={{ background: '#0a0e14' }}>
+                      <p className="text-xs font-bold mb-0.5" style={{ color, letterSpacing: '0.04em' }}>{label}</p>
+                      <p className="text-xs font-mono" style={{ color: 'rgba(255,255,255,0.4)', wordBreak: 'break-all', lineHeight: 1.4 }}>{cmd}</p>
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* Seuils d'alerte résumé */}
-              <div className="rounded-2xl p-4" style={{ background: '#1c2026', border: '1px solid rgba(255,255,255,0.06)' }}>
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="material-symbols-outlined text-base" style={{ color: '#FFB74D' }}>notifications_active</span>
-                  <span className="font-bold text-sm tracking-wider" style={{ color: '#fff', letterSpacing: '0.06em' }}>SEUILS D'ALERTE</span>
+              {/* Seuils d'alerte */}
+              <div id="onboarding-energy-thresholds" className="rounded-2xl p-5 flex flex-col gap-3" style={{ background: '#1c2026', border: '1px solid rgba(255,255,255,0.06)' }}>
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(255,183,77,0.08)' }}>
+                    <span className="material-symbols-outlined" style={{ color: '#FFB74D', fontSize: 18 }}>notifications_active</span>
+                  </div>
+                  <div>
+                    <p className="font-bold text-sm" style={{ color: '#fff' }}>Seuils d'alerte</p>
+                    <p className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>Plages optimales capteurs</p>
+                  </div>
                 </div>
-                <div className="space-y-1.5">
+                <div className="space-y-1.5 flex-1">
                   {Object.entries(SENSOR_META).map(([type, m]) => (
-                    <div key={type} className="flex items-center gap-2 py-1.5 px-2 rounded-lg" style={{ background: 'rgba(255,255,255,0.02)' }}>
+                    <div key={type} className="flex items-center gap-2 py-1.5 px-2.5 rounded-lg" style={{ background: 'rgba(255,255,255,0.02)' }}>
                       <span className="material-symbols-outlined flex-shrink-0" style={{ color: m.color, fontSize: 13 }}>{m.icon}</span>
-                      <span className="text-xs flex-1 truncate" style={{ color: 'rgba(255,255,255,0.6)' }}>{m.label}</span>
-                      <span className="text-xs font-mono flex-shrink-0" style={{ color: '#52f081', fontSize: 10 }}>{m.goodMin}–{m.goodMax} {m.unit}</span>
+                      <span className="text-xs flex-1 truncate" style={{ color: 'rgba(255,255,255,0.55)' }}>{m.label}</span>
+                      <span className="text-xs font-mono font-bold flex-shrink-0" style={{ color: '#52f081', fontSize: 10 }}>{m.goodMin}–{m.goodMax}<span style={{ color: 'rgba(255,255,255,0.3)', fontWeight: 400 }}> {m.unit}</span></span>
                     </div>
                   ))}
                 </div>
               </div>
 
             </div>
+
+            {/* ── Guide de Dépannage (full width) ───────────────────── */}
+            <div id="onboarding-energy-guide" className="rounded-2xl overflow-hidden" style={{ background: '#1c2026', border: '1px solid rgba(255,255,255,0.06)' }}>
+              <div className="flex items-center gap-3 px-6 py-4" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+                <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(255,107,107,0.08)' }}>
+                  <span className="material-symbols-outlined" style={{ color: '#FF6B6B', fontSize: 18 }}>build_circle</span>
+                </div>
+                <div className="flex-1">
+                  <p className="font-bold text-sm" style={{ color: '#fff' }}>Guide de Dépannage</p>
+                  <p className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>Étapes de résolution pour les capteurs défaillants</p>
+                </div>
+                {problematicSensors.length > 0 && (
+                  <span className="text-xs px-2.5 py-1 rounded-full font-bold flex-shrink-0"
+                    style={{ background: 'rgba(255,107,107,0.1)', color: '#FF6B6B', border: '1px solid rgba(255,107,107,0.2)' }}>
+                    {problematicSensors.length} capteur{problematicSensors.length > 1 ? 's' : ''} à traiter
+                  </span>
+                )}
+              </div>
+
+              {problematicSensors.length === 0 ? (
+                <div className="flex items-center gap-4 px-6 py-5">
+                  <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(82,240,129,0.1)' }}>
+                    <span className="material-symbols-outlined" style={{ color: '#52f081', fontSize: 20 }}>verified</span>
+                  </div>
+                  <div>
+                    <p className="font-bold text-sm" style={{ color: '#52f081' }}>Tous les capteurs sont opérationnels</p>
+                    <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.3)' }}>Aucune intervention requise. Continue à surveiller régulièrement.</p>
+                  </div>
+                </div>
+              ) : (
+                <div className="p-5 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                  {problematicSensors.map(s => {
+                    const m = getMeta(s.type);
+                    const h = sensorHealth(s);
+                    const tips = TROUBLESHOOT[s.type] || TROUBLESHOOT.default;
+                    return (
+                      <div key={s.id} className="rounded-xl overflow-hidden" style={{ border: `1px solid ${HC[h]}22`, background: 'rgba(255,255,255,0.015)' }}>
+                        <div className="flex items-center gap-2 px-4 py-3" style={{ background: `${HC[h]}08`, borderBottom: `1px solid ${HC[h]}15` }}>
+                          <span className="material-symbols-outlined flex-shrink-0" style={{ color: m.color, fontSize: 16 }}>{m.icon}</span>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-bold text-sm truncate" style={{ color: '#fff' }}>{s.name}</p>
+                            <p className="text-xs font-mono truncate" style={{ color: 'rgba(255,255,255,0.28)' }}>{s.id}</p>
+                          </div>
+                          <span className="text-xs font-bold px-2 py-0.5 rounded-full flex-shrink-0"
+                            style={{ background: `${HC[h]}18`, color: HC[h], border: `1px solid ${HC[h]}30`, fontSize: 9, letterSpacing: '0.06em' }}>
+                            {HL[h].toUpperCase()}
+                          </span>
+                        </div>
+                        <div className="px-4 py-3">
+                          <p className="text-xs font-black mb-2.5" style={{ color: 'rgba(255,255,255,0.35)', letterSpacing: '0.1em' }}>ÉTAPES DE RÉSOLUTION</p>
+                          <ol className="space-y-2">
+                            {tips.map((tip, i) => (
+                              <li key={i} className="flex items-start gap-2.5 text-xs" style={{ color: 'rgba(255,255,255,0.6)', lineHeight: 1.6 }}>
+                                <span className="flex-shrink-0 w-4 h-4 rounded-full flex items-center justify-center font-black"
+                                  style={{ background: `${HC[h]}18`, color: HC[h], minWidth: 16, fontSize: 9, marginTop: 1 }}>{i + 1}</span>
+                                <span>{tip}</span>
+                              </li>
+                            ))}
+                          </ol>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
           </div>
         )}
 

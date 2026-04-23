@@ -194,6 +194,51 @@ export const ONBOARDING_STEPS: OnboardingStep[] = [
     targetId: 'onboarding-energy-kpis',
     viewNavigate: 'energy',
   },
+  {
+    id: 'energy-telemetry',
+    emoji: '📡',
+    title: 'Sensor Telemetry',
+    description:
+      "Ce tableau liste tous tes capteurs en direct avec leur valeur, plage cible et statut. Clique sur une ligne pour ouvrir la carte détaillée avec statut santé, valeur live et timestamp !",
+    targetId: 'onboarding-energy-telemetry',
+    viewNavigate: 'energy',
+  },
+  {
+    id: 'energy-mqtt',
+    emoji: '🔗',
+    title: 'MQTT Broker',
+    description:
+      "Ce widget affiche l'état de connexion au broker MQTT de ta serre. Broker, utilisateur, topic abonné — et la commande SSH pour surveiller les messages en direct.",
+    targetId: 'onboarding-energy-mqtt',
+    viewNavigate: 'energy',
+  },
+  {
+    id: 'energy-guide',
+    emoji: '🔧',
+    title: 'Guide de Dépannage',
+    description:
+      "Si un capteur est défaillant, EVE affiche automatiquement les étapes de résolution ici ! Numérotées et contextuelles selon le type de capteur : pH, TDS, température...",
+    targetId: 'onboarding-energy-guide',
+    viewNavigate: 'energy',
+  },
+  {
+    id: 'energy-commands',
+    emoji: '💻',
+    title: 'ESP32 Commandes',
+    description:
+      "Ces commandes SSH te permettent de diagnostiquer rapidement : logs firmware, ping MQTT, redémarrage API, statut des services Pi. Copie-les directement dans ton terminal !",
+    targetId: 'onboarding-energy-commands',
+    viewNavigate: 'energy',
+  },
+  {
+    id: 'energy-thresholds',
+    emoji: '🔔',
+    title: 'Seuils d\'Alerte',
+    description:
+      "Ce récapitulatif affiche les plages idéales pour chaque capteur : température, humidité, pH, TDS, lumière... Si une valeur sort de ces bornes, une alerte se déclenche !",
+    targetId: 'onboarding-energy-thresholds',
+    viewNavigate: 'energy',
+  },
   // ── Reports ───────────────────────────────────────────────────────────────
   {
     id: 'reports-intro',
