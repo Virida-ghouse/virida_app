@@ -113,6 +113,128 @@ function BigScoreRing({ score }: { score: number }) {
   );
 }
 
+// ── Markdown parser ───────────────────────────────────────────────────
+type MdBlock = { type: 'heading'; text: string } | { type: 'list'; items: string[] } | { type: 'paragraph'; text: string };
+
+function parseMarkdown(raw: string): MdBlock[] {
+  const lines = raw.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+  const blocks: MdBlock[] = [];
+  let i = 0;
+  while (i < lines.length) {
+    const line = lines[i];
+    // H2: **Title**
+    if (/^\*\*[^*]+\*\*$/.test(line)) {
+      blocks.push({ type: 'heading', text: line.replace(/\*\*/g, '') });
+      i++;
+    } else if (line.startsWith('- ') || line.startsWith('• ')) {
+      const items: string[] = [];
+      while (i < lines.length && (lines[i].startsWith('- ') || lines[i].startsWith('• '))) {
+        items.push(lines[i].replace(/^[-•]\s+/, ''));
+        i++;
+      }
+      blocks.push({ type: 'list', items });
+    } else {
+      blocks.push({ type: 'paragraph', text: line });
+      i++;
+    }
+  }
+  return blocks;
+}
+
+// Inline markdown: bold + italic
+function renderInline(text: string): React.ReactNode {
+  const parts = text.split(/(\*\*[^*]+\*\*|\*[^*]+\*)/g);
+  return parts.map((p, i) => {
+    if (/^\*\*[^*]+\*\*$/.test(p)) return <strong key={i} style={{ color: '#fff', fontWeight: 700 }}>{p.slice(2, -2)}</strong>;
+    if (/^\*[^*]+\*$/.test(p)) return <em key={i} style={{ color: 'rgba(255,255,255,0.7)', fontStyle: 'italic' }}>{p.slice(1, -1)}</em>;
+    return <span key={i}>{p}</span>;
+  });
+}
+
+const SECTION_COLORS: Record<string, string> = {
+  'bilan': '#CBED62', 'général': '#CBED62', 'résumé': '#CBED62',
+  'positifs': '#2AD368', 'positif': '#2AD368', 'bien': '#2AD368',
+  'attention': '#FFB74D', 'surveiller': '#FFB74D', 'améliorer': '#FFB74D',
+  'recommandation': '#64B5F6', 'prioritaire': '#64B5F6', 'action': '#64B5F6',
+};
+function sectionColor(heading: string): string {
+  const lower = heading.toLowerCase();
+  for (const [k, v] of Object.entries(SECTION_COLORS)) if (lower.includes(k)) return v;
+  return 'rgba(255,255,255,0.5)';
+}
+function sectionIcon(heading: string): string {
+  const lower = heading.toLowerCase();
+  if (lower.includes('bilan') || lower.includes('général') || lower.includes('résumé')) return 'analytics';
+  if (lower.includes('positif') || lower.includes('bien')) return 'check_circle';
+  if (lower.includes('attention') || lower.includes('surveiller') || lower.includes('améliorer')) return 'warning_amber';
+  if (lower.includes('recommand') || lower.includes('action') || lower.includes('priorit')) return 'bolt';
+  return 'eco';
+}
+
+function EveSummaryRender({ text }: { text: string }) {
+  if (!text) return null;
+  const blocks = parseMarkdown(text);
+  // If no headings found, just render as paragraphs nicely
+  const hasStructure = blocks.some(b => b.type === 'heading');
+  if (!hasStructure) {
+    // Fallback: split by sentences and display cleanly
+    return (
+      <p className="leading-relaxed" style={{ color: 'rgba(255,255,255,0.8)', fontSize: 14, lineHeight: 1.7 }}>
+        {renderInline(text)}
+      </p>
+    );
+  }
+  return (
+    <div className="space-y-4">
+      {blocks.map((block, i) => {
+        if (block.type === 'heading') {
+          const col = sectionColor(block.text);
+          const icon = sectionIcon(block.text);
+          return (
+            <div key={i} className="flex items-center gap-2">
+              <span className="material-symbols-outlined" style={{ color: col, fontSize: 15 }}>{icon}</span>
+              <span className="font-black text-xs tracking-widest uppercase" style={{ color: col, letterSpacing: '0.1em' }}>{block.text}</span>
+              <div className="flex-1 h-px" style={{ background: `linear-gradient(90deg, ${col}40, transparent)` }} />
+            </div>
+          );
+        }
+        if (block.type === 'list') {
+          // Find previous heading to get color
+          const prevHeading = blocks.slice(0, i).reverse().find(b => b.type === 'heading');
+          const col = prevHeading ? sectionColor((prevHeading as any).text) : 'rgba(255,255,255,0.5)';
+          return (
+            <ul key={i} className="space-y-1.5 pl-2">
+              {block.items.map((item, j) => (
+                <li key={j} className="flex items-start gap-2.5 text-sm" style={{ color: 'rgba(255,255,255,0.75)', lineHeight: 1.6 }}>
+                  <span className="mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: col, boxShadow: `0 0 4px ${col}` }} />
+                  <span>{renderInline(item)}</span>
+                </li>
+              ))}
+            </ul>
+          );
+        }
+        // paragraph
+        const prevHeading = blocks.slice(0, i).reverse().find(b => b.type === 'heading');
+        const isRecommendation = prevHeading && (prevHeading as any).text.toLowerCase().includes('recommand');
+        if (isRecommendation) {
+          return (
+            <div key={i} className="px-4 py-3 rounded-2xl flex items-start gap-3"
+              style={{ background: 'rgba(100,181,246,0.07)', border: '1px solid rgba(100,181,246,0.2)' }}>
+              <span className="material-symbols-outlined flex-shrink-0 mt-0.5" style={{ color: '#64B5F6', fontSize: 16 }}>bolt</span>
+              <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.85)' }}>{renderInline(block.text)}</p>
+            </div>
+          );
+        }
+        return (
+          <p key={i} className="text-sm leading-relaxed pl-2" style={{ color: 'rgba(255,255,255,0.75)', lineHeight: 1.7 }}>
+            {renderInline(block.text)}
+          </p>
+        );
+      })}
+    </div>
+  );
+}
+
 // ── Fake sparkline data (7 days) ──────────────────────────────────────
 const genSparkData = (base: number | null, variance = 0.1) => {
   if (base == null) return [0, 0, 0, 0, 0, 0, 0];
@@ -147,7 +269,22 @@ const ReportsNew: React.FC = () => {
     try {
       const sd: Record<string, any> = {};
       Object.entries(map).forEach(([k, v]) => { if (v != null) sd[k] = v; });
-      const res = await chatService.sendMessage(`Résume l'état de la serre en 2 phrases max. Score: ${score}/100.`, undefined, undefined, sd);
+      const prompt = `Génère un rapport d'analyse de la serre. Score santé : ${score}/100. Réponds UNIQUEMENT avec ce format exact, sans texte avant ou après :
+
+**Bilan général**
+[1-2 phrases sur l'état global de la serre]
+
+**Points positifs**
+- [point positif 1]
+- [point positif 2]
+
+**Points d'attention**
+- [point à surveiller 1]
+- [point à surveiller 2]
+
+**Recommandation prioritaire**
+[1 action concrète à faire en priorité]`;
+      const res = await chatService.sendMessage(prompt, undefined, undefined, sd);
       setEveSummary(res?.eveResponse?.replace(/^🐝\s*/, '') || '');
     } catch { /**/ } finally { setEveLoading(false); }
   }, [map, score]);
@@ -288,17 +425,45 @@ const ReportsNew: React.FC = () => {
               </div>
 
               {/* EVE body */}
-              <div className="flex-1 px-6 py-5">
+              <div className="flex-1 px-6 py-5 overflow-y-auto" style={{ maxHeight: 340 }}>
                 {eveLoading ? (
-                  <div className="space-y-3">
-                    {[100, 75, 55].map((w, i) => (
-                      <div key={i} className="h-3 rounded-full animate-pulse" style={{ width: `${w}%`, background: 'rgba(203,237,98,0.1)' }} />
-                    ))}
+                  <div className="space-y-4">
+                    {/* Simulated section skeleton */}
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 rounded-full animate-pulse" style={{ background: 'rgba(203,237,98,0.3)' }} />
+                      <div className="h-2.5 rounded-full animate-pulse" style={{ width: '30%', background: 'rgba(203,237,98,0.2)' }} />
+                      <div className="flex-1 h-px" style={{ background: 'rgba(203,237,98,0.1)' }} />
+                    </div>
+                    <div className="space-y-2 pl-2">
+                      {[90, 75].map((w, i) => (
+                        <div key={i} className="flex items-center gap-2.5">
+                          <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: 'rgba(42,211,104,0.4)' }} />
+                          <div className="h-2.5 rounded-full animate-pulse" style={{ width: `${w}%`, background: 'rgba(255,255,255,0.07)' }} />
+                        </div>
+                      ))}
+                    </div>
+                    <div className="flex items-center gap-2 mt-2">
+                      <div className="w-3 h-3 rounded-full animate-pulse" style={{ background: 'rgba(255,183,77,0.3)' }} />
+                      <div className="h-2.5 rounded-full animate-pulse" style={{ width: '35%', background: 'rgba(255,183,77,0.2)' }} />
+                      <div className="flex-1 h-px" style={{ background: 'rgba(255,183,77,0.1)' }} />
+                    </div>
+                    <div className="space-y-2 pl-2">
+                      {[80, 65].map((w, i) => (
+                        <div key={i} className="flex items-center gap-2.5">
+                          <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: 'rgba(255,183,77,0.4)' }} />
+                          <div className="h-2.5 rounded-full animate-pulse" style={{ width: `${w}%`, background: 'rgba(255,255,255,0.07)' }} />
+                        </div>
+                      ))}
+                    </div>
+                    <div className="h-12 rounded-2xl animate-pulse" style={{ background: 'rgba(100,181,246,0.07)', border: '1px solid rgba(100,181,246,0.12)' }} />
                   </div>
+                ) : eveSummary ? (
+                  <EveSummaryRender text={eveSummary} />
                 ) : (
-                  <p className="leading-relaxed" style={{ color: 'rgba(255,255,255,0.85)', fontSize: 15 }}>
-                    {eveSummary || <span style={{ color: 'rgba(255,255,255,0.25)', fontStyle: 'italic' }}>Connexion à EVE en cours...</span>}
-                  </p>
+                  <div className="flex items-center gap-3" style={{ color: 'rgba(255,255,255,0.25)' }}>
+                    <span className="material-symbols-outlined animate-spin" style={{ fontSize: 16, color: '#CBED62' }}>autorenew</span>
+                    <span className="text-sm italic">Connexion à EVE en cours...</span>
+                  </div>
                 )}
               </div>
 
