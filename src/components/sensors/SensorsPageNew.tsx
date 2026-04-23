@@ -719,7 +719,7 @@ const SensorsPageNew:React.FC = () => {
             <p className="text-sm text-[var(--text-secondary)] mt-1">
               {compareMode
                 ? `Mode comparaison — ${selectedIds.length} capteur${selectedIds.length!==1?'s':''} sélectionné${selectedIds.length!==1?'s':''}`
-                : 'Surveillance IoT · Cliquez pour l'historique · Comparez plusieurs capteurs'}
+                : "Surveillance IoT · Cliquez pour l'historique · Comparez plusieurs capteurs"}
             </p>
           </div>
           <div className="flex items-center gap-2 flex-wrap">
