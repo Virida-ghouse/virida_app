@@ -109,9 +109,9 @@ const OnboardingOverlay: React.FC = () => {
             style={{
               position: 'fixed', inset: 0, zIndex: 8999,
               // Step 0: visible blur with faint tint — steps 1+: no overlay at all
-              background: 'transparent',
-              backdropFilter: 'none',
-              WebkitBackdropFilter: 'none',
+              background: 'rgba(0,0,0,0.22)',
+              backdropFilter: 'blur(6px)',
+              WebkitBackdropFilter: 'blur(6px)',
               pointerEvents: 'none',
             }}
           />
