@@ -10,6 +10,7 @@ import EnergyManagementNew from './energy/EnergyManagementNew';
 import SettingsPanelNew from './settings/SettingsPanelNew';
 import ChatBotNew from './chatbot/ChatBotNew';
 import AdminPage from './admin/AdminPage';
+import ReportsNew from './reports/ReportsNew';
 import { useAuth } from '../contexts/AuthContext';
 import { useViridaSensors } from '../hooks/useViridaSensors';
 
@@ -52,11 +53,7 @@ const MainAppNew: React.FC = () => {
       case 'admin':
         return user?.role === 'ADMIN' ? <AdminPage /> : <DashboardNew greenhouseName={primaryGreenhouse?.name} />;
       case 'reports':
-        return (
-          <div className="p-8 text-[var(--text-primary)]">
-            Cette fonctionnalité sera bientôt disponible
-          </div>
-        );
+        return <ReportsNew />;
       default:
         return <DashboardNew greenhouseName={primaryGreenhouse?.name} />;
     }
