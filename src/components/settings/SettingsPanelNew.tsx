@@ -4,12 +4,14 @@ import { useTheme } from '../../contexts/ThemeContext';
 import { useRGPD } from '../../contexts/RGPDContext';
 import { useChatHistory } from '../../contexts/ChatHistoryContext';
 import PrivacyPolicy from '../rgpd/PrivacyPolicy';
+import { useOnboardingContext } from '../onboarding/OnboardingOverlay';
 
 export default function SettingsPanelNew() {
   const { user, logout } = useAuth();
   const { theme: currentTheme, setTheme } = useTheme();
   const { openPreferences } = useRGPD();
   const { exportHistory, clearAllHistory } = useChatHistory();
+  const { reopen: reopenOnboarding } = useOnboardingContext();
   const [activeTab, setActiveTab] = useState('general');
   const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
   const [showSavedAlert, setShowSavedAlert] = useState(false);
@@ -189,6 +191,27 @@ export default function SettingsPanelNew() {
                   <option value="celsius">Celsius (°C)</option>
                   <option value="fahrenheit">Fahrenheit (°F)</option>
                 </select>
+              </div>
+            </div>
+
+            {/* Onboarding */}
+            <div className="pt-2 border-t border-[var(--border-color)]">
+              <h3 className="text-sm font-semibold text-[var(--text-secondary)] mb-3">Guide de l'application</h3>
+              <div className="flex items-center justify-between p-4 rounded-xl glass-card backdrop-blur-xl border border-[var(--border-color)]">
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl">🐝</span>
+                  <div>
+                    <p className="text-sm font-semibold text-[var(--text-primary)]">Visite guidée avec Eve</p>
+                    <p className="text-xs text-[var(--text-secondary)]">Relancer le tutoriel de présentation de l'app</p>
+                  </div>
+                </div>
+                <button
+                  onClick={reopenOnboarding}
+                  className="px-4 py-2 rounded-xl border border-[#2AD368]/40 text-[#2AD368] text-sm font-semibold hover:bg-[#2AD368]/10 transition-all flex items-center gap-2"
+                >
+                  <span className="material-symbols-outlined text-base">play_arrow</span>
+                  Relancer
+                </button>
               </div>
             </div>
           </div>

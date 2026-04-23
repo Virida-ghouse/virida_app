@@ -10,6 +10,12 @@ export const useOnboarding = () => {
     if (!seen) setIsOpen(true);
   }, []);
 
+  const forceOpen = () => {
+    localStorage.removeItem(STORAGE_KEY);
+    setCurrentStep(0);
+    setIsOpen(true);
+  };
+
   const complete = () => {
     localStorage.setItem(STORAGE_KEY, 'true');
     setIsOpen(false);
@@ -42,5 +48,6 @@ export const useOnboarding = () => {
     prev,
     goTo,
     close: complete,
+    forceOpen,
   };
 };
